@@ -2,6 +2,8 @@ package com.example.ahimmoyakbackend.board.controller;
 
 import com.example.ahimmoyakbackend.board.dto.BoardCreateRequestDTO;
 import com.example.ahimmoyakbackend.board.dto.BoardCreateResponseDTO;
+import com.example.ahimmoyakbackend.board.dto.BoardUpdateRequestDTO;
+import com.example.ahimmoyakbackend.board.dto.BoardUpdateResponseDTO;
 import com.example.ahimmoyakbackend.board.entity.Type;
 import com.example.ahimmoyakbackend.board.service.BoardService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,6 +24,12 @@ public class BoardController {
     public ResponseEntity<BoardCreateResponseDTO> createBoard(@RequestBody BoardCreateRequestDTO requestDTO, @PathVariable Type boardType){
         BoardCreateResponseDTO created = boardService.create(requestDTO,boardType);
         return ResponseEntity.status(HttpStatus.OK).body(created);
+    }
+
+    @PatchMapping("/v1/board")
+    public ResponseEntity<BoardUpdateResponseDTO> createBoard(@RequestBody BoardUpdateRequestDTO requestDTO, @RequestParam Long boardId){
+        BoardUpdateResponseDTO updated = boardService.update(requestDTO,boardId);
+        return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 
 }
