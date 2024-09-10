@@ -1,10 +1,12 @@
 package com.example.ahimmoyakbackend.auth.entity;
 
 import com.example.ahimmoyakbackend.auth.entity.common.Gender;
+import com.example.ahimmoyakbackend.board.entity.Board;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Builder
 @Getter
@@ -37,5 +39,8 @@ public class User extends Timestamped {
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @OneToMany(mappedBy = "user")
+    private List<Board> boards;
 
 }
