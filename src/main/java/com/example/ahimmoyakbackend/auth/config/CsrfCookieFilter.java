@@ -1,4 +1,4 @@
-package com.example.ahimmoyakbackend.config;
+package com.example.ahimmoyakbackend.auth.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

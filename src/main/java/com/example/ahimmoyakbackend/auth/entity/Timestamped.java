@@ -1,4 +1,4 @@
-package com.example.ahimmoyakbackend.entity;
+package com.example.ahimmoyakbackend.auth.entity;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
