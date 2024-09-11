@@ -1,9 +1,6 @@
 package com.example.ahimmoyakbackend.board.controller;
 
-import com.example.ahimmoyakbackend.board.dto.BoardCreateRequestDTO;
-import com.example.ahimmoyakbackend.board.dto.BoardCreateResponseDTO;
-import com.example.ahimmoyakbackend.board.dto.BoardUpdateRequestDTO;
-import com.example.ahimmoyakbackend.board.dto.BoardUpdateResponseDTO;
+import com.example.ahimmoyakbackend.board.dto.*;
 import com.example.ahimmoyakbackend.board.entity.Type;
 import com.example.ahimmoyakbackend.board.service.BoardService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,4 +29,9 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 
+    @DeleteMapping("/v1/board")
+    public ResponseEntity<BoardDeleteResponseDTO> deleteBoard(@RequestParam Long boardId){
+        BoardDeleteResponseDTO deleted = boardService.delete(boardId);
+        return ResponseEntity.status(HttpStatus.OK).body(deleted);
+    }
 }
