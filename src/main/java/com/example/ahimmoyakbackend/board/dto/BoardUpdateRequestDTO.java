@@ -1,7 +1,7 @@
 package com.example.ahimmoyakbackend.board.dto;
 
 
-import com.example.ahimmoyakbackend.board.entity.Type;
+import com.example.ahimmoyakbackend.board.common.BoardType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,5 +17,5 @@ public class BoardUpdateRequestDTO {
 
     private String content;
 
-    private Type boardType;
+    private BoardType type;
 }
