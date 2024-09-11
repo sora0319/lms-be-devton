@@ -1,9 +1,6 @@
 package com.example.ahimmoyakbackend.board.service;
 
-import com.example.ahimmoyakbackend.board.dto.BoardCreateRequestDTO;
-import com.example.ahimmoyakbackend.board.dto.BoardCreateResponseDTO;
-import com.example.ahimmoyakbackend.board.dto.BoardUpdateRequestDTO;
-import com.example.ahimmoyakbackend.board.dto.BoardUpdateResponseDTO;
+import com.example.ahimmoyakbackend.board.dto.*;
 import com.example.ahimmoyakbackend.board.entity.Board;
 import com.example.ahimmoyakbackend.board.entity.Type;
 import com.example.ahimmoyakbackend.board.repository.BoardRepository;
@@ -33,4 +30,9 @@ public class BoardService {
         return BoardUpdateResponseDTO.builder().msg("게시물 수정 완료").build();
     }
 
+    public BoardDeleteResponseDTO delete(Long boardId) {
+        Board deleted = boardRepository.findById(boardId).orElseThrow(()->new IllegalArgumentException("없는 게시물 입니다."));
+        boardRepository.delete(deleted);
+        return BoardDeleteResponseDTO.builder().msg("게시물 삭제 완료").build();
+    }
 }
