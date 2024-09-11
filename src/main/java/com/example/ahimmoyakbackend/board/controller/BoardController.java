@@ -27,7 +27,7 @@ public class BoardController {
     }
 
     @PatchMapping("/v1/board")
-    public ResponseEntity<BoardUpdateResponseDTO> createBoard(@RequestBody BoardUpdateRequestDTO requestDTO, @RequestParam Long boardId){
+    public ResponseEntity<BoardUpdateResponseDTO> updateBoard(@RequestBody BoardUpdateRequestDTO requestDTO, @RequestParam Long boardId){
         BoardUpdateResponseDTO updated = boardService.update(requestDTO,boardId);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
