@@ -1,8 +1,8 @@
 package com.example.ahimmoyakbackend.board.dto;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
+import com.example.ahimmoyakbackend.board.common.BoardType;
 import com.example.ahimmoyakbackend.board.entity.Board;
-import com.example.ahimmoyakbackend.board.entity.Type;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,10 +20,10 @@ public class BoardResponseDTO {
 
     private String content;
 
-    private Type boardType;
+    private BoardType type;
 
     public static BoardResponseDTO createDTO(Board board){
-        return new BoardResponseDTO(board.getUser(),board.getTitle(), board.getContent(),board.getBoardType());
+        return new BoardResponseDTO(board.getUser(),board.getTitle(), board.getContent(),board.getType());
     }
 
 }
