@@ -5,9 +5,12 @@ import com.example.ahimmoyakbackend.board.entity.Type;
 import com.example.ahimmoyakbackend.board.service.BoardService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "BoardController")
 @RestController
@@ -33,5 +36,11 @@ public class BoardController {
     public ResponseEntity<BoardDeleteResponseDTO> deleteBoard(@RequestParam Long boardId){
         BoardDeleteResponseDTO deleted = boardService.delete(boardId);
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
+    }
+
+    @GetMapping("/v1/board")
+    public ResponseEntity<List<BoardResponseDTO>> showBoard(@RequestParam Type boardType){
+        List<BoardResponseDTO> boards = boardService.show(boardType);
+        return ResponseEntity.status(HttpStatus.OK).body(boards);
     }
 }
