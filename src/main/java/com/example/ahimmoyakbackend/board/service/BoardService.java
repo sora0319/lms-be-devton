@@ -7,6 +7,9 @@ import com.example.ahimmoyakbackend.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class BoardService {
@@ -34,5 +37,12 @@ public class BoardService {
         Board deleted = boardRepository.findById(boardId).orElseThrow(()->new IllegalArgumentException("없는 게시물 입니다."));
         boardRepository.delete(deleted);
         return BoardDeleteResponseDTO.builder().msg("게시물 삭제 완료").build();
+    }
+
+    public List<BoardResponseDTO> show(Type boardType) {
+        return boardRepository.findAllByBoardType(boardType)
+                .stream()
+                .map(BoardResponseDTO::createDTO)
+                .collect(Collectors.toList());
     }
 }
