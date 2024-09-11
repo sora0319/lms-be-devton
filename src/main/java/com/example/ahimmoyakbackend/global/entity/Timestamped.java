@@ -1,4 +1,4 @@
-package com.example.ahimmoyakbackend.auth.entity;
+package com.example.ahimmoyakbackend.global.entity;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class Timestamped {
+
     @CreatedDate
     private LocalDateTime createdAt;
 

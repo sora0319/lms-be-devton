@@ -1,15 +1,19 @@
 package com.example.ahimmoyakbackend.auth.entity;
 
-import com.example.ahimmoyakbackend.auth.entity.common.Gender;
+import com.example.ahimmoyakbackend.auth.common.Gender;
+import com.example.ahimmoyakbackend.global.entity.Timestamped;
+import com.example.ahimmoyakbackend.auth.common.UserRole;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Builder
-@Getter
-@ToString
 @Entity
+@Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
@@ -31,11 +35,17 @@ public class User extends Timestamped {
     @Column(nullable = false)
     private LocalDate birth;
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, length = 100)
     private String email;
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
+//    @ColumnDefault("NONE")
     private Gender gender;
+
+    @Column(nullable = false, length = 20)
+    @Enumerated(EnumType.STRING)
+//    @ColumnDefault("NORMAL")
+    private UserRole role;
 
 }
