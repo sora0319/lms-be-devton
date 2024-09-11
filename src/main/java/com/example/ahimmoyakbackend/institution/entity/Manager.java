@@ -1,7 +1,6 @@
-package com.example.ahimmoyakbackend.board.entity;
+package com.example.ahimmoyakbackend.institution.entity;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
-import com.example.ahimmoyakbackend.board.common.BoardType;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,24 +13,19 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "board")
-public class Board extends Timestamped {
+@Table(name = "manager")
+public class Manager extends Timestamped {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
-
-    @Column
-    private String content;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private BoardType type;
-
-    @ManyToOne
+    @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "institution_id")
+    private Institution institution;
 
 }

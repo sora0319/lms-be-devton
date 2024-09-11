@@ -1,7 +1,6 @@
-package com.example.ahimmoyakbackend.board.entity;
+package com.example.ahimmoyakbackend.course.entity;
 
-import com.example.ahimmoyakbackend.auth.entity.User;
-import com.example.ahimmoyakbackend.board.common.BoardType;
+import com.example.ahimmoyakbackend.course.common.ContentType;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,24 +13,25 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "board")
-public class Board extends Timestamped {
+@Table(name = "contents")
+public class Contents extends Timestamped {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String title;
 
     @Column
-    private String content;
+    @Enumerated(EnumType.STRING)
+    private ContentType type;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private BoardType type;
+    private Integer idx;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "curriculum_id")
+    private Curriculum curriculum;
 
 }

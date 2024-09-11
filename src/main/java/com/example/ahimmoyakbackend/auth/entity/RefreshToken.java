@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.auth.entity;
 
+import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.*;
 
