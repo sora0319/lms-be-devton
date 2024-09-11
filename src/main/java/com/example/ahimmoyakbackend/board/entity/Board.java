@@ -2,6 +2,7 @@ package com.example.ahimmoyakbackend.board.entity;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.board.common.BoardType;
+import com.example.ahimmoyakbackend.board.dto.BoardUpdateRequestDTO;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -34,4 +35,18 @@ public class Board extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public void patch(BoardUpdateRequestDTO requestDTO, Long boardId) {
+        if(this.id != boardId){
+           throw new IllegalArgumentException("잘못된 게시물 입니다.");
+        }
+        if(requestDTO.getTitle() != null){
+            this.title = requestDTO.getTitle();
+        }
+        if(requestDTO.getContent() != null){
+            this.content = requestDTO.getContent();
+        }
+        if(requestDTO.getType() != null){
+            this.type = requestDTO.getType();
+        }
+    }
 }
