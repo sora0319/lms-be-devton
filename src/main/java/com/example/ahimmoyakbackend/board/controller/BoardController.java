@@ -3,6 +3,7 @@ package com.example.ahimmoyakbackend.board.controller;
 import com.example.ahimmoyakbackend.board.common.BoardType;
 import com.example.ahimmoyakbackend.board.dto.*;
 import com.example.ahimmoyakbackend.board.service.BoardService;
+import com.example.ahimmoyakbackend.board.service.CommentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class BoardController {
 
     private final BoardService boardService;
+    private final CommentService commentService;
 
     @PostMapping("/v1/board/{type}")
     public ResponseEntity<BoardCreateResponseDTO> createBoard(@RequestBody BoardCreateRequestDTO requestDTO, @PathVariable BoardType type){
@@ -50,4 +52,9 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(board);
     }
 
+    @PostMapping("/v1/board/comment/{boardId}")
+    public ResponseEntity<CommentCreateResponseDto> createComment(@RequestBody CommentCreateRequestDto requestDto,@PathVariable Long boardId){
+        CommentCreateResponseDto comment = commentService.create(requestDto,boardId);
+        return ResponseEntity.status(HttpStatus.OK).body(comment);
+    }
 }
