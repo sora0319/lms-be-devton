@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.auth.service;
 
+import com.example.ahimmoyakbackend.auth.common.UserRole;
 import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
 import com.example.ahimmoyakbackend.auth.dto.*;
 import com.example.ahimmoyakbackend.auth.entity.RefreshToken;
@@ -34,6 +35,7 @@ public class UserService {
                 .birth(requestDto.getBirth())
                 .email(requestDto.getEmail())
                 .gender(requestDto.getGender())
+                .role(UserRole.NORMAL)
                 .build();
 
         userRepository.save(user);
