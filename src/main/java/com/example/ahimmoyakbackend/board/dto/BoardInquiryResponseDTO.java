@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BoardInquiryResponseDTO {
 
-    private User users;
+    private String username;
 
     private String title;
 
