@@ -40,7 +40,7 @@ public class BoardService {
         return BoardDeleteResponseDTO.builder().msg("게시물 삭제 완료").build();
     }
 
-    public Page<BoardResponseDTO> inquiry(BoardType type, int page, int size) {
+    public Page<BoardInquiryResponseDTO> inquiry(BoardType type, int page, int size) {
         Pageable pageable = PageRequest.of(page-1,size);
         return boardRepository.findAllByTypeOrderByCreatedAtDesc(type, pageable).map(Board::toDTO);
     }

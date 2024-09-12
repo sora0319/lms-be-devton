@@ -37,11 +37,10 @@ public class BoardController {
     }
 
     @GetMapping("/v1/board")
-    public ResponseEntity<Page<BoardResponseDTO>> inquiryBoard(@RequestParam BoardType type,
-                                                            @RequestParam(defaultValue = "1") int page,
-                                                            @RequestParam(defaultValue = "10") int size){
-        Page<BoardResponseDTO> boardPage = boardService.inquiry(type,page,size);
+    public ResponseEntity<Page<BoardInquiryResponseDTO>> inquiryBoard(@RequestParam BoardType type,
+                                                                      @RequestParam(defaultValue = "1") int page,
+                                                                      @RequestParam(defaultValue = "10") int size){
+        Page<BoardInquiryResponseDTO> boardPage = boardService.inquiry(type,page,size);
         return ResponseEntity.status(HttpStatus.OK).body(boardPage);
     }
-
 }
