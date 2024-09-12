@@ -43,4 +43,11 @@ public class BoardController {
         Page<BoardInquiryResponseDTO> boardPage = boardService.inquiry(type,page,size);
         return ResponseEntity.status(HttpStatus.OK).body(boardPage);
     }
+
+    @GetMapping("/v1/board/{type}")
+    public ResponseEntity<BoardShowResponseDTO> showBoard(@PathVariable BoardType type, @RequestParam Long boardId){
+        BoardShowResponseDTO board = boardService.show(type,boardId);
+        return ResponseEntity.status(HttpStatus.OK).body(board);
+    }
+
 }
