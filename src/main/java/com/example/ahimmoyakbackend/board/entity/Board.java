@@ -52,7 +52,7 @@ public class Board extends Timestamped {
     }
 
     public static BoardInquiryResponseDTO toDTO(Board board){
-        return new BoardInquiryResponseDTO(board.getUser(),board.getTitle(), board.getContent(),board.getType(),board.getCreatedAt());
+        return new BoardInquiryResponseDTO(board.getUser().getUsername(),board.getTitle(), board.getContent(),board.getType(),board.getCreatedAt());
     }
 
 }
