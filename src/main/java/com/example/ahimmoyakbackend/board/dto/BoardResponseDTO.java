@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Builder
 @Getter
 @AllArgsConstructor
@@ -22,8 +24,6 @@ public class BoardResponseDTO {
 
     private BoardType type;
 
-    public static BoardResponseDTO createDTO(Board board){
-        return new BoardResponseDTO(board.getUser(),board.getTitle(), board.getContent(),board.getType());
-    }
+    private LocalDateTime createAt;
 
 }
