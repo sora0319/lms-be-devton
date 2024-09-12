@@ -3,12 +3,16 @@ package com.example.ahimmoyakbackend.board.service;
 import com.example.ahimmoyakbackend.board.common.BoardType;
 import com.example.ahimmoyakbackend.board.dto.*;
 import com.example.ahimmoyakbackend.board.entity.Board;
+import com.example.ahimmoyakbackend.board.entity.Comment;
 import com.example.ahimmoyakbackend.board.repository.BoardRepository;
+import com.example.ahimmoyakbackend.board.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
 
     public BoardCreateResponseDTO create(BoardCreateRequestDTO requestDTO, BoardType type) {
         Board board = Board.builder()
@@ -45,4 +50,15 @@ public class BoardService {
         return boardRepository.findAllByTypeOrderByCreatedAtDesc(type, pageable).map(Board::toDTO);
     }
 
+    public BoardShowResponseDTO show(BoardType type, Long boardId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(()->new IllegalArgumentException("없는 게시물 입니다."));
+//        List<Comment> comments = commentRepository.findAllByBoardId(boardId);
+        return BoardShowResponseDTO.builder()
+                .user(board.getUser())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .type(type)
+//                .comments(comments)
+                .build();
+    }
 }
