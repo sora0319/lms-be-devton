@@ -52,13 +52,13 @@ public class BoardService {
 
     public BoardShowResponseDTO show(BoardType type, Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(()->new IllegalArgumentException("없는 게시물 입니다."));
-//        List<Comment> comments = commentRepository.findAllByBoardId(boardId);
         return BoardShowResponseDTO.builder()
-                .user(board.getUser())
+                .username(board.getUser().getUsername())
                 .title(board.getTitle())
                 .content(board.getContent())
                 .type(type)
-//                .comments(comments)
+                .createAt(board.getCreatedAt())
+                .comments(commentRepository.findAllByBoardId(boardId).stream().map(Comment::toDto).toList())
                 .build();
     }
 }
