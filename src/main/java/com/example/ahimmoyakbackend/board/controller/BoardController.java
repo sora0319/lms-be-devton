@@ -5,11 +5,10 @@ import com.example.ahimmoyakbackend.board.dto.*;
 import com.example.ahimmoyakbackend.board.service.BoardService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "BoardController")
 @RestController
@@ -19,7 +18,7 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @PostMapping("/v1/board/{boardType}")
+    @PostMapping("/v1/board/{type}")
     public ResponseEntity<BoardCreateResponseDTO> createBoard(@RequestBody BoardCreateRequestDTO requestDTO, @PathVariable BoardType type){
         BoardCreateResponseDTO created = boardService.create(requestDTO,type);
         return ResponseEntity.status(HttpStatus.OK).body(created);
@@ -38,8 +37,10 @@ public class BoardController {
     }
 
     @GetMapping("/v1/board")
-    public ResponseEntity<List<BoardResponseDTO>> showBoard(@RequestParam BoardType type){
-        List<BoardResponseDTO> boards = boardService.show(type);
-        return ResponseEntity.status(HttpStatus.OK).body(boards);
+    public ResponseEntity<Page<BoardResponseDTO>> showBoard(@RequestParam BoardType type,
+                                                            @RequestParam(defaultValue = "1") int page,
+                                                            @RequestParam(defaultValue = "10") int size){
+        Page<BoardResponseDTO> boardPage = boardService.show(type,page,size);
+        return ResponseEntity.status(HttpStatus.OK).body(boardPage);
     }
 }
