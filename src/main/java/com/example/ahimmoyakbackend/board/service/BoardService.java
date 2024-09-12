@@ -5,10 +5,11 @@ import com.example.ahimmoyakbackend.board.dto.*;
 import com.example.ahimmoyakbackend.board.entity.Board;
 import com.example.ahimmoyakbackend.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,10 +40,9 @@ public class BoardService {
         return BoardDeleteResponseDTO.builder().msg("게시물 삭제 완료").build();
     }
 
-    public List<BoardResponseDTO> show(BoardType type) {
-        return boardRepository.findAllByType(type)
-                .stream()
-                .map(BoardResponseDTO::createDTO)
-                .collect(Collectors.toList());
+    public Page<BoardResponseDTO> show(BoardType type, int page, int size) {
+        Pageable pageable = PageRequest.of(page-1,size);
+        return boardRepository.findAllByTypeOrderByCreatedAtDesc(type, pageable).map(Board::toDTO);
     }
+
 }
