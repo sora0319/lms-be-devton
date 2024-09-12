@@ -17,9 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class BoardShowResponseDTO {
 
-//    private String username;
-
-    private User user;
+    private String username;
 
     private String title;
 
@@ -29,6 +27,6 @@ public class BoardShowResponseDTO {
 
     private LocalDateTime createAt;
 
-    private List<Comment> comments;
+    private List<CommentOnBoardResponseDto> comments;
 
 }
