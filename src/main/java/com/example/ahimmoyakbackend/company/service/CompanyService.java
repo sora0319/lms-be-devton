@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.company.service;
 
+import com.example.ahimmoyakbackend.company.dto.CompanyDeleteDepartmentResponseDto;
 import com.example.ahimmoyakbackend.company.dto.CompanyEnrollDepartmentRequestDto;
 import com.example.ahimmoyakbackend.company.dto.CompanyEnrollDepartmentResponseDto;
 import com.example.ahimmoyakbackend.company.entity.Affiliation;
@@ -44,6 +45,30 @@ public class CompanyService {
                 .msg("부서 등록이 완료되었습니다")
                 .build();
 
+    }
+
+    @Transactional
+    public CompanyDeleteDepartmentResponseDto delete(Long companyId, Long affiliationId, Long departmentId) {
+
+        Company company = companyRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("해당 companyId 가 없습니다"));
+        Affiliation affiliation = affiliationRepository.findById(affiliationId).orElseThrow(() -> new IllegalArgumentException("해당 affiliationId 가 없습니다"));
+        Department department = departmentRepository.findById(departmentId).orElseThrow(() -> new IllegalArgumentException("해당 departmentId 가 없습니다"));
+
+        Affiliation updateAffiliation = Affiliation.builder()
+                .id(affiliation.getId())
+                .isSupervisor(affiliation.getIsSupervisor())
+                .approval(affiliation.getApproval())
+                .department(null)
+                .user(affiliation.getUser())
+                .build();
+
+        affiliationRepository.save(updateAffiliation);
+
+        departmentRepository.delete(department);
+
+        return CompanyDeleteDepartmentResponseDto.builder()
+                .msg("부서삭제완료")
+                .build();
     }
 
 //    @Transactional
