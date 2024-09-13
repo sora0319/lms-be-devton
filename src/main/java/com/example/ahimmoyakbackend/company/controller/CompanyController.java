@@ -1,8 +1,6 @@
 package com.example.ahimmoyakbackend.company.controller;
 
-import com.example.ahimmoyakbackend.company.dto.CompanyDeleteDepartmentResponseDto;
-import com.example.ahimmoyakbackend.company.dto.CompanyEnrollDepartmentRequestDto;
-import com.example.ahimmoyakbackend.company.dto.CompanyEnrollDepartmentResponseDto;
+import com.example.ahimmoyakbackend.company.dto.*;
 import com.example.ahimmoyakbackend.company.service.CompanyService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +42,16 @@ public class CompanyController {
     ) {
         CompanyDeleteDepartmentResponseDto deleted = companyService.delete(companyId, affiliationId, departmentId);
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
+    }
+
+    @RequestMapping(value = "v1/supervisor", method = RequestMethod.PATCH)
+    public ResponseEntity<CompanyUpdateDepartmentResponseDto> updateDepartment(@RequestParam("companyId") Long companyId,
+                                                                               @RequestParam("departmentId") Long departmentId,
+                                                                               @RequestBody CompanyUpdateDepartmentRequestDto requestDto
+
+    ) {
+        CompanyUpdateDepartmentResponseDto updated = companyService.update(companyId,departmentId, requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 }
 
