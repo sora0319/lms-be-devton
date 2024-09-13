@@ -1,8 +1,6 @@
 package com.example.ahimmoyakbackend.company.service;
 
-import com.example.ahimmoyakbackend.company.dto.CompanyDeleteDepartmentResponseDto;
-import com.example.ahimmoyakbackend.company.dto.CompanyEnrollDepartmentRequestDto;
-import com.example.ahimmoyakbackend.company.dto.CompanyEnrollDepartmentResponseDto;
+import com.example.ahimmoyakbackend.company.dto.*;
 import com.example.ahimmoyakbackend.company.entity.Affiliation;
 import com.example.ahimmoyakbackend.company.entity.Company;
 import com.example.ahimmoyakbackend.company.entity.Department;
@@ -69,6 +67,17 @@ public class CompanyService {
         return CompanyDeleteDepartmentResponseDto.builder()
                 .msg("부서삭제완료")
                 .build();
+    }
+
+    @Transactional
+    public CompanyUpdateDepartmentResponseDto update(Long companyId, Long departmentId, CompanyUpdateDepartmentRequestDto requestDto) {
+
+        Company company = companyRepository.findById(companyId).orElseThrow(()-> new IllegalArgumentException("해당 companyId 가 없습니다"));
+        Department department = departmentRepository.findById(departmentId).orElseThrow(() -> new IllegalArgumentException("해당 departmentId 가 없습니다"));
+        department.patch(requestDto);
+        Department updated = departmentRepository.save(department);
+
+        return CompanyUpdateDepartmentResponseDto.toDto(updated);
     }
 
 //    @Transactional
