@@ -11,6 +11,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -45,5 +47,9 @@ public class Course extends Timestamped {
     @OneToOne
     @JoinColumn(name = "image_id")
     private Image image;
+
+    @OneToMany
+    @JoinColumn(name = "Curriculum_id")
+    private List<Curriculum> curriculumList;
 
 }

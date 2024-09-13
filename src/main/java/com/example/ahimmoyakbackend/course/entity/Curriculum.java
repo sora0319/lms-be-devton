@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -28,5 +30,10 @@ public class Curriculum extends Timestamped {
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
+
+    @OneToMany
+    @JoinColumn(name = "content_id")
+    private List<Contents> contentsList;
+
 
 }
