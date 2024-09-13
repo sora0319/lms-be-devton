@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.company.controller;
 
+import com.example.ahimmoyakbackend.company.dto.CompanyDeleteDepartmentResponseDto;
 import com.example.ahimmoyakbackend.company.dto.CompanyEnrollDepartmentRequestDto;
 import com.example.ahimmoyakbackend.company.dto.CompanyEnrollDepartmentResponseDto;
 import com.example.ahimmoyakbackend.company.service.CompanyService;
@@ -17,6 +18,15 @@ public class CompanyController {
 
     private final CompanyService companyService;
 
+//    @RequestMapping("/v1/supervisor", method = RequestMethod.POST)
+//    public ResponseEntity<List<CompanyInquiryUserResponseDto>> getUserList(@RequestParam("companyId") Long companyId,
+//                                                                           @RequestParam("affiliationId") Long affiliationId,
+//                                                                           @RequestParam("departmentId") Long departmentId
+//    ) {
+//        List<CompanyInquiryUserResponseDto> userList = companyService.getUserByCompany(companyId, affiliationId, departmentId);
+//        return ResponseEntity.status(HttpStatus.OK).body(userList);
+//    }
+
     @RequestMapping(value = "/v1/supervisor", method = RequestMethod.POST)
     public ResponseEntity<CompanyEnrollDepartmentResponseDto> enrollDepartment(@RequestParam("companyId") Long companyId,
                                                                                @RequestParam("affiliationId") Long affiliationId,
@@ -25,4 +35,16 @@ public class CompanyController {
         CompanyEnrollDepartmentResponseDto enrolled = companyService.enroll(companyId, affiliationId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(enrolled);
     }
+
+    @RequestMapping(value = "/v1/supervisor", method = RequestMethod.DELETE)
+    public ResponseEntity<CompanyDeleteDepartmentResponseDto> deleteDepartment(@RequestParam("companyId") Long companyId,
+                                                                               @RequestParam("affiliationId") Long affiliationId,
+                                                                               @RequestParam("departmentId") Long departmentId
+
+    ) {
+        CompanyDeleteDepartmentResponseDto deleted = companyService.delete(companyId, affiliationId, departmentId);
+        return ResponseEntity.status(HttpStatus.OK).body(deleted);
+    }
 }
+
+
