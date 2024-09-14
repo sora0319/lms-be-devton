@@ -2,8 +2,8 @@ package com.example.ahimmoyakbackend.board.entity;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.board.common.BoardType;
-import com.example.ahimmoyakbackend.board.dto.BoardInquiryResponseDTO;
-import com.example.ahimmoyakbackend.board.dto.BoardUpdateRequestDTO;
+import com.example.ahimmoyakbackend.board.dto.BoardInquiryResponseDto;
+import com.example.ahimmoyakbackend.board.dto.BoardUpdateRequestDto;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -36,7 +36,7 @@ public class Board extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void patch(BoardUpdateRequestDTO requestDTO, Long boardId) {
+    public void patch(BoardUpdateRequestDto requestDTO, Long boardId) {
         if(this.id != boardId){
            throw new IllegalArgumentException("잘못된 게시물 입니다.");
         }
@@ -51,8 +51,8 @@ public class Board extends Timestamped {
         }
     }
 
-    public static BoardInquiryResponseDTO toDTO(Board board){
-        return new BoardInquiryResponseDTO(board.getUser().getUsername(),board.getTitle(), board.getContent(),board.getType(),board.getCreatedAt());
+    public static BoardInquiryResponseDto toDto(Board board){
+        return new BoardInquiryResponseDto(board.getUser().getUsername(),board.getTitle(), board.getContent(),board.getType(),board.getCreatedAt());
     }
 
 }

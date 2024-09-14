@@ -19,20 +19,20 @@ public class CourseBoardController {
     private final CourseBoardService courseBoardService;
 
     @PostMapping("/v1/board/{type}/{courseId}")
-    public ResponseEntity<BoardCreateResponseDTO> createBoard(@RequestBody BoardCreateRequestDTO requestDTO, @PathVariable Long courseId,@PathVariable BoardType type){
-        BoardCreateResponseDTO created = courseBoardService.create(requestDTO,courseId,type);
+    public ResponseEntity<BoardCreateResponseDto> createBoard(@RequestBody BoardCreateRequestDto requestDTO, @PathVariable Long courseId, @PathVariable BoardType type){
+        BoardCreateResponseDto created = courseBoardService.create(requestDTO,courseId,type);
         return ResponseEntity.status(HttpStatus.OK).body(created);
     }
 
     @PatchMapping("/v1/board/{courseId}")
-    public ResponseEntity<BoardUpdateResponseDTO> updateBoard(@AuthenticationPrincipal @RequestBody BoardUpdateRequestDTO requestDTO, @PathVariable Long courseId, @RequestParam Long courseBoardId){
-        BoardUpdateResponseDTO updated = courseBoardService.update(requestDTO,courseId,courseBoardId);
+    public ResponseEntity<BoardUpdateResponseDto> updateBoard(@AuthenticationPrincipal @RequestBody BoardUpdateRequestDto requestDTO, @PathVariable Long courseId, @RequestParam Long courseBoardId){
+        BoardUpdateResponseDto updated = courseBoardService.update(requestDTO,courseId,courseBoardId);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 
     @DeleteMapping("/v1/board/{courseId}")
-    public ResponseEntity<BoardDeleteResponseDTO> deleteBoard(@PathVariable Long courseId, @RequestParam Long courseBoardId){
-        BoardDeleteResponseDTO deleted = courseBoardService.delete(courseId,courseBoardId);
+    public ResponseEntity<BoardDeleteResponseDto> deleteBoard(@PathVariable Long courseId, @RequestParam Long courseBoardId){
+        BoardDeleteResponseDto deleted = courseBoardService.delete(courseId,courseBoardId);
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
 

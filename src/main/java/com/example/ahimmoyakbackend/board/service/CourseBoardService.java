@@ -22,7 +22,7 @@ public class CourseBoardService {
     private final CourseBoardRepository courseBoardRepository;
     private final CourseRepository courseRepository;
 
-    public BoardCreateResponseDTO create(BoardCreateRequestDTO requestDTO, Long courseId, BoardType type) {
+    public BoardCreateResponseDto create(BoardCreateRequestDto requestDTO, Long courseId, BoardType type) {
 
         Course course = courseRepository.findById(courseId).orElseThrow(()->new IllegalArgumentException("잘못된 코스입니다."));
 
@@ -33,23 +33,23 @@ public class CourseBoardService {
                 .course(course)
                 .build();
         courseBoardRepository.save(board);
-        return BoardCreateResponseDTO.builder().msg("게시물 작성 완료").build();
+        return BoardCreateResponseDto.builder().msg("게시물 작성 완료").build();
     }
 
-    public BoardUpdateResponseDTO update(BoardUpdateRequestDTO requestDTO, Long courseId, Long courseBoardId) {
+    public BoardUpdateResponseDto update(BoardUpdateRequestDto requestDTO, Long courseId, Long courseBoardId) {
         CourseBoard updated = courseBoardRepository.findById(courseBoardId).orElseThrow(()->new IllegalArgumentException("없는 게시물 입니다."));
         updated.patch(requestDTO, courseBoardId,courseId);
         courseBoardRepository.save(updated);
-        return BoardUpdateResponseDTO.builder().msg("게시물 수정 완료").build();
+        return BoardUpdateResponseDto.builder().msg("게시물 수정 완료").build();
     }
 
-    public BoardDeleteResponseDTO delete(Long courseId, Long courseBoardId) {
+    public BoardDeleteResponseDto delete(Long courseId, Long courseBoardId) {
         CourseBoard deleted = courseBoardRepository.findById(courseBoardId).orElseThrow(()->new IllegalArgumentException("없는 게시물 입니다."));
         if(deleted.getCourse().getId() != courseId){
             throw new IllegalArgumentException("잘못된 게시물 입니다.");
         }
         courseBoardRepository.delete(deleted);
-        return BoardDeleteResponseDTO.builder().msg("게시물 삭제 완료").build();
+        return BoardDeleteResponseDto.builder().msg("게시물 삭제 완료").build();
     }
 
     public CourseBoardInquiryResponseDto inquiry(Long courseId, BoardType type, int page, int size) {
@@ -62,7 +62,7 @@ public class CourseBoardService {
 
         List<CourseBoardsResponseDto> boards = courseBoardPage
                 .stream()
-                .map(CourseBoard::toBoardResponseDTO)
+                .map(CourseBoard::toBoardResponseDto)
                 .collect(Collectors.toList());
 
         return new CourseBoardInquiryResponseDto(

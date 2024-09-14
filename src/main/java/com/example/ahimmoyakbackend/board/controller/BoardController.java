@@ -21,34 +21,34 @@ public class BoardController {
     private final CommentService commentService;
 
     @PostMapping("/v1/board/{type}")
-    public ResponseEntity<BoardCreateResponseDTO> createBoard(@RequestBody BoardCreateRequestDTO requestDTO, @PathVariable BoardType type){
-        BoardCreateResponseDTO created = boardService.create(requestDTO,type);
+    public ResponseEntity<BoardCreateResponseDto> createBoard(@RequestBody BoardCreateRequestDto requestDTO, @PathVariable BoardType type){
+        BoardCreateResponseDto created = boardService.create(requestDTO,type);
         return ResponseEntity.status(HttpStatus.OK).body(created);
     }
 
     @PatchMapping("/v1/board")
-    public ResponseEntity<BoardUpdateResponseDTO> updateBoard(@RequestBody BoardUpdateRequestDTO requestDTO, @RequestParam Long boardId){
-        BoardUpdateResponseDTO updated = boardService.update(requestDTO,boardId);
+    public ResponseEntity<BoardUpdateResponseDto> updateBoard(@RequestBody BoardUpdateRequestDto requestDTO, @RequestParam Long boardId){
+        BoardUpdateResponseDto updated = boardService.update(requestDTO,boardId);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 
     @DeleteMapping("/v1/board")
-    public ResponseEntity<BoardDeleteResponseDTO> deleteBoard(@RequestParam Long boardId){
-        BoardDeleteResponseDTO deleted = boardService.delete(boardId);
+    public ResponseEntity<BoardDeleteResponseDto> deleteBoard(@RequestParam Long boardId){
+        BoardDeleteResponseDto deleted = boardService.delete(boardId);
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
 
     @GetMapping("/v1/board")
-    public ResponseEntity<Page<BoardInquiryResponseDTO>> inquiryBoard(@RequestParam BoardType type,
+    public ResponseEntity<Page<BoardInquiryResponseDto>> inquiryBoard(@RequestParam BoardType type,
                                                                       @RequestParam(defaultValue = "1") int page,
                                                                       @RequestParam(defaultValue = "10") int size){
-        Page<BoardInquiryResponseDTO> boardPage = boardService.inquiry(type,page,size);
+        Page<BoardInquiryResponseDto> boardPage = boardService.inquiry(type,page,size);
         return ResponseEntity.status(HttpStatus.OK).body(boardPage);
     }
 
     @GetMapping("/v1/board/{type}")
-    public ResponseEntity<BoardShowResponseDTO> showBoard(@PathVariable BoardType type, @RequestParam Long boardId){
-        BoardShowResponseDTO board = boardService.show(type,boardId);
+    public ResponseEntity<BoardShowResponseDto> showBoard(@PathVariable BoardType type, @RequestParam Long boardId){
+        BoardShowResponseDto board = boardService.show(type,boardId);
         return ResponseEntity.status(HttpStatus.OK).body(board);
     }
 
