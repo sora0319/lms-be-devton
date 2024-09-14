@@ -47,6 +47,12 @@ public class CourseBoardController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @GetMapping("/v1/courseBoard/{courseId}/{type}")
+    public ResponseEntity<CourseBoardShowResponseDto> showBoard(@PathVariable Long courseId,  @PathVariable BoardType type, @RequestParam Long courseBoardId){
+        CourseBoardShowResponseDto board = courseBoardService.show(courseId,type,courseBoardId);
+        return ResponseEntity.status(HttpStatus.OK).body(board);
+    }
+
     @PostMapping("/v1/courseBoard/comment/{courseBoardId}")
     public ResponseEntity<CommentCreateResponseDto> createComment(@RequestBody CommentCreateRequestDto requestDto,@PathVariable Long courseBoardId){
         CommentCreateResponseDto comment = courseCommentService.create(requestDto,courseBoardId);
