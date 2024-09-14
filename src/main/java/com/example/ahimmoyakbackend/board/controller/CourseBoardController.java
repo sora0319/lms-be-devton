@@ -18,19 +18,19 @@ public class CourseBoardController {
 
     private final CourseBoardService courseBoardService;
 
-    @PostMapping("/v1/board/{type}/{courseId}")
+    @PostMapping("/v1/courseBoard/{type}/{courseId}")
     public ResponseEntity<BoardCreateResponseDto> createBoard(@RequestBody BoardCreateRequestDto requestDTO, @PathVariable Long courseId, @PathVariable BoardType type){
         BoardCreateResponseDto created = courseBoardService.create(requestDTO,courseId,type);
         return ResponseEntity.status(HttpStatus.OK).body(created);
     }
 
-    @PatchMapping("/v1/board/{courseId}")
+    @PatchMapping("/v1/courseBoard/{courseId}")
     public ResponseEntity<BoardUpdateResponseDto> updateBoard(@AuthenticationPrincipal @RequestBody BoardUpdateRequestDto requestDTO, @PathVariable Long courseId, @RequestParam Long courseBoardId){
         BoardUpdateResponseDto updated = courseBoardService.update(requestDTO,courseId,courseBoardId);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 
-    @DeleteMapping("/v1/board/{courseId}")
+    @DeleteMapping("/v1/courseBoard/{courseId}")
     public ResponseEntity<BoardDeleteResponseDto> deleteBoard(@PathVariable Long courseId, @RequestParam Long courseBoardId){
         BoardDeleteResponseDto deleted = courseBoardService.delete(courseId,courseBoardId);
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
