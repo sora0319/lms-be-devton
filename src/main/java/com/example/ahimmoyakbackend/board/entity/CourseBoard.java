@@ -1,7 +1,8 @@
 package com.example.ahimmoyakbackend.board.entity;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
-import com.example.ahimmoyakbackend.board.common.CourseBoardType;
+import com.example.ahimmoyakbackend.board.common.BoardType;
+import com.example.ahimmoyakbackend.board.dto.BoardUpdateRequestDTO;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
@@ -29,7 +30,7 @@ public class CourseBoard extends Timestamped {
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
-    private CourseBoardType type;
+    private BoardType type;
 
     @ManyToOne
     @JoinColumn(name = "course_id")
@@ -39,4 +40,18 @@ public class CourseBoard extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public void patch(BoardUpdateRequestDTO requestDTO, Long courseBoardId, Long courseId) {
+        if(this.course.getId() != courseId || this.course.getId() != courseBoardId){
+            throw new IllegalArgumentException("잘못된 게시물 입니다.");
+        }
+        if(requestDTO.getTitle() != null){
+            this.title = requestDTO.getTitle();
+        }
+        if(requestDTO.getContent() != null){
+            this.content = requestDTO.getContent();
+        }
+        if(requestDTO.getType() != null){
+            this.type = requestDTO.getType();
+        }
+    }
 }
