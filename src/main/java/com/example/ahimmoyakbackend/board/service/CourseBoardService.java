@@ -3,7 +3,9 @@ package com.example.ahimmoyakbackend.board.service;
 import com.example.ahimmoyakbackend.board.common.BoardType;
 import com.example.ahimmoyakbackend.board.dto.*;
 import com.example.ahimmoyakbackend.board.entity.CourseBoard;
+import com.example.ahimmoyakbackend.board.entity.CourseComment;
 import com.example.ahimmoyakbackend.board.repository.CourseBoardRepository;
+import com.example.ahimmoyakbackend.board.repository.CourseCommentRepository;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.course.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,8 @@ public class CourseBoardService {
 
     private final CourseBoardRepository courseBoardRepository;
     private final CourseRepository courseRepository;
+    private final CourseCommentRepository courseCommentRepository;
+
 
     public BoardCreateResponseDto create(BoardCreateRequestDto requestDTO, Long courseId, BoardType type) {
 
@@ -70,5 +74,20 @@ public class CourseBoardService {
                 boards,
                 new Pagination(page,size)
         );
+
+    }
+    public CourseBoardShowResponseDto show(Long courseId, BoardType type, Long courseBoardId) {
+        Course course = courseRepository.findById(courseId).orElseThrow(()->new IllegalArgumentException("없는 코스 입니다."));
+        CourseBoard board = courseBoardRepository.findByCourseAndId(course,courseBoardId);
+
+        return CourseBoardShowResponseDto.builder()
+                .courseTitle(board.getCourse().getTitle())
+                .username(board.getUser().getUsername())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .type(type)
+                .createAt(board.getCreatedAt())
+                .comments(courseCommentRepository.findAllByCourseBoardId(courseBoardId).stream().map(CourseComment::toDto).toList())
+                .build();
     }
 }
