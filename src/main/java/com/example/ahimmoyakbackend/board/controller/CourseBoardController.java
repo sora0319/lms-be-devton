@@ -35,4 +35,13 @@ public class CourseBoardController {
         BoardDeleteResponseDTO deleted = courseBoardService.delete(courseId,courseBoardId);
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
+
+    @GetMapping("/v1/courseBoard/{courseId}")
+    public ResponseEntity<CourseBoardInquiryResponseDto> inquiryBoard(@PathVariable Long courseId,
+                                                                      @RequestParam BoardType type,
+                                                                      @RequestParam(defaultValue = "1") int page,
+                                                                      @RequestParam(defaultValue = "10") int size) {
+        CourseBoardInquiryResponseDto responseDto = courseBoardService.inquiry(courseId, type, page, size);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
 }
