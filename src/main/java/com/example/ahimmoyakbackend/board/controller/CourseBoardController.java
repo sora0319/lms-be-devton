@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "BoardController")
+@Tag(name = "CourseBoardController")
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
