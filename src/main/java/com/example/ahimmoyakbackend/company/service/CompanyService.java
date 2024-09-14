@@ -96,6 +96,7 @@ public class CompanyService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public CompanyEnrollResponseDto enrollCompany(CompanyEnrollRequestDto requestDto) {
         
         Company company = Company.builder()
@@ -113,6 +114,7 @@ public class CompanyService {
                 .build();
     }
 
+    @Transactional
     public CompanyUpdateResponseDto updateCompany(Long companyId, CompanyUpdateRequestDto requestDto) {
 
         Company company = companyRepository.findById(companyId).orElseThrow(()->new IllegalArgumentException("해당 companyId 가 없습니다"));
