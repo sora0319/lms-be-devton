@@ -72,7 +72,7 @@ public class CompanyService {
     }
 
     @Transactional
-    public CompanyUpdateDepartmentResponseDto update(Long companyId, Long departmentId, CompanyUpdateDepartmentRequestDto requestDto) {
+    public CompanyUpdateDepartmentResponseDto updateDepartment(Long companyId, Long departmentId, CompanyUpdateDepartmentRequestDto requestDto) {
 
         Company company = companyRepository.findById(companyId).orElseThrow(()-> new IllegalArgumentException("해당 companyId 가 없습니다"));
         Department department = departmentRepository.findById(departmentId).orElseThrow(() -> new IllegalArgumentException("해당 departmentId 가 없습니다"));
@@ -112,6 +112,7 @@ public class CompanyService {
                 .msg("회사 등록 완료")
                 .build();
     }
+
 
 //    @Transactional
 //    public List<CompanyInquiryUserResponseDto> getUserByCompany(Long companyId, Long affiliationId, Long departmentId) {
