@@ -1,8 +1,11 @@
 package com.example.ahimmoyakbackend.board.service;
 
+import com.example.ahimmoyakbackend.board.common.BoardType;
 import com.example.ahimmoyakbackend.board.common.CourseBoardType;
 import com.example.ahimmoyakbackend.board.dto.BoardCreateRequestDTO;
 import com.example.ahimmoyakbackend.board.dto.BoardCreateResponseDTO;
+import com.example.ahimmoyakbackend.board.dto.BoardUpdateRequestDTO;
+import com.example.ahimmoyakbackend.board.dto.BoardUpdateResponseDTO;
 import com.example.ahimmoyakbackend.board.entity.CourseBoard;
 import com.example.ahimmoyakbackend.board.repository.CourseBoardRepository;
 import com.example.ahimmoyakbackend.course.entity.Course;
@@ -18,7 +21,7 @@ public class CourseBoardService {
     private final CourseRepository courseRepository;
 
 
-    public BoardCreateResponseDTO create(BoardCreateRequestDTO requestDTO, Long courseId, CourseBoardType type) {
+    public BoardCreateResponseDTO create(BoardCreateRequestDTO requestDTO, Long courseId, BoardType type) {
 
         Course course = courseRepository.findById(courseId).orElseThrow(()->new IllegalArgumentException("잘못된 코스입니다."));
 
