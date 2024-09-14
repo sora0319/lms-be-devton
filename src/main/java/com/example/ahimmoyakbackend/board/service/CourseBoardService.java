@@ -1,15 +1,19 @@
 package com.example.ahimmoyakbackend.board.service;
 
 import com.example.ahimmoyakbackend.board.common.BoardType;
-import com.example.ahimmoyakbackend.board.common.CourseBoardType;
 import com.example.ahimmoyakbackend.board.dto.*;
-import com.example.ahimmoyakbackend.board.entity.Board;
 import com.example.ahimmoyakbackend.board.entity.CourseBoard;
 import com.example.ahimmoyakbackend.board.repository.CourseBoardRepository;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.course.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +21,6 @@ public class CourseBoardService {
 
     private final CourseBoardRepository courseBoardRepository;
     private final CourseRepository courseRepository;
-
 
     public BoardCreateResponseDTO create(BoardCreateRequestDTO requestDTO, Long courseId, BoardType type) {
 
@@ -47,5 +50,25 @@ public class CourseBoardService {
         }
         courseBoardRepository.delete(deleted);
         return BoardDeleteResponseDTO.builder().msg("게시물 삭제 완료").build();
+    }
+
+    public CourseBoardInquiryResponseDto inquiry(Long courseId, BoardType type, int page, int size) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("없는 코스 입니다."));
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<CourseBoard> courseBoardPage = courseBoardRepository
+                .findAllByCourseAndTypeOrderByCreatedAtDesc(course, type, pageable);
+
+        List<CourseBoardsResponseDto> boards = courseBoardPage
+                .stream()
+                .map(CourseBoard::toBoardResponseDTO)
+                .collect(Collectors.toList());
+
+        return new CourseBoardInquiryResponseDto(
+                course.getTitle(),
+                boards,
+                new Pagination(page,size)
+        );
     }
 }
