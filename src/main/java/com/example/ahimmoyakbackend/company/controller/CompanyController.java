@@ -53,7 +53,7 @@ public class CompanyController {
                                                                                @RequestBody CompanyUpdateDepartmentRequestDto requestDto
 
     ) {
-        CompanyUpdateDepartmentResponseDto updated = companyService.update(companyId, departmentId, requestDto);
+        CompanyUpdateDepartmentResponseDto updated = companyService.updateDepartment(companyId, departmentId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 
@@ -70,6 +70,8 @@ public class CompanyController {
         CompanyEnrollResponseDto enrolled = companyService.enrollCompany(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(enrolled);
     }
+
+
 }
 
 
