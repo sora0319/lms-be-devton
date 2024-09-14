@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Tag(name = "CompanyController")
@@ -18,14 +19,14 @@ public class CompanyController {
     private final CompanyService companyService;
 
     // User
-//    @RequestMapping("/v1/supervisor", method = RequestMethod.POST)
-//    public ResponseEntity<List<CompanyInquiryUserResponseDto>> getUserList(@RequestParam("companyId") Long companyId,
-//                                                                           @RequestParam("affiliationId") Long affiliationId,
-//                                                                           @RequestParam("departmentId") Long departmentId
-//    ) {
-//        List<CompanyInquiryUserResponseDto> userList = companyService.getUserByCompany(companyId, affiliationId, departmentId);
-//        return ResponseEntity.status(HttpStatus.OK).body(userList);
-//    }
+    @RequestMapping(value = "/v1/supervisor", method = RequestMethod.GET)
+    public ResponseEntity<List<CompanyInquiryUserResponseDto>> getUserList(@RequestParam("companyId") Long companyId,
+                                                                           @RequestParam("affiliationId") Long affiliationId,
+                                                                           @RequestParam("departmentId") Long departmentId
+    ) {
+        List<CompanyInquiryUserResponseDto> userList = companyService.getUserbyCompany(companyId, affiliationId, departmentId);
+        return ResponseEntity.status(HttpStatus.OK).body(userList);
+    }
 
     // Department
     @RequestMapping(value = "/v1/supervisor", method = RequestMethod.POST)
