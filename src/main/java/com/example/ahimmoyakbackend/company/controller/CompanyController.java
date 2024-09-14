@@ -43,7 +43,7 @@ public class CompanyController {
                                                                                @RequestParam("departmentId") Long departmentId
 
     ) {
-        CompanyDeleteDepartmentResponseDto deleted = companyService.delete(companyId, affiliationId, departmentId);
+        CompanyDeleteDepartmentResponseDto deleted = companyService.deleteDepartment(companyId, affiliationId, departmentId);
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
 
@@ -70,7 +70,6 @@ public class CompanyController {
         CompanyEnrollResponseDto enrolled = companyService.enrollCompany(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(enrolled);
     }
-
 
 }
 

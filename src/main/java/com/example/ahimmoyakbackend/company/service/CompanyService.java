@@ -48,7 +48,7 @@ public class CompanyService {
     }
 
     @Transactional
-    public CompanyDeleteDepartmentResponseDto delete(Long companyId, Long affiliationId, Long departmentId) {
+    public CompanyDeleteDepartmentResponseDto deleteDepartment(Long companyId, Long affiliationId, Long departmentId) {
 
         Company company = companyRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("해당 companyId 가 없습니다"));
         Affiliation affiliation = affiliationRepository.findById(affiliationId).orElseThrow(() -> new IllegalArgumentException("해당 affiliationId 가 없습니다"));
@@ -112,6 +112,7 @@ public class CompanyService {
                 .msg("회사 등록 완료")
                 .build();
     }
+
 
 
 //    @Transactional
