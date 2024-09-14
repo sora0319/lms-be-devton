@@ -3,6 +3,7 @@ package com.example.ahimmoyakbackend.board.entity;
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.board.common.BoardType;
 import com.example.ahimmoyakbackend.board.dto.BoardUpdateRequestDTO;
+import com.example.ahimmoyakbackend.board.dto.CourseBoardsResponseDto;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
@@ -53,5 +54,14 @@ public class CourseBoard extends Timestamped {
         if(requestDTO.getType() != null){
             this.type = requestDTO.getType();
         }
+    }
+
+    public static CourseBoardsResponseDto toBoardResponseDTO(CourseBoard courseBoard) {
+        return new CourseBoardsResponseDto(
+                courseBoard.getUser().getUsername(),
+                courseBoard.getTitle(),
+                courseBoard.getType(),
+                courseBoard.getCreatedAt()
+        );
     }
 }
