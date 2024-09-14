@@ -10,6 +10,8 @@ import com.example.ahimmoyakbackend.company.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -78,6 +80,20 @@ public class CompanyService {
         Department updated = departmentRepository.save(department);
 
         return CompanyUpdateDepartmentResponseDto.toDto(updated);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CompanyInquiryDepartmentResponseDto> getDepartmentCompanyId(Long companyId) {
+        List<Department> departments = departmentRepository.findByCompanyId(companyId);
+
+
+        return departments.stream()
+                .map(department -> CompanyInquiryDepartmentResponseDto.builder()
+                        .departmentId(department.getId())
+                        .departmentName(department.getName())
+                        .companyId(department.getCompany().getId())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 //    @Transactional
