@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @Tag(name = "CompanyController")
 @RestController
@@ -50,9 +51,17 @@ public class CompanyController {
                                                                                @RequestBody CompanyUpdateDepartmentRequestDto requestDto
 
     ) {
-        CompanyUpdateDepartmentResponseDto updated = companyService.update(companyId,departmentId, requestDto);
+        CompanyUpdateDepartmentResponseDto updated = companyService.update(companyId, departmentId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
+
+    @RequestMapping(value = "v1/supervisor", method = RequestMethod.GET)
+    public ResponseEntity<List<CompanyInquiryDepartmentResponseDto>> inquiryDepartment(@RequestParam("companyId") Long companyId
+    ){
+        List<CompanyInquiryDepartmentResponseDto> departmentList = companyService.getDepartmentCompanyId(companyId);
+        return ResponseEntity.status(HttpStatus.OK).body(departmentList);
+    }
+
 }
 
 
