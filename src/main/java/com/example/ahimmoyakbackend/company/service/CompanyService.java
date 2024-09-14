@@ -113,6 +113,13 @@ public class CompanyService {
                 .build();
     }
 
+    public CompanyUpdateResponseDto updateCompany(Long companyId, CompanyUpdateRequestDto requestDto) {
+
+        Company company = companyRepository.findById(companyId).orElseThrow(()->new IllegalArgumentException("해당 companyId 가 없습니다"));
+        company.patch(requestDto);
+        Company updated = companyRepository.save(company);
+        return CompanyUpdateResponseDto.toDto(updated);
+    }
 
 
 //    @Transactional
