@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.company.service;
 
+import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.company.dto.*;
 import com.example.ahimmoyakbackend.company.entity.Affiliation;
 import com.example.ahimmoyakbackend.company.entity.Company;
@@ -7,9 +8,12 @@ import com.example.ahimmoyakbackend.company.entity.Department;
 import com.example.ahimmoyakbackend.company.repository.AffiliationRepository;
 import com.example.ahimmoyakbackend.company.repository.CompanyRepository;
 import com.example.ahimmoyakbackend.company.repository.DepartmentRepository;
+import com.example.ahimmoyakbackend.global.entity.Address;
+import com.example.ahimmoyakbackend.global.repository.AddressRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +24,26 @@ public class CompanyService {
     private final AffiliationRepository affiliationRepository;
     private final DepartmentRepository departmentRepository;
     private final CompanyRepository companyRepository;
+    private final AddressRepository addressRepository;
+
+    @Transactional
+    public List<CompanyInquiryUserResponseDto> getUserbyCompany(Long companyId, Long affiliationId, Long departmentId) {
+
+        Company company = companyRepository.findById(companyId).orElseThrow(()-> new IllegalArgumentException("해당 companyId 가 없습니다"));
+
+        List<Affiliation> affiliations = affiliationRepository.findAllByCompanyIdAndDepartmentId(companyId, departmentId);
+
+
+        return affiliations.stream()
+                .map( affiliation -> {
+                    User user = affiliation.getUser();
+                    Address address = addressRepository.findByUserId(user.getId()).orElse(null);
+                    return CompanyInquiryUserResponseDto.toDto(affiliation, address);
+                }
+                )
+                .collect(Collectors.toList());
+
+    }
 
     @Transactional
     public CompanyEnrollDepartmentResponseDto enrollDepartment(Long affiliationId, Long companyId, CompanyEnrollDepartmentRequestDto requestDto) {
@@ -74,7 +98,7 @@ public class CompanyService {
     @Transactional
     public CompanyUpdateDepartmentResponseDto updateDepartment(Long companyId, Long departmentId, CompanyUpdateDepartmentRequestDto requestDto) {
 
-        Company company = companyRepository.findById(companyId).orElseThrow(()-> new IllegalArgumentException("해당 companyId 가 없습니다"));
+        Company company = companyRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("해당 companyId 가 없습니다"));
         Department department = departmentRepository.findById(departmentId).orElseThrow(() -> new IllegalArgumentException("해당 departmentId 가 없습니다"));
         department.patch(requestDto);
         Department updated = departmentRepository.save(department);
@@ -98,7 +122,7 @@ public class CompanyService {
 
     @Transactional
     public CompanyEnrollResponseDto enrollCompany(CompanyEnrollRequestDto requestDto) {
-        
+
         Company company = Company.builder()
                 .name(requestDto.getCompanyName())
                 .ownerName(requestDto.getOwnerName())
@@ -106,9 +130,9 @@ public class CompanyService {
                 .email(requestDto.getEmail())
                 .phone(requestDto.getPhoneNumber())
                 .build();
-        
+
         companyRepository.save(company);
-        
+
         return CompanyEnrollResponseDto.builder()
                 .msg("회사 등록 완료")
                 .build();
@@ -117,21 +141,10 @@ public class CompanyService {
     @Transactional
     public CompanyUpdateResponseDto updateCompany(Long companyId, CompanyUpdateRequestDto requestDto) {
 
-        Company company = companyRepository.findById(companyId).orElseThrow(()->new IllegalArgumentException("해당 companyId 가 없습니다"));
+        Company company = companyRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("해당 companyId 가 없습니다"));
         company.patch(requestDto);
         Company updated = companyRepository.save(company);
         return CompanyUpdateResponseDto.toDto(updated);
     }
-
-
-//    @Transactional
-//    public List<CompanyInquiryUserResponseDto> getUserByCompany(Long companyId, Long affiliationId, Long departmentId) {
-//        List<Affiliation> affiliations = affiliationRepository.findByCompanyIdAndAffiliationIdAndDepartmentId(companyId, affiliationId, departmentId);
-//
-//        return affiliations.stream()
-//                .map(affiliation -> new CompanyInquiryUserResponseDto(affiliations))
-//                .collect(Collectors.toList());
-//    }
-
 
 }
