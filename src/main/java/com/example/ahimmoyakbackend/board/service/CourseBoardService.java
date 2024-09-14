@@ -41,17 +41,16 @@ public class CourseBoardService {
     }
 
     public BoardUpdateResponseDto update(BoardUpdateRequestDto requestDTO, Long courseId, Long courseBoardId) {
-        CourseBoard updated = courseBoardRepository.findById(courseBoardId).orElseThrow(()->new IllegalArgumentException("없는 게시물 입니다."));
+        Course course = courseRepository.findById(courseId).orElseThrow(()->new IllegalArgumentException("없는 코스 입니다."));
+        CourseBoard updated = courseBoardRepository.findByCourseAndId(course,courseBoardId);
         updated.patch(requestDTO, courseBoardId,courseId);
         courseBoardRepository.save(updated);
         return BoardUpdateResponseDto.builder().msg("게시물 수정 완료").build();
     }
 
     public BoardDeleteResponseDto delete(Long courseId, Long courseBoardId) {
-        CourseBoard deleted = courseBoardRepository.findById(courseBoardId).orElseThrow(()->new IllegalArgumentException("없는 게시물 입니다."));
-        if(deleted.getCourse().getId() != courseId){
-            throw new IllegalArgumentException("잘못된 게시물 입니다.");
-        }
+        Course course = courseRepository.findById(courseId).orElseThrow(()->new IllegalArgumentException("없는 코스 입니다."));
+        CourseBoard deleted = courseBoardRepository.findByCourseAndId(course,courseBoardId);
         courseBoardRepository.delete(deleted);
         return BoardDeleteResponseDto.builder().msg("게시물 삭제 완료").build();
     }
