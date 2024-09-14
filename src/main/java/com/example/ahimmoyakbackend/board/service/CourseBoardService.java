@@ -34,4 +34,11 @@ public class CourseBoardService {
         courseBoardRepository.save(board);
         return BoardCreateResponseDTO.builder().msg("게시물 작성 완료").build();
     }
+
+    public BoardUpdateResponseDTO update(BoardUpdateRequestDTO requestDTO, Long courseId, Long courseBoardId) {
+        CourseBoard updated = courseBoardRepository.findById(courseBoardId).orElseThrow(()->new IllegalArgumentException("없는 게시물 입니다."));
+        updated.patch(requestDTO, courseBoardId,courseId);
+        courseBoardRepository.save(updated);
+        return BoardUpdateResponseDTO.builder().msg("게시물 수정 완료").build();
+    }
 }
