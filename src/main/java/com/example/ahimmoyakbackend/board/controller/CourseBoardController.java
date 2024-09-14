@@ -1,10 +1,7 @@
 package com.example.ahimmoyakbackend.board.controller;
 
 import com.example.ahimmoyakbackend.board.common.BoardType;
-import com.example.ahimmoyakbackend.board.dto.BoardCreateRequestDTO;
-import com.example.ahimmoyakbackend.board.dto.BoardCreateResponseDTO;
-import com.example.ahimmoyakbackend.board.dto.BoardUpdateRequestDTO;
-import com.example.ahimmoyakbackend.board.dto.BoardUpdateResponseDTO;
+import com.example.ahimmoyakbackend.board.dto.*;
 import com.example.ahimmoyakbackend.board.service.CourseBoardService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +28,11 @@ public class CourseBoardController {
     public ResponseEntity<BoardUpdateResponseDTO> updateBoard(@AuthenticationPrincipal @RequestBody BoardUpdateRequestDTO requestDTO, @PathVariable Long courseId, @RequestParam Long courseBoardId){
         BoardUpdateResponseDTO updated = courseBoardService.update(requestDTO,courseId,courseBoardId);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
+    }
+
+    @DeleteMapping("/v1/board/{courseId}")
+    public ResponseEntity<BoardDeleteResponseDTO> deleteBoard(@PathVariable Long courseId, @RequestParam Long courseBoardId){
+        BoardDeleteResponseDTO deleted = courseBoardService.delete(courseId,courseBoardId);
+        return ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
 }
