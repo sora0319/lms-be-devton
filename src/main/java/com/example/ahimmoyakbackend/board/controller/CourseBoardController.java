@@ -1,7 +1,6 @@
 package com.example.ahimmoyakbackend.board.controller;
 
 import com.example.ahimmoyakbackend.board.common.BoardType;
-import com.example.ahimmoyakbackend.board.common.CourseBoardType;
 import com.example.ahimmoyakbackend.board.dto.BoardCreateRequestDTO;
 import com.example.ahimmoyakbackend.board.dto.BoardCreateResponseDTO;
 import com.example.ahimmoyakbackend.board.dto.BoardUpdateRequestDTO;
@@ -28,4 +27,9 @@ public class CourseBoardController {
         return ResponseEntity.status(HttpStatus.OK).body(created);
     }
 
+    @PatchMapping("/v1/board/{courseId}")
+    public ResponseEntity<BoardUpdateResponseDTO> updateBoard(@AuthenticationPrincipal @RequestBody BoardUpdateRequestDTO requestDTO, @PathVariable Long courseId, @RequestParam Long courseBoardId){
+        BoardUpdateResponseDTO updated = courseBoardService.update(requestDTO,courseId,courseBoardId);
+        return ResponseEntity.status(HttpStatus.OK).body(updated);
+    }
 }
