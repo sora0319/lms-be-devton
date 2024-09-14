@@ -64,7 +64,12 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).body(departmentList);
     }
 
-
+    // Company
+    @RequestMapping(value = "v1/supervisor", method = RequestMethod.POST)
+    public ResponseEntity<CompanyEnrollResponseDto> enrollCompany(@RequestBody CompanyEnrollRequestDto requestDto) {
+        CompanyEnrollResponseDto enrolled = companyService.enrollCompany(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(enrolled);
+    }
 }
 
 
