@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardUpdateResponseDTO {
+public class BoardCreateResponseDto {
 
     private String msg;
+
 }

@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardDeleteResponseDTO {
+public class BoardUpdateResponseDto {
 
     private String msg;
-
 }
