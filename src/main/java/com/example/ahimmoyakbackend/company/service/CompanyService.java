@@ -96,6 +96,23 @@ public class CompanyService {
                 .collect(Collectors.toList());
     }
 
+    public CompanyEnrollResponseDto enrollCompany(CompanyEnrollRequestDto requestDto) {
+        
+        Company company = Company.builder()
+                .name(requestDto.getCompanyName())
+                .ownerName(requestDto.getOwnerName())
+                .businessNumber(requestDto.getBusinessNumber())
+                .email(requestDto.getEmail())
+                .phone(requestDto.getPhoneNumber())
+                .build();
+        
+        companyRepository.save(company);
+        
+        return CompanyEnrollResponseDto.builder()
+                .msg("회사 등록 완료")
+                .build();
+    }
+
 //    @Transactional
 //    public List<CompanyInquiryUserResponseDto> getUserByCompany(Long companyId, Long affiliationId, Long departmentId) {
 //        List<Affiliation> affiliations = affiliationRepository.findByCompanyIdAndAffiliationIdAndDepartmentId(companyId, affiliationId, departmentId);
