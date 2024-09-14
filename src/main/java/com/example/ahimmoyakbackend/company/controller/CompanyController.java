@@ -71,6 +71,14 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).body(enrolled);
     }
 
+    @RequestMapping(value = "v1/supervisor", method = RequestMethod.PATCH)
+    public ResponseEntity<CompanyUpdateResponseDto> updateCompany(@RequestParam("companyId") Long companyId,
+                                                                  @RequestBody CompanyUpdateRequestDto requestDto
+
+    ) {
+        CompanyUpdateResponseDto updated = companyService.updateCompany(companyId, requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(updated);
+    }
 }
 
 
