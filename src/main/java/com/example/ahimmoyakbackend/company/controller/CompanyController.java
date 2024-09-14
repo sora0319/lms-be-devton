@@ -17,6 +17,7 @@ public class CompanyController {
 
     private final CompanyService companyService;
 
+    // User
 //    @RequestMapping("/v1/supervisor", method = RequestMethod.POST)
 //    public ResponseEntity<List<CompanyInquiryUserResponseDto>> getUserList(@RequestParam("companyId") Long companyId,
 //                                                                           @RequestParam("affiliationId") Long affiliationId,
@@ -26,12 +27,13 @@ public class CompanyController {
 //        return ResponseEntity.status(HttpStatus.OK).body(userList);
 //    }
 
+    // Department
     @RequestMapping(value = "/v1/supervisor", method = RequestMethod.POST)
     public ResponseEntity<CompanyEnrollDepartmentResponseDto> enrollDepartment(@RequestParam("companyId") Long companyId,
                                                                                @RequestParam("affiliationId") Long affiliationId,
                                                                                @RequestBody CompanyEnrollDepartmentRequestDto requestDto
     ) {
-        CompanyEnrollDepartmentResponseDto enrolled = companyService.enroll(companyId, affiliationId, requestDto);
+        CompanyEnrollDepartmentResponseDto enrolled = companyService.enrollDepartment(companyId, affiliationId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(enrolled);
     }
 
@@ -57,10 +59,11 @@ public class CompanyController {
 
     @RequestMapping(value = "v1/supervisor", method = RequestMethod.GET)
     public ResponseEntity<List<CompanyInquiryDepartmentResponseDto>> inquiryDepartment(@RequestParam("companyId") Long companyId
-    ){
+    ) {
         List<CompanyInquiryDepartmentResponseDto> departmentList = companyService.getDepartmentCompanyId(companyId);
         return ResponseEntity.status(HttpStatus.OK).body(departmentList);
     }
+
 
 }
 
