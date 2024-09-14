@@ -22,7 +22,7 @@ public class CompanyService {
     private final CompanyRepository companyRepository;
 
     @Transactional
-    public CompanyEnrollDepartmentResponseDto enroll(Long affiliationId, Long companyId, CompanyEnrollDepartmentRequestDto requestDto) {
+    public CompanyEnrollDepartmentResponseDto enrollDepartment(Long affiliationId, Long companyId, CompanyEnrollDepartmentRequestDto requestDto) {
 
         Affiliation affiliation = affiliationRepository.findById(affiliationId).orElseThrow(() -> new IllegalArgumentException("해당 affiliationId 가 없습니다."));
         Company company = companyRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("해당 companyId 가 없습니다."));
