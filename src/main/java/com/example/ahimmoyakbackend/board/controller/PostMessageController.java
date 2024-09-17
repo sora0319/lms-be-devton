@@ -30,7 +30,7 @@ public class PostMessageController {
     public ResponseEntity<ReceivePostMessageResponseDto> sendInquiry(@AuthenticationPrincipal User user,
                                                                         @RequestParam(defaultValue = "1") int page,
                                                                         @RequestParam(defaultValue = "10") int size){
-        ReceivePostMessageResponseDto receiveMessage = postMessageService.receiveInquriy(user,page,size);
+        ReceivePostMessageResponseDto receiveMessage = postMessageService.sendInquriy(user,page,size);
         return ResponseEntity.status(HttpStatus.OK).body(receiveMessage);
     }
 }

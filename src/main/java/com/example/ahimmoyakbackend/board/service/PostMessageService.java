@@ -36,7 +36,7 @@ public class PostMessageService {
         return SendPostMessageResponseDto.builder().msg("메세지 전송").build();
     }
 
-    public ReceivePostMessageResponseDto receiveInquriy(User user, int page, int size) {
+    public ReceivePostMessageResponseDto sendInquriy(User user, int page, int size) {
         User target = userRepository.findById(user.getId()).orElseThrow(()->new IllegalArgumentException("잘못된 유저입니다."));
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<PostMessage> messagesPages = postMessageRepository
