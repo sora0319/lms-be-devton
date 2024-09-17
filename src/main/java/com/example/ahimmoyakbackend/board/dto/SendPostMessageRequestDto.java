@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostMessageRequestDto {
+public class SendPostMessageRequestDto {
 
     private String title;
 
