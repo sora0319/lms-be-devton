@@ -1,6 +1,7 @@
 package com.example.ahimmoyakbackend.board.entity;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
+import com.example.ahimmoyakbackend.board.dto.PostMessageRequestDto;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,11 @@ public class PostMessage extends Timestamped {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "sender_id")
+    private User sender;
+
+    @ManyToOne
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
 
 }
