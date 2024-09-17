@@ -5,12 +5,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Builder
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostMessageResponseDto {
 
-    private String msg;
+    private String title;
+
+    private String content;
+
+    private String senderName;
+
+    private String receiverName;
+
+    private Boolean isRead;
 
 }
