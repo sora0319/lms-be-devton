@@ -27,7 +27,8 @@ public class PostMessageController {
     }
 
     @GetMapping("/v1/message/send")
-    public ResponseEntity<ReceivePostMessageResponseDto> receiveInquiry(@AuthenticationPrincipal User user, @RequestParam(defaultValue = "1") int page,
+    public ResponseEntity<ReceivePostMessageResponseDto> sendInquiry(@AuthenticationPrincipal User user,
+                                                                        @RequestParam(defaultValue = "1") int page,
                                                                         @RequestParam(defaultValue = "10") int size){
         ReceivePostMessageResponseDto receiveMessage = postMessageService.receiveInquriy(user,page,size);
         return ResponseEntity.status(HttpStatus.OK).body(receiveMessage);
