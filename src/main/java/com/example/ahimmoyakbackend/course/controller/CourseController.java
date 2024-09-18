@@ -20,13 +20,10 @@ public class CourseController {
     private final CourseService courseService;
 
     @GetMapping("/course/{courseId}")
-    public ResponseEntity<CourseDetailsInquiryResponseDTO> InquiryCourse(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long courseId, @RequestParam Long contentId) {
+    public ResponseEntity<CourseDetailsInquiryResponseDTO> InquiryCourse(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long courseId) {
 
-        Long userId = userDetails.getUser().getId();
 
-        ContentsHistoryState state = courseService.getStateByUserAndCourse(userId, contentId);
-
-        CourseDetailsInquiryResponseDTO responseDTO = courseService.Inquiry(userId, courseId, state);
+        CourseDetailsInquiryResponseDTO responseDTO = courseService.Inquiry(userDetails.getUser(), courseId);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
 
