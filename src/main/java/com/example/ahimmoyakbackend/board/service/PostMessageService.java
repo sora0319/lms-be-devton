@@ -31,12 +31,13 @@ public class PostMessageService {
                 .content(messageRequestDto.getContent())
                 .sender(sender)
                 .receiver(receiver)
+                .isRead(false)
                 .build();
         postMessageRepository.save(message);
         return SendPostMessageResponseDto.builder().msg("메세지 전송").build();
     }
 
-    public ReceivePostMessageResponseDto sendInquriy(User user, int page, int size) {
+    public PostMessageInquiryResponseDto sendInquriy(User user, int page, int size) {
         User target = userRepository.findById(user.getId()).orElseThrow(()->new IllegalArgumentException("잘못된 유저입니다."));
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<PostMessage> messagesPages = postMessageRepository
@@ -47,9 +48,27 @@ public class PostMessageService {
                 .map(PostMessage::toDto)
                 .collect(Collectors.toList());
 
-        return new ReceivePostMessageResponseDto(
+        return new PostMessageInquiryResponseDto(
                 messages,
                 new Pagination(page,size)
         );
     }
+
+    public PostMessageInquiryResponseDto receiveInquriy(User user, int page, int size) {
+        User target = userRepository.findById(user.getId()).orElseThrow(()->new IllegalArgumentException("잘못된 유저입니다."));
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<PostMessage> messagesPages = postMessageRepository
+                .findPostMessagesByReceiverOrderByCreatedAtDesc(target, pageable);
+
+        List<PostMessageResponseDto> messages = messagesPages
+                .stream()
+                .map(PostMessage::toDto)
+                .collect(Collectors.toList());
+
+        return new PostMessageInquiryResponseDto(
+                messages,
+                new Pagination(page,size)
+        );
+    }
+
 }
