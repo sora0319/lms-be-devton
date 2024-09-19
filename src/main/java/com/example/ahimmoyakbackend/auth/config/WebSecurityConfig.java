@@ -1,7 +1,7 @@
 package com.example.ahimmoyakbackend.auth.config;
 
 import com.example.ahimmoyakbackend.auth.jwt.JwtAuthFilter;
-import com.example.ahimmoyakbackend.auth.jwt.JwtUtil;
+import com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
 
     @Bean
@@ -63,7 +63,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().permitAll())
                 .addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class)
-                .addFilterAfter(new JwtAuthFilter(jwtUtil, userRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new JwtAuthFilter(jwtTokenProvider, userRepository), UsernamePasswordAuthenticationFilter.class)
         ;
 
         return http.build();

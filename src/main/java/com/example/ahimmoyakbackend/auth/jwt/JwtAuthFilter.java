@@ -18,25 +18,25 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.example.ahimmoyakbackend.auth.jwt.JwtUtil.ACCESS_TOKEN;
-import static com.example.ahimmoyakbackend.auth.jwt.JwtUtil.REFRESH_TOKEN;
+import static com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider.ACCESS_TOKEN;
+import static com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider.REFRESH_TOKEN;
 
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = jwtUtil.getTokenFromHeader(request, ACCESS_TOKEN);
-        String refreshToken = jwtUtil.getTokenFromHeader(request, REFRESH_TOKEN);
+        String accessToken = jwtTokenProvider.getTokenFromHeader(request, ACCESS_TOKEN);
+        String refreshToken = jwtTokenProvider.getTokenFromHeader(request, REFRESH_TOKEN);
 
         if (accessToken != null) {
-            if (jwtUtil.validateToken(accessToken)) {
-                setAuthentication(jwtUtil.getUserInfoFromToken(accessToken));
+            if (jwtTokenProvider.validateToken(accessToken)) {
+                setAuthentication(jwtTokenProvider.getUserInfoFromToken(accessToken));
                 filterChain.doFilter(request, response);
             } else {
                 jwtExceptionHandler(response, "Invalid Access Token.", HttpStatus.UNAUTHORIZED.value());
@@ -44,12 +44,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (refreshToken != null && jwtUtil.refreshTokenValid(refreshToken)) {
-            String username = jwtUtil.getUserInfoFromToken(refreshToken);
+        if (refreshToken != null && jwtTokenProvider.refreshTokenValid(refreshToken)) {
+            String username = jwtTokenProvider.getUserInfoFromToken(refreshToken);
             User user = userRepository.findUserByUsername(username)
                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
-            String newAccessToken = jwtUtil.createToken(username, user.getEmail(), ACCESS_TOKEN);
-            jwtUtil.setHeaderAccessToken(response, newAccessToken);
+            String newAccessToken = jwtTokenProvider.createToken(username, user.getEmail(), ACCESS_TOKEN);
+            jwtTokenProvider.setHeaderAccessToken(response, newAccessToken);
             setAuthentication(username);
             filterChain.doFilter(request, response);
             return;
@@ -65,7 +65,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     public void setAuthentication(String username) {
-        Authentication authentication = jwtUtil.createAuthentication(username);
+        Authentication authentication = jwtTokenProvider.createAuthentication(username);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 

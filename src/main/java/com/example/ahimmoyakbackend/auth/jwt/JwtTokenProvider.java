@@ -29,7 +29,7 @@ import java.util.Optional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtUtil {
+public class JwtTokenProvider {
     private final UserDetailsServiceImpl userDetailsService;
     private final RefreshTokenRepository refreshTokenRepository;
     public static final String ACCESS_TOKEN = "Authorization";

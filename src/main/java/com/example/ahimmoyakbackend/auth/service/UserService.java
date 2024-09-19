@@ -5,7 +5,7 @@ import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
 import com.example.ahimmoyakbackend.auth.dto.*;
 import com.example.ahimmoyakbackend.auth.entity.RefreshToken;
 import com.example.ahimmoyakbackend.auth.entity.User;
-import com.example.ahimmoyakbackend.auth.jwt.JwtUtil;
+import com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider;
 import com.example.ahimmoyakbackend.auth.repository.RefreshTokenRepository;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,7 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public UserJoinResponseDTO create(UserJoinRequestDTO requestDto) {
@@ -54,7 +54,7 @@ public class UserService {
             throw new IllegalArgumentException("잘못된 요청입니다.");
         }
 
-        JwsDTO jwsDto = jwtUtil.createAllToken(findUser.getUsername(), findUser.getEmail());
+        JwsDTO jwsDto = jwtTokenProvider.createAllToken(findUser.getUsername(), findUser.getEmail());
 
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(requestDTO.getUsername());
 
@@ -69,8 +69,8 @@ public class UserService {
             refreshTokenRepository.save(newToken);
         }
 
-        response.addHeader(JwtUtil.ACCESS_TOKEN, jwsDto.getAccessToken());
-        response.addHeader(JwtUtil.REFRESH_TOKEN, jwsDto.getRefreshToken());
+        response.addHeader(JwtTokenProvider.ACCESS_TOKEN, jwsDto.getAccessToken());
+        response.addHeader(JwtTokenProvider.REFRESH_TOKEN, jwsDto.getRefreshToken());
 
         return UserLoginResponseDTO.builder()
                 .msg("로그인 완료")
