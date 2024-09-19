@@ -43,4 +43,9 @@ public class PostMessageController {
         return ResponseEntity.status(HttpStatus.OK).body(receiveMessage);
     }
 
+    @GetMapping("/v1/message")
+    public ResponseEntity<PostMessageResponseDto> showMessage(@RequestParam Long messageId){
+        PostMessageResponseDto message = postMessageService.showMessage(messageId);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
 }
