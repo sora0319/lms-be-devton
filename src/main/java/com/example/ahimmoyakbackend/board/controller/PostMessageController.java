@@ -1,9 +1,10 @@
 package com.example.ahimmoyakbackend.board.controller;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
+import com.example.ahimmoyakbackend.board.dto.PostMessageResponseDto;
 import com.example.ahimmoyakbackend.board.dto.SendPostMessageRequestDto;
 import com.example.ahimmoyakbackend.board.dto.SendPostMessageResponseDto;
-import com.example.ahimmoyakbackend.board.dto.ReceivePostMessageResponseDto;
+import com.example.ahimmoyakbackend.board.dto.PostMessageInquiryResponseDto;
 import com.example.ahimmoyakbackend.board.service.PostMessageService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +28,19 @@ public class PostMessageController {
     }
 
     @GetMapping("/v1/message/send")
-    public ResponseEntity<ReceivePostMessageResponseDto> sendInquiry(@AuthenticationPrincipal User user,
-                                                                        @RequestParam(defaultValue = "1") int page,
-                                                                        @RequestParam(defaultValue = "10") int size){
-        ReceivePostMessageResponseDto receiveMessage = postMessageService.sendInquriy(user,page,size);
+    public ResponseEntity<PostMessageInquiryResponseDto> sendInquiry(@AuthenticationPrincipal User user,
+                                                                     @RequestParam(defaultValue = "1") int page,
+                                                                     @RequestParam(defaultValue = "10") int size){
+        PostMessageInquiryResponseDto receiveMessage = postMessageService.sendInquriy(user,page,size);
         return ResponseEntity.status(HttpStatus.OK).body(receiveMessage);
     }
+
+    @GetMapping("/v1/message/receive")
+    public ResponseEntity<PostMessageInquiryResponseDto> receiveInquiry(@AuthenticationPrincipal User user,
+                                                                        @RequestParam(defaultValue = "1") int page,
+                                                                        @RequestParam(defaultValue = "10") int size){
+        PostMessageInquiryResponseDto receiveMessage = postMessageService.receiveInquriy(user,page,size);
+        return ResponseEntity.status(HttpStatus.OK).body(receiveMessage);
+    }
+
 }
