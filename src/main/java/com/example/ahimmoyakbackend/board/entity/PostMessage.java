@@ -48,4 +48,15 @@ public class PostMessage extends Timestamped {
                 .isRead(postMessage.getIsRead())
                 .build();
     }
+
+    public static PostMessage readMessage(PostMessage target) {
+        return PostMessage.builder()
+                .title(target.getTitle())
+                .content(target.getContent())
+                .sender(target.getSender())
+                .receiver(target.getReceiver())
+                .isRead(true).build();
+    }
+
+
 }
