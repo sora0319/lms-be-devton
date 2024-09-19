@@ -1,10 +1,7 @@
 package com.example.ahimmoyakbackend.board.controller;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
-import com.example.ahimmoyakbackend.board.dto.PostMessageResponseDto;
-import com.example.ahimmoyakbackend.board.dto.SendPostMessageRequestDto;
-import com.example.ahimmoyakbackend.board.dto.SendPostMessageResponseDto;
-import com.example.ahimmoyakbackend.board.dto.PostMessageInquiryResponseDto;
+import com.example.ahimmoyakbackend.board.dto.*;
 import com.example.ahimmoyakbackend.board.service.PostMessageService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +43,12 @@ public class PostMessageController {
     @GetMapping("/v1/message")
     public ResponseEntity<PostMessageResponseDto> showMessage(@RequestParam Long messageId){
         PostMessageResponseDto message = postMessageService.showMessage(messageId);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+
+    @DeleteMapping("/v1/message")
+    public ResponseEntity<DeletePostMessageResponseDto> deleteMessage(@RequestParam Long messageId){
+        DeletePostMessageResponseDto message = postMessageService.deleteMessage(messageId);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 }
