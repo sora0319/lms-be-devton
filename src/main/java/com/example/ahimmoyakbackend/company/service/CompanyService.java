@@ -31,7 +31,7 @@ public class CompanyService {
 
         Company company = companyRepository.findById(companyId).orElseThrow(()-> new IllegalArgumentException("해당 companyId 가 없습니다"));
 
-        List<Affiliation> affiliations = affiliationRepository.findAllByCompanyIdAndDepartmentId(companyId, departmentId);
+        List<Affiliation> affiliations = affiliationRepository.findAllByDepartment_CompanyIdAndDepartmentId(companyId, departmentId);
 
 
         return affiliations.stream()
