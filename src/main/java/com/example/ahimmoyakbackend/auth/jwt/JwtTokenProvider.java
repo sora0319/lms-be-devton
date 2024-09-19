@@ -93,7 +93,7 @@ public class JwtTokenProvider {
         return false;
     }
 
-    public Authentication createAuthentication(String username) {
+    public Authentication getAuthentication(String username) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, null, null);
     }
