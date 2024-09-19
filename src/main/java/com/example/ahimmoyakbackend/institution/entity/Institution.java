@@ -35,5 +35,5 @@ public class Institution extends Timestamped {
     private String email;
 
     @Column(length = 20)
-    private String phoneNumber;
+    private String phone;
 }
