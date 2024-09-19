@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReceivePostMessageResponseDto {
+public class PostMessageInquiryResponseDto {
 
     private List<PostMessageResponseDto> messages;
 
