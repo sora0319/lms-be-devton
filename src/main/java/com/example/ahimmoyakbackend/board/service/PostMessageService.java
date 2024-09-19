@@ -71,4 +71,10 @@ public class PostMessageService {
         );
     }
 
+    public PostMessageResponseDto showMessage(Long messageId) {
+        PostMessage target = postMessageRepository.findById(messageId).orElseThrow(()->new IllegalArgumentException("잘못된 쪽지 입니다."));
+        target = PostMessage.readMessage(target);
+        postMessageRepository.save(target);
+        return PostMessage.toDto(target);
+    }
 }
