@@ -1,9 +1,13 @@
 package com.example.ahimmoyakbackend.course.service;
 
+import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.course.common.CourseCategory;
 import com.example.ahimmoyakbackend.course.dto.CourseListResponseDTO;
+import com.example.ahimmoyakbackend.course.dto.TutorGetCourseListResponseDTO;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.course.repository.CourseRepository;
+import com.example.ahimmoyakbackend.institution.entity.Tutor;
+import com.example.ahimmoyakbackend.institution.repository.TutorRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,12 +25,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseService {
     private final CourseRepository courseRepository;
+    private final TutorRepository tutorRepository;
 
-    // 유저 마이페이지에서 코스리스트 조회
+    // 마이페이지 코스리스트 조회
     @Transactional
-    public Page<CourseListResponseDTO> findUserCourseList(Long userId, Long institutionId, int page, @Positive int size) {
+    public Page<CourseListResponseDTO> findUserCourseList(User user, Long institutionId, int page, @Positive int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        if (userId == null || institutionId == null) {
+        if (user.getId() == null || institutionId == null) {
             return null;
         }
         Page<Course> coursePage = courseRepository.findAll(pageable);
@@ -39,12 +45,11 @@ public class CourseService {
         return new PageImpl<>(list, coursePage.getPageable(), coursePage.getTotalElements());
     }
 
-    // 메인페이지에서 코스리스트 조회
+    // 수강신청할 코스 탐색
     public Page<CourseListResponseDTO> getCourseByCategory(int categoryNum, int currentPage, int size) {
         Pageable pageable = PageRequest.of(currentPage - 1, size);
         CourseCategory category = Arrays.stream(CourseCategory.values())
                 .filter(course -> course.getCategoryNumber() == categoryNum).findFirst().get();
-
         if (CourseCategory.ALL.getCategoryNumber() == categoryNum) {
             return courseRepository.findAll(pageable)
                     .map(course -> CourseListResponseDTO.builder()
@@ -55,7 +60,6 @@ public class CourseService {
                             .build());
         }
         Page<Course> page = courseRepository.findAllByCategory(category, pageable);
-
         List<CourseListResponseDTO> list = page.stream()
                 .map(course -> CourseListResponseDTO.builder()
                         .id(course.getId())
@@ -65,5 +69,22 @@ public class CourseService {
                         .build())
                 .toList();
         return new PageImpl<>(list, page.getPageable(), page.getTotalElements());
+    }
+
+    // 강사 대시보드리스트 조회
+    public List<TutorGetCourseListResponseDTO> getCurriculumList(String username) {
+        Tutor tutor = tutorRepository.findByUserName(username)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        List<Course> courseList = courseRepository.findByTutor(tutor);
+        List<TutorGetCourseListResponseDTO> tutorGetCourseList = new ArrayList<>();
+        for (Course course : courseList) {
+            tutorGetCourseList.add(TutorGetCourseListResponseDTO.builder()
+                    .id(course.getId())
+                    .title(course.getTitle())
+                    .image(course.getImage())
+                    .category(course.getCategory())
+                    .build());
+        }
+        return tutorGetCourseList;
     }
 }
