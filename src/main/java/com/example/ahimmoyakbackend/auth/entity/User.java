@@ -35,6 +35,9 @@ public class User extends Timestamped {
     @Column(nullable = false)
     private LocalDate birth;
 
+    @Column(length = 20)
+    private String phone;
+
     @Column(nullable = false, length = 100)
     private String email;
 
