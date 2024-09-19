@@ -30,6 +30,9 @@ public class Contents extends Timestamped {
     @Column(nullable = false)
     private Integer idx;
 
+    @Column(nullable = false) // 파일 경로
+    private String contentsPath;
+
     @ManyToOne
     @JoinColumn(name = "curriculum_id")
     private Curriculum curriculum;
