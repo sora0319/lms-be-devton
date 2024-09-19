@@ -77,4 +77,10 @@ public class PostMessageService {
         postMessageRepository.save(target);
         return PostMessage.toDto(target);
     }
+
+    public DeletePostMessageResponseDto deleteMessage(Long messageId) {
+        PostMessage target = postMessageRepository.findById(messageId).orElseThrow(()->new IllegalArgumentException("잘못된 쪽지 입니다."));
+        postMessageRepository.delete(target);
+        return DeletePostMessageResponseDto.builder().msg("메세지 삭제").build();
+    }
 }
