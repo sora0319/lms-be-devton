@@ -39,7 +39,7 @@ public class CourseService {
                 .map(course -> CourseListResponseDTO.builder()
                         .id(course.getId())
                         .title(course.getTitle())
-                        .image(course.getImage())
+                        .image(course.getImage().getPath())
                         .build())
                 .toList();
         return new PageImpl<>(list, coursePage.getPageable(), coursePage.getTotalElements());
@@ -55,7 +55,7 @@ public class CourseService {
                     .map(course -> CourseListResponseDTO.builder()
                             .id(course.getId())
                             .title(course.getTitle())
-                            .image(course.getImage())
+                            .image(course.getImage().getPath())
                             .tutor(course.getTutor())
                             .build());
         }
@@ -64,7 +64,7 @@ public class CourseService {
                 .map(course -> CourseListResponseDTO.builder()
                         .id(course.getId())
                         .title(course.getTitle())
-                        .image(course.getImage())
+                        .image(course.getImage().getPath())
                         .tutor(course.getTutor())
                         .build())
                 .toList();
@@ -81,7 +81,7 @@ public class CourseService {
             tutorGetCourseList.add(TutorGetCourseListResponseDTO.builder()
                     .id(course.getId())
                     .title(course.getTitle())
-                    .image(course.getImage())
+                    .image(course.getImage().getPath())
                     .category(course.getCategory())
                     .build());
         }
