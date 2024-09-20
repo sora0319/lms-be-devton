@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class CourseListResponseDTO {
     private Long id;
     private String title;
-    private Image image;
+    private String image;
     private CourseCategory category;
     private Tutor tutor;
 }
