@@ -56,4 +56,26 @@ public class CurriculumService {
                 .msg("삭제되었습니다.")
                 .build();
     }
+
+    // 커리큘럼 수정
+    @Transactional
+    public CurriculumResponseDTO modifyCurriculum(User user, Long courseId, Long curriculumId, CurriculumCreateRequestDTO requestDTO) {
+        courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 코스입니다."));
+
+        if (user.getRole() != UserRole.MANAGE) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+
+        Curriculum curriculum = curriculumRepository.findById(curriculumId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 커리큘럼입니다."));
+
+        curriculum.patch(requestDTO.getTitle(), requestDTO.getIdx());
+
+        curriculumRepository.save(curriculum);
+
+        return CurriculumResponseDTO.builder()
+                .msg("수정되었습니다.")
+                .build();
+    }
 }

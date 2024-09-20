@@ -46,4 +46,16 @@ public class CurriculumController {
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
+
+    // 커리큘럼 수정
+    @PatchMapping
+    public ResponseEntity<CurriculumResponseDTO> updateCurriculum(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestParam Long courseId,
+            @RequestParam Long curriculumId,
+            @RequestParam CurriculumCreateRequestDTO requestDto
+    ) {
+        CurriculumResponseDTO responseDTO = curriculumService.modifyCurriculum(userDetails.getUser(), courseId, curriculumId, requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+    }
 }
