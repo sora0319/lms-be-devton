@@ -29,4 +29,9 @@ public class Curriculum extends Timestamped {
     @JoinColumn(name = "course_id")
     private Course course;
 
+    public void patch(String title, Integer idx) {
+        this.title = title;
+        this.idx = idx;
+
+    }
 }
