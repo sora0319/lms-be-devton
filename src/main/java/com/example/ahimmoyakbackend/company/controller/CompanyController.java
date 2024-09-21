@@ -19,7 +19,7 @@ public class CompanyController {
     private final CompanyService companyService;
 
     // User
-    @RequestMapping(value = "/v1/supervisor", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/supervisor/", method = RequestMethod.GET)
     public ResponseEntity<List<CompanyInquiryUserResponseDto>> getUserList(@RequestParam("companyId") Long companyId,
                                                                            @RequestParam("departmentId") Long departmentId
     ) {
@@ -28,7 +28,7 @@ public class CompanyController {
     }
 
     // Department
-    @RequestMapping(value = "/v1/supervisor", method = RequestMethod.POST)
+    @RequestMapping(value = "/v1/supervisor/department", method = RequestMethod.POST)
     public ResponseEntity<CompanyEnrollDepartmentResponseDto> enrollDepartment(@RequestParam("companyId") Long companyId,
                                                                                @RequestParam("affiliationId") Long affiliationId,
                                                                                @RequestBody CompanyEnrollDepartmentRequestDto requestDto
@@ -37,7 +37,7 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).body(enrolled);
     }
 
-    @RequestMapping(value = "/v1/supervisor", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/v1/supervisor/department", method = RequestMethod.DELETE)
     public ResponseEntity<CompanyDeleteDepartmentResponseDto> deleteDepartment(@RequestParam("companyId") Long companyId,
                                                                                @RequestParam("affiliationId") Long affiliationId,
                                                                                @RequestParam("departmentId") Long departmentId
@@ -47,7 +47,7 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
 
-    @RequestMapping(value = "v1/supervisor", method = RequestMethod.PATCH)
+    @RequestMapping(value = "v1/supervisor/department", method = RequestMethod.PATCH)
     public ResponseEntity<CompanyUpdateDepartmentResponseDto> updateDepartment(@RequestParam("companyId") Long companyId,
                                                                                @RequestParam("departmentId") Long departmentId,
                                                                                @RequestBody CompanyUpdateDepartmentRequestDto requestDto
@@ -57,7 +57,7 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 
-    @RequestMapping(value = "v1/supervisor", method = RequestMethod.GET)
+    @RequestMapping(value = "v1/supervisor/department", method = RequestMethod.GET)
     public ResponseEntity<List<CompanyInquiryDepartmentResponseDto>> inquiryDepartment(@RequestParam("companyId") Long companyId
     ) {
         List<CompanyInquiryDepartmentResponseDto> departmentList = companyService.getDepartmentCompanyId(companyId);
@@ -65,13 +65,13 @@ public class CompanyController {
     }
 
     // Company
-    @RequestMapping(value = "v1/supervisor", method = RequestMethod.POST)
+    @RequestMapping(value = "v1/supervisor/company", method = RequestMethod.POST)
     public ResponseEntity<CompanyEnrollResponseDto> enrollCompany(@RequestBody CompanyEnrollRequestDto requestDto) {
         CompanyEnrollResponseDto enrolled = companyService.enrollCompany(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(enrolled);
     }
 
-    @RequestMapping(value = "v1/supervisor", method = RequestMethod.PATCH)
+    @RequestMapping(value = "v1/supervisor/company", method = RequestMethod.PATCH)
     public ResponseEntity<CompanyUpdateResponseDto> updateCompany(@RequestParam("companyId") Long companyId,
                                                                   @RequestBody CompanyUpdateRequestDto requestDto
 
