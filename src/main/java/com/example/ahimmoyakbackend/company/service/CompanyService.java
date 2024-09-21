@@ -31,14 +31,19 @@ public class CompanyService {
 
         Company company = companyRepository.findById(companyId).orElseThrow(()-> new IllegalArgumentException("해당 companyId 가 없습니다"));
 
-        List<Affiliation> affiliations = affiliationRepository.findAllByDepartment_CompanyIdAndDepartmentId(companyId, departmentId);
+        List<Affiliation> affiliations;
 
+        if (departmentId != null) {
+            affiliations = affiliationRepository.findAllByDepartment_CompanyIdAndDepartmentId(companyId, departmentId);
+        } else {
+            affiliations = affiliationRepository.findAllByDepartment_Company_Id(companyId);
+        }
 
         return affiliations.stream()
                 .map( affiliation -> {
                     User user = affiliation.getUser();
-                    Address address = addressRepository.findByUserId(user.getId()).orElse(null);
-                    return CompanyInquiryUserResponseDto.toDto(affiliation, address);
+                    List<Address> addresses = addressRepository.findByUser_Id(user.getId());
+                    return CompanyInquiryUserResponseDto.toDto(affiliation, addresses);
                 }
                 )
                 .collect(Collectors.toList());

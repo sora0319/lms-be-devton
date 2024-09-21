@@ -10,7 +10,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -29,13 +32,15 @@ public class CompanyInquiryUserResponseDto {
     private final Gender gender;
     private final Boolean approval;
     private final String departmentName;
-    private final String base;
-    private final String detail;
-    private final Integer postal;
+    private final List<CompanyGetAddressDto> addresses;
 
-    public static CompanyInquiryUserResponseDto toDto(Affiliation affiliation, Address address) {
+    public static CompanyInquiryUserResponseDto toDto(Affiliation affiliation, List<Address> addresses) {
         User user = affiliation.getUser();
         Department department = affiliation.getDepartment();
+
+        List<CompanyGetAddressDto> addressDtos = addresses.stream()
+                .map(CompanyGetAddressDto::fromEntity)
+                .collect(Collectors.toList());
 
         return CompanyInquiryUserResponseDto.builder()
                 .id(user.getId())
@@ -45,11 +50,10 @@ public class CompanyInquiryUserResponseDto {
                 .phone(user.getPhone())
                 .email(user.getEmail())
                 .gender(user.getGender())
-                .approval(affiliation.getApproval())
+                .approval(affiliation != null ? affiliation.getApproval() : null)
                 .departmentName(department.getName())
-                .base(address != null ? address.getBase() : null)
-                .detail(address != null ? address.getDetail() : null)
-                .postal(address != null ? address.getPostal() : null)
+                .addresses(addressDtos != null ? addressDtos : null)
                 .build();
     }
+
 }
