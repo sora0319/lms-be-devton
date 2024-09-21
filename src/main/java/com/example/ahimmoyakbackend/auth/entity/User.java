@@ -2,6 +2,7 @@ package com.example.ahimmoyakbackend.auth.entity;
 
 import com.example.ahimmoyakbackend.auth.common.Gender;
 import com.example.ahimmoyakbackend.company.entity.Affiliation;
+import com.example.ahimmoyakbackend.global.entity.Address;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import com.example.ahimmoyakbackend.auth.common.UserRole;
 import jakarta.persistence.*;
@@ -11,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -53,7 +56,9 @@ public class User extends Timestamped {
     private UserRole role;
 
     @OneToOne
-    @JoinColumn(name = "affiliation_id")
+    @JoinColumn(name = "affiliation_id", nullable = true)
     private Affiliation affiliation;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> address = new ArrayList<>();
 }
