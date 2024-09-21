@@ -21,7 +21,7 @@ public class Company extends Timestamped {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String companyName;
 
     @Column
     private String ownerName;
@@ -39,8 +39,8 @@ public class Company extends Timestamped {
     private String phone;
 
     public void patch(CompanyUpdateRequestDto requestDto) {
-        if (this.name != requestDto.getName())
-            this.name = requestDto.getName();
+        if (this.companyName != requestDto.getName())
+            this.companyName = requestDto.getName();
         if (this.ownerName != requestDto.getOwnerName())
             this.ownerName = requestDto.getOwnerName();
         if (this.businessNumber != requestDto.getBusinessNumber())

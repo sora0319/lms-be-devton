@@ -19,7 +19,7 @@ public class CompanyUpdateResponseDto {
 
     public static CompanyUpdateResponseDto toDto(Company company) {
         return CompanyUpdateResponseDto.builder()
-                .name(company.getName())
+                .name(company.getCompanyName())
                 .ownerName(company.getOwnerName())
                 .businessNumber(company.getBusinessNumber())
                 .email(company.getEmail())
