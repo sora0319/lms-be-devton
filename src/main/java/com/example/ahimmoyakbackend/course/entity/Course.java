@@ -1,10 +1,12 @@
 package com.example.ahimmoyakbackend.course.entity;
 
 import com.example.ahimmoyakbackend.course.common.CourseCategory;
+import com.example.ahimmoyakbackend.course.common.TrainingCourseType;
+import com.example.ahimmoyakbackend.course.dto.CourseModifyRequestDTO;
 import com.example.ahimmoyakbackend.global.entity.Image;
+import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import com.example.ahimmoyakbackend.institution.entity.Institution;
 import com.example.ahimmoyakbackend.institution.entity.Tutor;
-import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +38,10 @@ public class Course extends Timestamped {
     @Enumerated(EnumType.STRING)
     private CourseCategory category;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TrainingCourseType type;
+
     @ManyToOne
     @JoinColumn(name = "institution_id")
     private Institution institution;
@@ -52,4 +58,23 @@ public class Course extends Timestamped {
     @JoinColumn(name = "Curriculum_id")
     private List<Curriculum> curriculumList;
 
+    public void patch(CourseModifyRequestDTO requestDTO, Long courseId) {
+
+        if (this.id != courseId) {
+            throw new IllegalArgumentException("잘못된 게시물 입니다.");
+        }
+        if (requestDTO.getTitle() != null) {
+            this.title = requestDTO.getTitle();
+        }
+        if (requestDTO.getIntroduction() != null) {
+            this.category = requestDTO.getCategory();
+        }
+        if (requestDTO.getImage() != null) {
+            this.image = requestDTO.getImage();
+        }
+        if (requestDTO.getType() != null) {
+            this.type = requestDTO.getType();
+        }
+
+    }
 }
