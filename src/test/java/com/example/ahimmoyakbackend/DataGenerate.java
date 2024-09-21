@@ -35,6 +35,7 @@ import com.example.ahimmoyakbackend.live.repository.LiveStreamingRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 
@@ -50,6 +51,8 @@ public class DataGenerate {
 
     @Autowired
     private CurriculumRepository curriculumRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * 이 메소드를 실행하면 데이터가 생성 됩니다.
@@ -156,7 +159,7 @@ public class DataGenerate {
         User user1 = User.builder()
                 .username("1111")
                 .name("일일일")
-                .password("1111")
+                .password(passwordEncoder.encode("1111"))
                 .birth(LocalDate.of(1993, 3, 3))
                 .phone("01011111111")
                 .email("one@ahim.com")
@@ -207,7 +210,7 @@ public class DataGenerate {
         User user2 = User.builder()
                 .username("2222")
                 .name("둘둘둘")
-                .password("2222")
+                .password(passwordEncoder.encode("2222"))
                 .birth(LocalDate.of(1993, 3, 3))
                 .phone("01022222222")
                 .email("two@moyak.com")
@@ -225,7 +228,7 @@ public class DataGenerate {
         User user3 = User.builder()
                 .username("3333")
                 .name("삼삼삼")
-                .password("3333")
+                .password(passwordEncoder.encode("3333"))
                 .birth(LocalDate.of(1993, 3, 3))
                 .phone("01033333333")
                 .email("three@tutor.com")
@@ -343,7 +346,7 @@ public class DataGenerate {
         User student1 = User.builder()
                 .username("st1")
                 .name("학생1")
-                .password("1111")
+                .password(passwordEncoder.encode("1111"))
                 .birth(LocalDate.of(1993, 3, 3))
                 .phone("01010101010")
                 .email("st1@ahim.com")
@@ -354,7 +357,7 @@ public class DataGenerate {
         User student2 = User.builder()
                 .username("st2")
                 .name("학생2")
-                .password("2222")
+                .password(passwordEncoder.encode("2222"))
                 .birth(LocalDate.of(1993, 3, 3))
                 .phone("01020202020")
                 .email("st2@ahim.com")
