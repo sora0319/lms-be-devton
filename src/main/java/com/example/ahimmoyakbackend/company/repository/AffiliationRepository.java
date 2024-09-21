@@ -12,4 +12,6 @@ import java.util.List;
 public interface AffiliationRepository extends JpaRepository<Affiliation, Long> {
     List<Affiliation> findAllByDepartment_CompanyIdAndDepartmentId(Long department_company_id, Long department_id);
 
+    List<Affiliation> findAllByDepartment_Company_Id(Long company_id);
+
 }
