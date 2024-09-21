@@ -45,7 +45,7 @@ public class PostMessageService {
         User target = userRepository.findById(id).orElseThrow();
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<PostMessage> messagesPages = postMessageRepository
-                .findPostMessagesByUserOrderByCreatedAtDesc(target, pageable);
+                .findByUserAndIsDeleteFalseOrderByCreatedAtDesc(target, pageable);
         List<PostMessageResponseDto> messages = messagesPages
                 .stream()
                 .map(PostMessage::toDto)
@@ -61,7 +61,7 @@ public class PostMessageService {
         User target = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("잘못된 유저입니다."));
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<PostMessage> messagesPages = postMessageRepository
-                .findByTargetUsers_User(target, pageable);
+                .findByTargetUsers_UserAndTargetUsers_IsDeleteFalseOrderByCreatedAtDesc(target, pageable);
 
         List<ReceivePostMessageResponseDto> messages = messagesPages
                 .stream()
@@ -91,9 +91,20 @@ public class PostMessageService {
         return PostMessage.toReadDto(target,targetUser);
     }
 
-    public DeletePostMessageResponseDto deleteMessage(Long messageId) {
-        PostMessage target = postMessageRepository.findById(messageId).orElseThrow(() -> new IllegalArgumentException("잘못된 쪽지 입니다."));
-        postMessageRepository.delete(target);
+    public DeletePostMessageResponseDto deleteSendMessage(Long id,User user,Long messageId) {
+        User user1 = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("잘못된 유저입니다."));
+        PostMessage target = postMessageRepository.findByIdAndUser(messageId,user1);
+        target.delete();
+        postMessageRepository.save(target);
+        return DeletePostMessageResponseDto.builder().msg("메세지 삭제").build();
+    }
+
+    public DeletePostMessageResponseDto deleteReceiveMessage(Long id,User user,Long messageId) {
+        User user1 = userRepository.findById(id).orElseThrow(()->new IllegalArgumentException("잘못된 유저입니다."));
+        PostMessage message = postMessageRepository.findById(messageId).orElseThrow(()->new IllegalArgumentException("잘못된 쪽지 입니다."));
+        TargetUser target = targetUserRepository.findTargetUserByPostMessageAndUser(message,user1);
+        target.delete();
+        targetUserRepository.save(target);
         return DeletePostMessageResponseDto.builder().msg("메세지 삭제").build();
     }
 }

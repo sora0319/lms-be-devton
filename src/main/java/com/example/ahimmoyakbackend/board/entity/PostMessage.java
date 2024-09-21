@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,10 @@ public class PostMessage extends Timestamped {
 
     @Column
     private String content;
+
+    @Column
+    @ColumnDefault("false")
+    private Boolean isDelete = false;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -78,5 +83,7 @@ public class PostMessage extends Timestamped {
                 .build();
     }
 
-
+    public void delete() {
+        this.isDelete=true;
+    }
 }

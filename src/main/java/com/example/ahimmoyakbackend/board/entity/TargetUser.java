@@ -22,6 +22,10 @@ public class TargetUser extends Timestamped {
     @ColumnDefault("false")
     private Boolean isRead;
 
+    @Column
+    @ColumnDefault("false")
+    private Boolean isDelete = false;
+
     @ManyToOne
     @JoinColumn(name = "post_message_id")
     private PostMessage postMessage;
@@ -34,4 +38,7 @@ public class TargetUser extends Timestamped {
         this.isRead=true;
     }
 
+    public void delete() {
+        this.isDelete = true;
+    }
 }

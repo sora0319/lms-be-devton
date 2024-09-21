@@ -52,9 +52,15 @@ public class PostMessageController {
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
-    @DeleteMapping("/v1/message")
-    public ResponseEntity<DeletePostMessageResponseDto> deleteMessage(@RequestParam Long messageId){
-        DeletePostMessageResponseDto message = postMessageService.deleteMessage(messageId);
+    @DeleteMapping("/v1/message/send/{id}")
+    public ResponseEntity<DeletePostMessageResponseDto> deleteSendMessage(@PathVariable Long id, @AuthenticationPrincipal User user,@RequestParam Long messageId){
+        DeletePostMessageResponseDto message = postMessageService.deleteSendMessage(id,user,messageId);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+
+    @DeleteMapping("/v1/message/receive/{id}")
+    public ResponseEntity<DeletePostMessageResponseDto> deleteReceiveMessage(@PathVariable Long id, @AuthenticationPrincipal User user,@RequestParam Long messageId){
+        DeletePostMessageResponseDto message = postMessageService.deleteReceiveMessage(id,user,messageId);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 }
