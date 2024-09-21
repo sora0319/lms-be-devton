@@ -1,6 +1,8 @@
 package com.example.ahimmoyakbackend.company.service;
 
+import com.example.ahimmoyakbackend.auth.common.UserRole;
 import com.example.ahimmoyakbackend.auth.entity.User;
+import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import com.example.ahimmoyakbackend.company.dto.*;
 import com.example.ahimmoyakbackend.company.entity.Affiliation;
 import com.example.ahimmoyakbackend.company.entity.Company;
@@ -25,11 +27,12 @@ public class CompanyService {
     private final DepartmentRepository departmentRepository;
     private final CompanyRepository companyRepository;
     private final AddressRepository addressRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public List<CompanyInquiryUserResponseDto> getUserbyCompany(Long companyId, Long departmentId) {
 
-        Company company = companyRepository.findById(companyId).orElseThrow(()-> new IllegalArgumentException("해당 companyId 가 없습니다"));
+        Company company = companyRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("해당 companyId 가 없습니다"));
 
         List<Affiliation> affiliations;
 
@@ -126,7 +129,12 @@ public class CompanyService {
     }
 
     @Transactional
-    public CompanyEnrollResponseDto enrollCompany(CompanyEnrollRequestDto requestDto) {
+    public CompanyEnrollResponseDto enrollCompany(Long userId, CompanyEnrollRequestDto requestDto) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 userId 가 없습니다"));
+
+        if (!user.getRole().equals(UserRole.MANAGER)) {
+            throw new IllegalArgumentException("회사 등록 권한이 없습니다");
+        }
 
         Company company = Company.builder()
                 .companyName(requestDto.getCompanyName())
