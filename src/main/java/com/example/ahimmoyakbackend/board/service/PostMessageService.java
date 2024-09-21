@@ -4,7 +4,9 @@ import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import com.example.ahimmoyakbackend.board.dto.*;
 import com.example.ahimmoyakbackend.board.entity.PostMessage;
+import com.example.ahimmoyakbackend.board.entity.TargetUser;
 import com.example.ahimmoyakbackend.board.repository.PostMessageRepository;
+import com.example.ahimmoyakbackend.board.repository.TargetUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,66 +22,77 @@ public class PostMessageService {
 
     private final UserRepository userRepository;
     private final PostMessageRepository postMessageRepository;
+    private final TargetUserRepository targetUserRepository;
 
     public SendPostMessageResponseDto write(SendPostMessageRequestDto messageRequestDto) {
-
-        User sender = userRepository.findUserByUsername(messageRequestDto.getSenderName()).orElseThrow( () -> new IllegalArgumentException("잘못된 유저입니다."));
-        User receiver = userRepository.findUserByUsername(messageRequestDto.getReceiverName()).orElseThrow( () -> new IllegalArgumentException("잘못된 유저입니다."));
-
+        User user1 = userRepository.findUserByUsername(messageRequestDto.getSender()).orElseThrow(()->new IllegalArgumentException("잘못된 유저"));
         PostMessage message = PostMessage.builder()
                 .title(messageRequestDto.getTitle())
                 .content(messageRequestDto.getContent())
-                .sender(sender)
-                .receiver(receiver)
-                .isRead(false)
+                .user(user1)
                 .build();
         postMessageRepository.save(message);
+
+        List<User> names = messageRequestDto.getTargetNames().stream().map(targetUserDto->userRepository.findUserByUsername(targetUserDto.getTargetUsername()).orElseThrow(()->new IllegalArgumentException("잘못된 사용자입니다."))).toList();
+        for(User user : names){
+            targetUserRepository.save(TargetUser.builder().postMessage(message).isRead(false).user(user).build());
+        }
         return SendPostMessageResponseDto.builder().msg("메세지 전송").build();
     }
 
-    public PostMessageInquiryResponseDto sendInquriy(User user, int page, int size) {
-        User target = userRepository.findById(user.getId()).orElseThrow(()->new IllegalArgumentException("잘못된 유저입니다."));
+    public PostMessageInquiryResponseDto sendInquriy(Long id, User user, int page, int size) {
+//        User target = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("잘못된 유저입니다."));
+        User target = userRepository.findById(id).orElseThrow();
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<PostMessage> messagesPages = postMessageRepository
-                .findPostMessagesBySenderOrderByCreatedAtDesc(target, pageable);
-
+                .findPostMessagesByUserOrderByCreatedAtDesc(target, pageable);
         List<PostMessageResponseDto> messages = messagesPages
                 .stream()
                 .map(PostMessage::toDto)
                 .collect(Collectors.toList());
-
         return new PostMessageInquiryResponseDto(
                 messages,
-                new Pagination(page,size)
+                new Pagination(page, size)
         );
     }
 
-    public PostMessageInquiryResponseDto receiveInquriy(User user, int page, int size) {
-        User target = userRepository.findById(user.getId()).orElseThrow(()->new IllegalArgumentException("잘못된 유저입니다."));
+    public ReceivePostMessageInquiryResponseDto receiveInquriy(Long id, User user, int page, int size) {
+//        User target = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("잘못된 유저입니다."));
+        User target = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("잘못된 유저입니다."));
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<PostMessage> messagesPages = postMessageRepository
-                .findPostMessagesByReceiverOrderByCreatedAtDesc(target, pageable);
+                .findByTargetUsers_User(target, pageable);
 
-        List<PostMessageResponseDto> messages = messagesPages
+        List<ReceivePostMessageResponseDto> messages = messagesPages
                 .stream()
-                .map(PostMessage::toDto)
+                .map(PostMessage::toReceiveMessageDto)
                 .collect(Collectors.toList());
 
-        return new PostMessageInquiryResponseDto(
+        return new ReceivePostMessageInquiryResponseDto(
                 messages,
-                new Pagination(page,size)
+                new Pagination(page, size)
         );
     }
 
-    public PostMessageResponseDto showMessage(Long messageId) {
-        PostMessage target = postMessageRepository.findById(messageId).orElseThrow(()->new IllegalArgumentException("잘못된 쪽지 입니다."));
-        target = PostMessage.readMessage(target);
-        postMessageRepository.save(target);
+    public PostMessageResponseDto showSendMessage(Long id, User user, Long messageId) {
+//        User user1 = userRepository.findById(user.getId()).orElseThrow(()-> new IllegalArgumentException("잘못된 유저입니다."));
+        User user1 = userRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("잘못된 유저입니다."));
+        PostMessage target = postMessageRepository.findByIdAndUser(messageId,user1);
         return PostMessage.toDto(target);
     }
 
+    public PostMessageShowResponseDto showReceiveMessage(Long id, User user, Long messageId) {
+//        User user1 = userRepository.findById(user.getId()).orElseThrow(()-> new IllegalArgumentException("잘못된 유저입니다."));
+        User user1 = userRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("잘못된 유저입니다."));
+        PostMessage target = postMessageRepository.findById(messageId).orElseThrow(() -> new IllegalArgumentException("잘못된 쪽지 입니다."));
+        TargetUser targetUser = targetUserRepository.findTargetUserByPostMessageAndUser(target,user1);
+        targetUser.read();
+        targetUserRepository.save(targetUser);
+        return PostMessage.toReadDto(target,targetUser);
+    }
+
     public DeletePostMessageResponseDto deleteMessage(Long messageId) {
-        PostMessage target = postMessageRepository.findById(messageId).orElseThrow(()->new IllegalArgumentException("잘못된 쪽지 입니다."));
+        PostMessage target = postMessageRepository.findById(messageId).orElseThrow(() -> new IllegalArgumentException("잘못된 쪽지 입니다."));
         postMessageRepository.delete(target);
         return DeletePostMessageResponseDto.builder().msg("메세지 삭제").build();
     }

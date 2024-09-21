@@ -25,24 +25,30 @@ public class PostMessageController {
     }
 
     @GetMapping("/v1/message/send")
-    public ResponseEntity<PostMessageInquiryResponseDto> sendInquiry(@AuthenticationPrincipal User user,
+    public ResponseEntity<PostMessageInquiryResponseDto> sendInquiry(@RequestParam Long id,@AuthenticationPrincipal User user,
                                                                      @RequestParam(defaultValue = "1") int page,
                                                                      @RequestParam(defaultValue = "10") int size){
-        PostMessageInquiryResponseDto receiveMessage = postMessageService.sendInquriy(user,page,size);
+        PostMessageInquiryResponseDto receiveMessage = postMessageService.sendInquriy(id,user,page,size);
         return ResponseEntity.status(HttpStatus.OK).body(receiveMessage);
     }
 
     @GetMapping("/v1/message/receive")
-    public ResponseEntity<PostMessageInquiryResponseDto> receiveInquiry(@AuthenticationPrincipal User user,
+    public ResponseEntity<ReceivePostMessageInquiryResponseDto> receiveInquiry(@RequestParam Long id,@AuthenticationPrincipal User user,
                                                                         @RequestParam(defaultValue = "1") int page,
                                                                         @RequestParam(defaultValue = "10") int size){
-        PostMessageInquiryResponseDto receiveMessage = postMessageService.receiveInquriy(user,page,size);
+        ReceivePostMessageInquiryResponseDto receiveMessage = postMessageService.receiveInquriy(id,user,page,size);
         return ResponseEntity.status(HttpStatus.OK).body(receiveMessage);
     }
 
-    @GetMapping("/v1/message")
-    public ResponseEntity<PostMessageResponseDto> showMessage(@RequestParam Long messageId){
-        PostMessageResponseDto message = postMessageService.showMessage(messageId);
+    @GetMapping("/v1/message/send/{id}/{message}")
+    public ResponseEntity<PostMessageResponseDto> showSendMessage(@PathVariable("id") Long id,@AuthenticationPrincipal User user,@PathVariable("message")Long messageId){
+        PostMessageResponseDto message = postMessageService.showSendMessage(id,user,messageId);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+
+    @GetMapping("/v1/message/receive/{id}/{message}")
+    public ResponseEntity<PostMessageShowResponseDto> showReceiveMessage(@PathVariable("id")  Long id,@AuthenticationPrincipal User user,@PathVariable("message") Long messageId){
+        PostMessageShowResponseDto message = postMessageService.showReceiveMessage(id,user,messageId);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 

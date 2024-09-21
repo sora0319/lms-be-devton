@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,8 +15,8 @@ public class SendPostMessageRequestDto {
 
     private String content;
 
-    private String senderName;
+    private String sender;
 
-    private String receiverName;
+    private List<TargetUserRequestDto> targetNames;
 
 }

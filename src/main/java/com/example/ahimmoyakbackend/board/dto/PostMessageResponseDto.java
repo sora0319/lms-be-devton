@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -17,7 +20,9 @@ public class PostMessageResponseDto {
 
     private String senderName;
 
-    private String receiverName;
+    private LocalDateTime createAt;
+
+    private List<String> receiverName;
 
     private Boolean isRead;
 

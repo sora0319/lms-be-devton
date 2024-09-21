@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostMessageRepository extends JpaRepository<PostMessage, Long> {
-    Page<PostMessage> findPostMessagesBySenderOrderByCreatedAtDesc(User user, Pageable pageable);
-    Page<PostMessage> findPostMessagesByReceiverOrderByCreatedAtDesc(User user, Pageable pageable);
+    Page<PostMessage> findPostMessagesByUserOrderByCreatedAtDesc(User user, Pageable pageable);
+    Page<PostMessage> findByTargetUsers_User(User user, Pageable pageable);
+    PostMessage findByIdAndUser(Long id, User user);
 }
