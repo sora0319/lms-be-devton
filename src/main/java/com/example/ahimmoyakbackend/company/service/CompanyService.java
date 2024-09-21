@@ -27,7 +27,7 @@ public class CompanyService {
     private final AddressRepository addressRepository;
 
     @Transactional
-    public List<CompanyInquiryUserResponseDto> getUserbyCompany(Long companyId, Long affiliationId, Long departmentId) {
+    public List<CompanyInquiryUserResponseDto> getUserbyCompany(Long companyId, Long departmentId) {
 
         Company company = companyRepository.findById(companyId).orElseThrow(()-> new IllegalArgumentException("해당 companyId 가 없습니다"));
 
@@ -124,7 +124,7 @@ public class CompanyService {
     public CompanyEnrollResponseDto enrollCompany(CompanyEnrollRequestDto requestDto) {
 
         Company company = Company.builder()
-                .name(requestDto.getCompanyName())
+                .companyName(requestDto.getCompanyName())
                 .ownerName(requestDto.getOwnerName())
                 .businessNumber(requestDto.getBusinessNumber())
                 .email(requestDto.getEmail())

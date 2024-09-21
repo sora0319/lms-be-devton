@@ -21,10 +21,9 @@ public class CompanyController {
     // User
     @RequestMapping(value = "/v1/supervisor", method = RequestMethod.GET)
     public ResponseEntity<List<CompanyInquiryUserResponseDto>> getUserList(@RequestParam("companyId") Long companyId,
-                                                                           @RequestParam("affiliationId") Long affiliationId,
                                                                            @RequestParam("departmentId") Long departmentId
     ) {
-        List<CompanyInquiryUserResponseDto> userList = companyService.getUserbyCompany(companyId, affiliationId, departmentId);
+        List<CompanyInquiryUserResponseDto> userList = companyService.getUserbyCompany(companyId, departmentId);
         return ResponseEntity.status(HttpStatus.OK).body(userList);
     }
 
