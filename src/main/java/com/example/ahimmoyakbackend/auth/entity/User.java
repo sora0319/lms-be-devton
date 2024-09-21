@@ -1,6 +1,7 @@
 package com.example.ahimmoyakbackend.auth.entity;
 
 import com.example.ahimmoyakbackend.auth.common.Gender;
+import com.example.ahimmoyakbackend.company.entity.Affiliation;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import com.example.ahimmoyakbackend.auth.common.UserRole;
 import jakarta.persistence.*;
@@ -50,5 +51,9 @@ public class User extends Timestamped {
     @Enumerated(EnumType.STRING)
 //    @ColumnDefault("NORMAL")
     private UserRole role;
+
+    @OneToOne
+    @JoinColumn(name = "affiliation_id")
+    private Affiliation affiliation;
 
 }
