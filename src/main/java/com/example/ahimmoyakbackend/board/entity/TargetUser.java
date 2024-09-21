@@ -19,6 +19,9 @@ public class TargetUser extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private Boolean isRead;
+
     @ManyToOne
     @JoinColumn(name = "post_message_id")
     private PostMessage postMessage;
