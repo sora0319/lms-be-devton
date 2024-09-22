@@ -1,4 +1,4 @@
-package com.example.ahimmoyakbackend.global.repository;
+package com.example.ahimmoyakbackend.company.repository;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.company.entity.Contract;
