@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.auth.config;
 
+import com.example.ahimmoyakbackend.auth.config.handler.CustomAccessDeniedHandler;
 import com.example.ahimmoyakbackend.auth.jwt.JwtAuthFilter;
 import com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
@@ -13,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
@@ -61,7 +63,14 @@ public class WebSecurityConfig {
                 }))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll())
+                        .requestMatchers("api/v1/manager/test").hasRole("MANAGER")   // MANAGER 역할만 접근 가능
+                        .anyRequest().permitAll()               // 나머지 요청은 인증 필요
+                )
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling
+                                .accessDeniedHandler(new CustomAccessDeniedHandler())
+//                                .authenticationEntryPoint(customAuthenticationEntryPoint)
+                )
                 .addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class)
                 .addFilterAfter(new JwtAuthFilter(jwtTokenProvider, userRepository), UsernamePasswordAuthenticationFilter.class)
         ;
