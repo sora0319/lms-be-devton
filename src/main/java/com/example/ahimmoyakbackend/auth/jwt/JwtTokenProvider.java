@@ -1,6 +1,6 @@
 package com.example.ahimmoyakbackend.auth.jwt;
 
-import com.example.ahimmoyakbackend.auth.config.security.UserDetailsServiceImpl;
+import com.example.ahimmoyakbackend.auth.config.security.impl.UserDetailsServiceImpl;
 import com.example.ahimmoyakbackend.auth.dto.JwsDTO;
 import com.example.ahimmoyakbackend.auth.entity.RefreshToken;
 import com.example.ahimmoyakbackend.auth.repository.RefreshTokenRepository;
@@ -95,7 +95,7 @@ public class JwtTokenProvider {
 
     public Authentication getAuthentication(String username) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        return new UsernamePasswordAuthenticationToken(userDetails, null, null);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     public String getUserInfoFromToken(String jws) {
