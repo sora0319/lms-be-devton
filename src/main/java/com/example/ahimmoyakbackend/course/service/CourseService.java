@@ -1,9 +1,8 @@
 package com.example.ahimmoyakbackend.course.service;
 
-import ch.qos.logback.core.rolling.DefaultTimeBasedFileNamingAndTriggeringPolicy;
-import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.company.entity.Contract;
+import com.example.ahimmoyakbackend.company.repository.ContractRepository;
 import com.example.ahimmoyakbackend.contents.dto.ContentsInquiryResponseDTO;
 import com.example.ahimmoyakbackend.course.common.ContentsHistoryState;
 import com.example.ahimmoyakbackend.course.dto.*;
@@ -14,9 +13,6 @@ import com.example.ahimmoyakbackend.course.entity.Curriculum;
 import com.example.ahimmoyakbackend.course.repository.ContentsHistoryRepository;
 import com.example.ahimmoyakbackend.course.repository.CourseRepository;
 import com.example.ahimmoyakbackend.curriculum.dto.CurriculumInquiryResponseDTO;
-import com.example.ahimmoyakbackend.global.entity.Image;
-import com.example.ahimmoyakbackend.global.repository.ContractRepository;
-import com.example.ahimmoyakbackend.global.repository.ImageRepository;
 import com.example.ahimmoyakbackend.institution.entity.Tutor;
 import com.example.ahimmoyakbackend.institution.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
