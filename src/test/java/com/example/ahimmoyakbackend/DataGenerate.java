@@ -335,6 +335,7 @@ public class DataGenerate {
         Contract contract1 = Contract.builder()
                 .company(company1)
                 .course(course1)
+                .supervisor(affiliation1)
                 .beginDate(LocalDate.of(2024, 9, 10))
                 .endDate(LocalDate.of(2024, 12, 31))
                 .state(ContractState.ACCEPTED)

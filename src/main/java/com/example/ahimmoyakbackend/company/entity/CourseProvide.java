@@ -40,6 +40,10 @@ public class CourseProvide extends Timestamped {
     private Long deposit;
 
     @ManyToOne
+    @JoinColumn(name = "supervisor_id")
+    private Affiliation supervisor;
+
+    @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
 
