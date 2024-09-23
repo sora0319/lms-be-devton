@@ -1,7 +1,7 @@
 package com.example.ahimmoyakbackend.course.entity;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
-import com.example.ahimmoyakbackend.company.entity.Contract;
+import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import com.example.ahimmoyakbackend.course.common.EnrollmentState;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
@@ -37,7 +37,7 @@ public class Enrollment extends Timestamped {
 
     @ManyToOne
     @JoinColumn(name = "contract_id")
-    private Contract contract;
+    private CourseProvide courseProvide;
 
 }
 
