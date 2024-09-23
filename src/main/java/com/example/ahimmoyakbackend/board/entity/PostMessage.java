@@ -60,7 +60,7 @@ public class PostMessage extends Timestamped {
                 .senderName(postMessage.getUser().getUsername())
                 .receiverName(postMessage.getTargetUsers().stream().map(user->user.getUser().getUsername()).collect(Collectors.toList()))
                 .isRead(readMessage)
-                .createAt(postMessage.getCreatedAt())
+                .createdAt(postMessage.getCreatedAt())
                 .build();
     }
     public static PostMessageShowResponseDto toReadDto(PostMessage postMessage, TargetUser targetUser) {
@@ -69,7 +69,7 @@ public class PostMessage extends Timestamped {
                 .content(postMessage.getContent())
                 .senderName(postMessage.getUser().getUsername())
                 .receiverName(targetUser.getUser().getUsername())
-                .createAt(postMessage.getCreatedAt())
+                .createdAt(postMessage.getCreatedAt())
                 .isRead(targetUser.getIsRead())
                 .build();
     }
@@ -79,7 +79,7 @@ public class PostMessage extends Timestamped {
                 .title(postMessage.getTitle())
                 .content(postMessage.getContent())
                 .senderName(postMessage.getUser().getUsername())
-                .createAt(postMessage.getCreatedAt())
+                .createdAt(postMessage.getCreatedAt())
                 .build();
     }
 

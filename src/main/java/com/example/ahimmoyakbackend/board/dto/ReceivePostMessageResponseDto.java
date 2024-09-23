@@ -20,7 +20,7 @@ public class ReceivePostMessageResponseDto {
 
     private String senderName;
 
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     private Boolean isRead;
 

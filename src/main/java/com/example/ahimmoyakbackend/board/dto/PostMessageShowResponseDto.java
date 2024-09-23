@@ -19,7 +19,7 @@ public class PostMessageShowResponseDto {
 
     private String senderName;
 
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     private String receiverName;
 

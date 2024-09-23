@@ -20,7 +20,7 @@ public class PostMessageResponseDto {
 
     private String senderName;
 
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     private List<String> receiverName;
 
