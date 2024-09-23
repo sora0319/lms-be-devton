@@ -8,7 +8,7 @@ import com.example.ahimmoyakbackend.board.repository.*;
 import com.example.ahimmoyakbackend.company.common.ContractState;
 import com.example.ahimmoyakbackend.company.entity.Affiliation;
 import com.example.ahimmoyakbackend.company.entity.Company;
-import com.example.ahimmoyakbackend.company.entity.Contract;
+import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import com.example.ahimmoyakbackend.company.entity.Department;
 import com.example.ahimmoyakbackend.company.repository.AffiliationRepository;
 import com.example.ahimmoyakbackend.company.repository.CompanyRepository;
@@ -331,16 +331,17 @@ public class DataGenerate {
         contentsMaterialRepository.save(contentsMaterial2);
 
         // 회사 - 코스 간 Contract 생성
-        Contract contract1 = Contract.builder()
+        CourseProvide courseProvide1 = CourseProvide.builder()
                 .company(company1)
+                .institution(institution1)
                 .course(course1)
                 .beginDate(LocalDate.of(2024, 9, 10))
                 .endDate(LocalDate.of(2024, 12, 31))
                 .state(ContractState.ACCEPTED)
-                .attendeeAmount(10)
+                .attendeeCount(10)
                 .deposit(1000000L)
                 .build();
-        contractRepository.save(contract1);
+        contractRepository.save(courseProvide1);
 
         // 수강할 User 들 생성
         User student1 = User.builder()
@@ -385,14 +386,14 @@ public class DataGenerate {
         // Contract 와 수강생들 매핑하는 Enrollment 생성
         Enrollment enrollment1 = Enrollment.builder()
                 .user(student1)
-                .contract(contract1)
+                .courseProvide(courseProvide1)
                 .state(EnrollmentState.ONPROGRESS)
                 .certificateDate(null)
                 .build();
         enrollmentRepository.save(enrollment1);
         Enrollment enrollment2 = Enrollment.builder()
                 .user(student2)
-                .contract(contract1)
+                .courseProvide(courseProvide1)
                 .state(EnrollmentState.ONPROGRESS)
                 .certificateDate(null)
                 .build();
