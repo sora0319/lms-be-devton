@@ -1,6 +1,6 @@
 package com.example.ahimmoyakbackend.company.entity;
 
-import com.example.ahimmoyakbackend.company.common.ContractState;
+import com.example.ahimmoyakbackend.company.common.CourseProvideState;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "contract")
-public class Contract extends Timestamped {
+public class CourseProvide extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,7 +31,7 @@ public class Contract extends Timestamped {
     @Column(nullable = false)
 //    @ColumnDefault("PENDING")
     @Enumerated(value = EnumType.STRING)
-    private ContractState state;
+    private CourseProvideState state;
 
     @Column(nullable = false)
     private Integer attendeeAmount;
