@@ -5,14 +5,14 @@ import com.example.ahimmoyakbackend.auth.common.UserRole;
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import com.example.ahimmoyakbackend.board.repository.*;
-import com.example.ahimmoyakbackend.company.common.ContractState;
+import com.example.ahimmoyakbackend.company.common.CourseProvideState;
 import com.example.ahimmoyakbackend.company.entity.Affiliation;
 import com.example.ahimmoyakbackend.company.entity.Company;
-import com.example.ahimmoyakbackend.company.entity.Contract;
+import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import com.example.ahimmoyakbackend.company.entity.Department;
 import com.example.ahimmoyakbackend.company.repository.AffiliationRepository;
 import com.example.ahimmoyakbackend.company.repository.CompanyRepository;
-import com.example.ahimmoyakbackend.company.repository.ContractRepository;
+import com.example.ahimmoyakbackend.company.repository.CourseProvideRepository;
 import com.example.ahimmoyakbackend.company.repository.DepartmentRepository;
 import com.example.ahimmoyakbackend.course.common.ContentType;
 import com.example.ahimmoyakbackend.course.common.CourseCategory;
@@ -100,7 +100,8 @@ public class DataGenerate {
     @Autowired TargetUserRepository targetUserRepository;
     @Autowired AffiliationRepository affiliationRepository;
     @Autowired CompanyRepository companyRepository;
-    @Autowired ContractRepository contractRepository;
+    @Autowired
+    CourseProvideRepository courseProvideRepository;
     @Autowired DepartmentRepository departmentRepository;
     @Autowired AttendHistoryRepository attendHistoryRepository;
     @Autowired ContentsHistoryRepository contentsHistoryRepository;
@@ -331,16 +332,16 @@ public class DataGenerate {
         contentsMaterialRepository.save(contentsMaterial2);
 
         // 회사 - 코스 간 Contract 생성
-        Contract contract1 = Contract.builder()
+        CourseProvide courseProvide1 = CourseProvide.builder()
                 .company(company1)
                 .course(course1)
                 .beginDate(LocalDate.of(2024, 9, 10))
                 .endDate(LocalDate.of(2024, 12, 31))
-                .state(ContractState.ACCEPTED)
+                .state(CourseProvideState.ACCEPTED)
                 .attendeeAmount(10)
                 .deposit(1000000L)
                 .build();
-        contractRepository.save(contract1);
+        courseProvideRepository.save(courseProvide1);
 
         // 수강할 User 들 생성
         User student1 = User.builder()
@@ -385,14 +386,14 @@ public class DataGenerate {
         // Contract 와 수강생들 매핑하는 Enrollment 생성
         Enrollment enrollment1 = Enrollment.builder()
                 .user(student1)
-                .contract(contract1)
+                .courseProvide(courseProvide1)
                 .state(EnrollmentState.ONPROGRESS)
                 .certificateDate(null)
                 .build();
         enrollmentRepository.save(enrollment1);
         Enrollment enrollment2 = Enrollment.builder()
                 .user(student2)
-                .contract(contract1)
+                .courseProvide(courseProvide1)
                 .state(EnrollmentState.ONPROGRESS)
                 .certificateDate(null)
                 .build();
