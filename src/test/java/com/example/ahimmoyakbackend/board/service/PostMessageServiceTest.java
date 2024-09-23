@@ -35,5 +35,18 @@ class PostMessageServiceTest {
     void setUp() {
     }
 
+    @Test
+    @DisplayName("한명에게 쪽지를 보내서 성공하는 경우")
+    void testWriteMessageToOne_Success() {
+        //given
+        SendPostMessageRequestDto messageRequestDto = new SendPostMessageRequestDto( "쪽지를 보냅니다", "한명에게만","mirumiru", List.of(new TargetUserRequestDto("DDingKong")));
+
+        // when
+        SendPostMessageResponseDto response = postMessageService.write(messageRequestDto);
+
+        // then
+        assertNotNull(response);
+        assertEquals("메세지 전송", response.getMsg());
+    }
 
 }
