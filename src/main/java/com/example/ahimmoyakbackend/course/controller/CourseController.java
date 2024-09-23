@@ -2,6 +2,8 @@ package com.example.ahimmoyakbackend.course.controller;
 
 import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
 import com.example.ahimmoyakbackend.course.dto.CourseListResponseDTO;
+import com.example.ahimmoyakbackend.course.dto.CourseRegistrationRequestDTO;
+import com.example.ahimmoyakbackend.course.dto.CourseResponseDTO;
 import com.example.ahimmoyakbackend.course.dto.TutorGetCourseListResponseDTO;
 import com.example.ahimmoyakbackend.course.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,10 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -57,5 +56,19 @@ public class CourseController {
         String username = userDetails.getUsername();
         List<TutorGetCourseListResponseDTO> responseDto = courseService.getCurriculumList(username);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+    // 수강신청 요청
+    @PostMapping("/{courseId}/provide")
+    public ResponseEntity<CourseResponseDTO> getCourseRegistration(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long courseId,
+            @RequestBody CourseRegistrationRequestDTO requestDTO
+    ) {
+        courseService.createCourseRegistration(userDetails.getUser(), courseId, requestDTO);
+        CourseResponseDTO responseDTO = CourseResponseDTO.builder()
+                .msg("수강신청이 완료되었습니다.")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 }
