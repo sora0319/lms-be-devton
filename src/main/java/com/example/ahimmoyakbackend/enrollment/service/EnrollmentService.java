@@ -32,7 +32,7 @@ public class EnrollmentService {
         Manager manager = managerRepository.findByUser(user);
         Institution institution = manager.getInstitution();
 
-        Company company = companyRepository.findById(companyId).get();
+        Company company = companyRepository.findById(companyId).orElseThrow(()-> new IllegalArgumentException("회사가 없습니다."));
 
         List<Contract> contractList = contractRepository.findAllByCompanyAndCourse_Institution(company, institution);
 
