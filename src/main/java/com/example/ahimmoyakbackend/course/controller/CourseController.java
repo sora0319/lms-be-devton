@@ -65,10 +65,7 @@ public class CourseController {
             @PathVariable Long courseId,
             @RequestBody CourseRegistrationRequestDTO requestDTO
     ) {
-        courseService.createCourseRegistration(userDetails.getUser(), courseId, requestDTO);
-        CourseResponseDTO responseDTO = CourseResponseDTO.builder()
-                .msg("수강신청이 완료되었습니다.")
-                .build();
+        CourseResponseDTO responseDTO = courseService.createCourseFormRegistration(userDetails.getUser(), courseId, requestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 }

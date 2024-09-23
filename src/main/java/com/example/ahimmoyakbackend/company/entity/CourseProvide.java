@@ -34,7 +34,7 @@ public class CourseProvide extends Timestamped {
     private CourseProvideState state;
 
     @Column(nullable = false)
-    private Integer attendeeAmount;
+    private Integer attendeeCount;
 
     @Column
     private Long deposit;

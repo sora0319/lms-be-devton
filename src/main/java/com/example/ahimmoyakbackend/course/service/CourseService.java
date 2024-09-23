@@ -1,6 +1,10 @@
 package com.example.ahimmoyakbackend.course.service;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
+import com.example.ahimmoyakbackend.company.entity.Affiliation;
+import com.example.ahimmoyakbackend.company.entity.CourseProvide;
+import com.example.ahimmoyakbackend.company.repository.AffiliationRepository;
+import com.example.ahimmoyakbackend.company.repository.CourseProvideRepository;
 import com.example.ahimmoyakbackend.course.common.CourseCategory;
 import com.example.ahimmoyakbackend.course.dto.CourseListResponseDTO;
 import com.example.ahimmoyakbackend.course.dto.CourseRegistrationRequestDTO;
@@ -28,6 +32,8 @@ import java.util.List;
 public class CourseService {
     private final CourseRepository courseRepository;
     private final TutorRepository tutorRepository;
+    private final AffiliationRepository affiliationRepository;
+    private final CourseProvideRepository courseProvideRepository;
 
     // 마이페이지 코스리스트 조회
     @Transactional
@@ -94,10 +100,22 @@ public class CourseService {
 
     // 수강신청 요청
     @Transactional
-    public CourseResponseDTO createCourseRegistration(
+    public CourseResponseDTO createCourseFormRegistration(
             User user, Long courseId, CourseRegistrationRequestDTO requestDTO
     ) {
-
-        return null;
+        Affiliation affiliation = affiliationRepository.findByUser(user);
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지않는 코스입니다."));
+        CourseProvide courseProvide = CourseProvide.builder()
+                .course(course)
+                .beginDate(requestDTO.getBeginDate())
+                .endDate(requestDTO.getEndDate())
+                .attendeeCount(requestDTO.getAttendeeCount())
+                .supervisor(affiliation)
+                .build();
+        courseProvideRepository.save(courseProvide);
+        return CourseResponseDTO.builder()
+                .msg("수강신청 양식 제출완료.")
+                .build();
     }
 }

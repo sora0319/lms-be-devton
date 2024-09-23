@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.course.dto;
 
+import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,8 +15,5 @@ import java.time.LocalDate;
 public class CourseRegistrationRequestDTO {
     private LocalDate beginDate;
     private LocalDate endDate;
-    private String jobTitle;
-    private String applicantName;
-    private String applicantPhone;
-    private String applicantEmail;
+    private int attendeeCount;
 }
