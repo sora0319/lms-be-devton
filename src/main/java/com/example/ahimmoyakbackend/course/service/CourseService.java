@@ -3,6 +3,8 @@ package com.example.ahimmoyakbackend.course.service;
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.course.common.CourseCategory;
 import com.example.ahimmoyakbackend.course.dto.CourseListResponseDTO;
+import com.example.ahimmoyakbackend.course.dto.CourseRegistrationRequestDTO;
+import com.example.ahimmoyakbackend.course.dto.CourseResponseDTO;
 import com.example.ahimmoyakbackend.course.dto.TutorGetCourseListResponseDTO;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.course.repository.CourseRepository;
@@ -46,6 +48,7 @@ public class CourseService {
     }
 
     // 수강신청할 코스 탐색
+    @Transactional
     public Page<CourseListResponseDTO> getCourseByCategory(int categoryNum, int currentPage, int size) {
         Pageable pageable = PageRequest.of(currentPage - 1, size);
         CourseCategory category = Arrays.stream(CourseCategory.values())
@@ -72,6 +75,7 @@ public class CourseService {
     }
 
     // 강사 대시보드리스트 조회
+    @Transactional
     public List<TutorGetCourseListResponseDTO> getCurriculumList(String username) {
         Tutor tutor = tutorRepository.findByUserName(username)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
@@ -86,5 +90,14 @@ public class CourseService {
                     .build());
         }
         return tutorGetCourseList;
+    }
+
+    // 수강신청 요청
+    @Transactional
+    public CourseResponseDTO createCourseRegistration(
+            User user, Long courseId, CourseRegistrationRequestDTO requestDTO
+    ) {
+
+        return null;
     }
 }

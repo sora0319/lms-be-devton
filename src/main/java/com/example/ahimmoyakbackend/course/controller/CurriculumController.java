@@ -22,7 +22,7 @@ public class CurriculumController {
     public ResponseEntity<CurriculumResponseDTO> createCurriculum(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam Long courseId,
-            @Valid @RequestBody CurriculumCreateRequestDTO requestDTO
+            @Valid @RequestParam CurriculumCreateRequestDTO requestDTO
     ) {
         curriculumService.create(userDetails.getUser(), courseId, requestDTO);
         CurriculumResponseDTO response = CurriculumResponseDTO.builder()
