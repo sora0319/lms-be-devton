@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.course.entity;
 
+import com.example.ahimmoyakbackend.company.entity.Contract;
 import com.example.ahimmoyakbackend.course.common.CourseCategory;
 import com.example.ahimmoyakbackend.course.common.TrainingCourseType;
 import com.example.ahimmoyakbackend.course.dto.CourseModifyRequestDTO;
@@ -50,12 +51,16 @@ public class Course extends Timestamped {
     @JoinColumn(name = "tutor_id")
     private Tutor tutor;
 
+    @OneToMany
+    @JoinColumn(name = "contract_id")
+    private List<Contract> contractList;
+
     @OneToOne
     @JoinColumn(name = "image_id")
     private Image image;
 
     @OneToMany
-    @JoinColumn(name = "Curriculum_id")
+    @JoinColumn(name = "curriculum_id")
     private List<Curriculum> curriculumList;
 
     public void patch(CourseModifyRequestDTO requestDTO, Long courseId) {
