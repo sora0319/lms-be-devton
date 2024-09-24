@@ -78,4 +78,13 @@ public class CourseController {
     }
 
     // 수강신청 요청 사항 조회
+    @GetMapping("/{courseProvideId}")
+    public ResponseEntity<List<CourseProvideListResponseDTO>> getCourseProvideList(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long courseProvideId,
+            @RequestParam CourseProvideListResponseDTO requestDTO
+    ) {
+        List<CourseProvideListResponseDTO> responseDTO = courseService.getCourseProvideList(userDetails.getUser(), courseProvideId, requestDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+    }
 }
