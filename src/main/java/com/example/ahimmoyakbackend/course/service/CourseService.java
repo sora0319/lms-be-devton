@@ -6,13 +6,12 @@ import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import com.example.ahimmoyakbackend.company.repository.AffiliationRepository;
 import com.example.ahimmoyakbackend.company.repository.CourseProvideRepository;
 import com.example.ahimmoyakbackend.course.common.CourseCategory;
-import com.example.ahimmoyakbackend.course.dto.CourseListResponseDTO;
-import com.example.ahimmoyakbackend.course.dto.CourseRegistrationRequestDTO;
-import com.example.ahimmoyakbackend.course.dto.CourseResponseDTO;
-import com.example.ahimmoyakbackend.course.dto.TutorGetCourseListResponseDTO;
+import com.example.ahimmoyakbackend.course.dto.*;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.course.repository.CourseRepository;
+import com.example.ahimmoyakbackend.institution.entity.Manager;
 import com.example.ahimmoyakbackend.institution.entity.Tutor;
+import com.example.ahimmoyakbackend.institution.repository.ManagerRepository;
 import com.example.ahimmoyakbackend.institution.repository.TutorRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Positive;
@@ -26,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +34,7 @@ public class CourseService {
     private final TutorRepository tutorRepository;
     private final AffiliationRepository affiliationRepository;
     private final CourseProvideRepository courseProvideRepository;
+    private final ManagerRepository managerRepository;
 
     // 마이페이지 코스리스트 조회
     @Transactional
@@ -58,7 +59,9 @@ public class CourseService {
     public Page<CourseListResponseDTO> getCourseByCategory(int categoryNum, int currentPage, int size) {
         Pageable pageable = PageRequest.of(currentPage - 1, size);
         CourseCategory category = Arrays.stream(CourseCategory.values())
-                .filter(course -> course.getCategoryNumber() == categoryNum).findFirst().get();
+                .filter(course -> course.getCategoryNumber() == categoryNum)
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("해당 카테고리를 찾을 수 없습니다. : " + categoryNum));
         if (CourseCategory.ALL.getCategoryNumber() == categoryNum) {
             return courseRepository.findAll(pageable)
                     .map(course -> CourseListResponseDTO.builder()
@@ -115,7 +118,26 @@ public class CourseService {
                 .build();
         courseProvideRepository.save(courseProvide);
         return CourseResponseDTO.builder()
-                .msg("수강신청 양식 제출완료.")
+                .msg("제출 되었습니다.")
                 .build();
     }
+
+    @Transactional
+    public CourseResponseDTO updateCourseProvideState(
+            User user, Long courseProvideId, CourseProvideStateRequestDTO requestDTO
+    ) {
+        Manager manager = managerRepository.findByUser(user);
+        if (manager == null) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+        CourseProvide courseProvide = courseProvideRepository.findById(courseProvideId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 코스 입니다."));
+        courseProvide.patch(requestDTO.getState());
+        courseProvideRepository.save(courseProvide);
+        return CourseResponseDTO.builder()
+                .msg("상태 변경 완료")
+                .build();
+    }
+    
+    // 수강신청 요청 사항 조회
 }

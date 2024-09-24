@@ -1,10 +1,7 @@
 package com.example.ahimmoyakbackend.course.controller;
 
 import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
-import com.example.ahimmoyakbackend.course.dto.CourseListResponseDTO;
-import com.example.ahimmoyakbackend.course.dto.CourseRegistrationRequestDTO;
-import com.example.ahimmoyakbackend.course.dto.CourseResponseDTO;
-import com.example.ahimmoyakbackend.course.dto.TutorGetCourseListResponseDTO;
+import com.example.ahimmoyakbackend.course.dto.*;
 import com.example.ahimmoyakbackend.course.service.CourseService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Positive;
@@ -68,4 +65,17 @@ public class CourseController {
         CourseResponseDTO responseDTO = courseService.createCourseFormRegistration(userDetails.getUser(), courseId, requestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
+
+    // 수강신청 요청의 응답
+    @PatchMapping("/{courseProvideId}/requests")
+    public ResponseEntity<CourseResponseDTO> updateCourseProvideState(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long courseProvideId,
+            @RequestBody CourseProvideStateRequestDTO requestDTO
+    ) {
+        CourseResponseDTO responseDTO = courseService.updateCourseProvideState(userDetails.getUser(), courseProvideId, requestDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+    }
+
+    // 수강신청 요청 사항 조회
 }

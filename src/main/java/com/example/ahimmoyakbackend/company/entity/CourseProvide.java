@@ -51,4 +51,7 @@ public class CourseProvide extends Timestamped {
     @JoinColumn(name = "course_id")
     private Course course;
 
+    public void patch(CourseProvideState state) {
+        this.state = state;
+    }
 }
