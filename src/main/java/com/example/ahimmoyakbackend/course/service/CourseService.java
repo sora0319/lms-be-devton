@@ -138,6 +138,11 @@ public class CourseService {
                 .msg("상태 변경 완료")
                 .build();
     }
-    
+
     // 수강신청 요청 사항 조회
+    public List<CourseProvideListResponseDTO> getCourseProvideList(
+            User user, Long courseProvideId, CourseProvideListResponseDTO requestDTO
+    ) {
+        return null;
+    }
 }
