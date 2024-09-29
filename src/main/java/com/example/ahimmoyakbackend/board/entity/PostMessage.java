@@ -25,6 +25,9 @@ public class PostMessage extends Timestamped {
     @Column
     private String content;
 
+    @Column
+    private Boolean isDelete;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

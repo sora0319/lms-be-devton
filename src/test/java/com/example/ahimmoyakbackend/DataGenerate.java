@@ -8,7 +8,7 @@ import com.example.ahimmoyakbackend.board.repository.*;
 import com.example.ahimmoyakbackend.company.common.ContractState;
 import com.example.ahimmoyakbackend.company.entity.Affiliation;
 import com.example.ahimmoyakbackend.company.entity.Company;
-import com.example.ahimmoyakbackend.company.entity.Contract;
+import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import com.example.ahimmoyakbackend.company.entity.Department;
 import com.example.ahimmoyakbackend.company.repository.AffiliationRepository;
 import com.example.ahimmoyakbackend.company.repository.CompanyRepository;
@@ -35,6 +35,7 @@ import com.example.ahimmoyakbackend.live.repository.LiveStreamingRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 
@@ -50,6 +51,8 @@ public class DataGenerate {
 
     @Autowired
     private CurriculumRepository curriculumRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * 이 메소드를 실행하면 데이터가 생성 됩니다.
@@ -126,7 +129,7 @@ public class DataGenerate {
     void part1() {
         // Company 생성
         Company company1 = Company.builder()
-                .name("일번회사")
+                .companyName("일번회사")
                 .ownerName("이현규")
                 .businessNumber("11111111")
                 .email("contact@ahim.com")
@@ -156,7 +159,7 @@ public class DataGenerate {
         User user1 = User.builder()
                 .username("1111")
                 .name("일일일")
-                .password("1111")
+                .password(passwordEncoder.encode("1111"))
                 .birth(LocalDate.of(1993, 3, 3))
                 .phone("01011111111")
                 .email("one@ahim.com")
@@ -207,7 +210,7 @@ public class DataGenerate {
         User user2 = User.builder()
                 .username("2222")
                 .name("둘둘둘")
-                .password("2222")
+                .password(passwordEncoder.encode("2222"))
                 .birth(LocalDate.of(1993, 3, 3))
                 .phone("01022222222")
                 .email("two@moyak.com")
@@ -225,7 +228,7 @@ public class DataGenerate {
         User user3 = User.builder()
                 .username("3333")
                 .name("삼삼삼")
-                .password("3333")
+                .password(passwordEncoder.encode("3333"))
                 .birth(LocalDate.of(1993, 3, 3))
                 .phone("01033333333")
                 .email("three@tutor.com")
@@ -328,22 +331,24 @@ public class DataGenerate {
         contentsMaterialRepository.save(contentsMaterial2);
 
         // 회사 - 코스 간 Contract 생성
-        Contract contract1 = Contract.builder()
+        CourseProvide courseProvide1 = CourseProvide.builder()
                 .company(company1)
+                .institution(institution1)
                 .course(course1)
+                .supervisor(affiliation1)
                 .beginDate(LocalDate.of(2024, 9, 10))
                 .endDate(LocalDate.of(2024, 12, 31))
                 .state(ContractState.ACCEPTED)
-                .attendeeAmount(10)
+                .attendeeCount(10)
                 .deposit(1000000L)
                 .build();
-        contractRepository.save(contract1);
+        contractRepository.save(courseProvide1);
 
         // 수강할 User 들 생성
         User student1 = User.builder()
                 .username("st1")
                 .name("학생1")
-                .password("1111")
+                .password(passwordEncoder.encode("1111"))
                 .birth(LocalDate.of(1993, 3, 3))
                 .phone("01010101010")
                 .email("st1@ahim.com")
@@ -354,7 +359,7 @@ public class DataGenerate {
         User student2 = User.builder()
                 .username("st2")
                 .name("학생2")
-                .password("2222")
+                .password(passwordEncoder.encode("2222"))
                 .birth(LocalDate.of(1993, 3, 3))
                 .phone("01020202020")
                 .email("st2@ahim.com")
@@ -382,14 +387,14 @@ public class DataGenerate {
         // Contract 와 수강생들 매핑하는 Enrollment 생성
         Enrollment enrollment1 = Enrollment.builder()
                 .user(student1)
-                .contract(contract1)
+                .courseProvide(courseProvide1)
                 .state(EnrollmentState.ONPROGRESS)
                 .certificateDate(null)
                 .build();
         enrollmentRepository.save(enrollment1);
         Enrollment enrollment2 = Enrollment.builder()
                 .user(student2)
-                .contract(contract1)
+                .courseProvide(courseProvide1)
                 .state(EnrollmentState.ONPROGRESS)
                 .certificateDate(null)
                 .build();
