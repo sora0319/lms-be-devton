@@ -58,9 +58,9 @@ public class JwtTokenProvider {
         return null;
     }
 
-    public String createToken(String username, String email, String jwsType, UserRole role) {
+    public String createAccessToken(String username, String email, UserRole role) {
         Date date = new Date();
-        long time = jwsType.equals(ACCESS_TOKEN) ? ACCESS_TIME : REFRESH_TIME;
+        long time = ACCESS_TIME;
         return BEARER_PREFIX + Jwts.builder()
                 .subject(username)
                 .claim("email", email)
@@ -72,14 +72,24 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-
+    public String createRefreshToken(String username) {
+        Date date = new Date();
+        long time = REFRESH_TIME;
+        return BEARER_PREFIX + Jwts.builder()
+                .subject(username)
+                .issuer("Ahimmoyak")
+                .issuedAt(date)
+                .expiration(new Date(date.getTime() + time))
+                .signWith(key)
+                .compact();
+    }
 
 
 
     public JwsDTO createAllToken(String userId, String email, UserRole role) {
         return JwsDTO.builder()
-                .accessToken(createToken(userId, email, ACCESS_TOKEN, role))
-                .refreshToken(createToken(userId, email, REFRESH_TOKEN, role))
+                .accessToken(createAccessToken(userId, email, role))
+                .refreshToken(createRefreshToken(userId))
                 .build();
     }
 

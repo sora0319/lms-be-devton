@@ -48,7 +48,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String username = jwtTokenProvider.getUserInfoFromToken(refreshToken);
             User user = userRepository.findUserByUsername(username)
                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
-            String newAccessToken = jwtTokenProvider.createToken(username, user.getEmail(), ACCESS_TOKEN, user.getRole());
+            String newAccessToken = jwtTokenProvider.createRefreshToken(username);
             jwtTokenProvider.setHeaderAccessToken(response, newAccessToken);
             setAuthentication(username);
             filterChain.doFilter(request, response);
