@@ -4,6 +4,7 @@ import com.example.ahimmoyakbackend.company.common.ContractState;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.course.entity.Enrollment;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
+import com.example.ahimmoyakbackend.institution.entity.Institution;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,8 +20,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "contract")
-public class Contract extends Timestamped {
+@Table(name = "course_provide")
+public class CourseProvide extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,14 +38,22 @@ public class Contract extends Timestamped {
     private ContractState state;
 
     @Column(nullable = false)
-    private Integer attendeeAmount;
+    private Integer attendeeCount;
 
     @Column
     private Long deposit;
 
     @ManyToOne
+    @JoinColumn(name = "supervisor_id")
+    private Affiliation supervisor;
+
+    @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @ManyToOne
+    @JoinColumn(name = "institution_id")
+    private Institution institution;
 
     @ManyToOne
     @JoinColumn(name = "course_id")
