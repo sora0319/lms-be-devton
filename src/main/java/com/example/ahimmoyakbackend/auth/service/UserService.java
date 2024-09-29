@@ -54,7 +54,7 @@ public class UserService {
             throw new IllegalArgumentException("잘못된 요청입니다.");
         }
 
-        JwsDTO jwsDto = jwtTokenProvider.createAllToken(findUser.getUsername(), findUser.getEmail());
+        JwsDTO jwsDto = jwtTokenProvider.createAllToken(findUser.getUsername(), findUser.getEmail(), findUser.getRole());
 
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(requestDTO.getUsername());
 

@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.auth.jwt;
 
+import com.example.ahimmoyakbackend.auth.common.UserRole;
 import com.example.ahimmoyakbackend.auth.config.security.impl.UserDetailsServiceImpl;
 import com.example.ahimmoyakbackend.auth.dto.JwsDTO;
 import com.example.ahimmoyakbackend.auth.entity.RefreshToken;
@@ -57,12 +58,13 @@ public class JwtTokenProvider {
         return null;
     }
 
-    public String createToken(String username, String email, String jwsType) {
+    public String createToken(String username, String email, String jwsType, UserRole role) {
         Date date = new Date();
         long time = jwsType.equals(ACCESS_TOKEN) ? ACCESS_TIME : REFRESH_TIME;
         return BEARER_PREFIX + Jwts.builder()
                 .subject(username)
                 .claim("email", email)
+                .claim("role", role.name())
                 .issuer("Ahimmoyak")
                 .issuedAt(date)
                 .expiration(new Date(date.getTime() + time))
@@ -70,10 +72,14 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public JwsDTO createAllToken(String userId, String email) {
+
+
+
+
+    public JwsDTO createAllToken(String userId, String email, UserRole role) {
         return JwsDTO.builder()
-                .accessToken(createToken(userId, email, ACCESS_TOKEN))
-                .refreshToken(createToken(userId, email, REFRESH_TOKEN))
+                .accessToken(createToken(userId, email, ACCESS_TOKEN, role))
+                .refreshToken(createToken(userId, email, REFRESH_TOKEN, role))
                 .build();
     }
 
