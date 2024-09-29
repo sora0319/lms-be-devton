@@ -1,5 +1,7 @@
 package com.example.ahimmoyakbackend.auth.config.handler;
 
+import com.example.ahimmoyakbackend.auth.dto.validation.SecurityExceptionDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,6 +21,14 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         if (referer != null && !referer.isEmpty()) {
             response.sendRedirect(referer);
         }
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
+
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.setContentType("application/json");
+
+        String json = new ObjectMapper().writeValueAsString(SecurityExceptionDto.builder()
+                .statusCode(HttpServletResponse.SC_FORBIDDEN)
+                .msg("Access Denied: You do not have the right role to access this resource.")
+                .build());
+        response.getWriter().write(json);
     }
 }
