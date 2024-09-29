@@ -141,6 +141,7 @@ public class CompanyService {
                 .ownerName(requestDto.getOwnerName())
                 .businessNumber(requestDto.getBusinessNumber())
                 .email(requestDto.getEmail())
+                .emailDomain(requestDto.getEmailDomail())
                 .phone(requestDto.getPhoneNumber())
                 .build();
 

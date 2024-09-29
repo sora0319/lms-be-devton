@@ -27,6 +27,9 @@ public class CompanyEnrollRequestDto {
     @Email(message = "유효하지 않은 이메일 형식 입니다.")
     private String email;
 
+    @NotBlank(message = "회사 도메인을 입력하세요")
+    private String emailDomail;
+
     @NotBlank(message = "전화번호를 입력하세요")
     private String phoneNumber;
 
