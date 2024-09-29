@@ -46,6 +46,7 @@ public class LiveController {
 
     @PostMapping("/publish-done")
     public ResponseEntity<Void> publishLiveDone(@ModelAttribute LivePublishFormDTO form) {
+        liveService.endLive(form.getName());
         return ResponseEntity.ok().build();
     }
 }

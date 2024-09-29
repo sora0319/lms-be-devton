@@ -82,4 +82,10 @@ public class LiveService {
         }
         return false;
     }
+
+    public void endLive(String streamKey) {
+        String[] keyAndTutor = streamKey.split("_");
+        Long liveId = Long.parseLong(keyAndTutor[0]);
+        liveStreamingRepository.findById(liveId).ifPresent(liveStreaming -> liveStreaming.setState(LiveState.END));
+    }
 }
