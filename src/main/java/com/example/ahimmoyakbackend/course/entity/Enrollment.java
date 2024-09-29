@@ -39,5 +39,18 @@ public class Enrollment extends Timestamped {
     @JoinColumn(name = "contract_id")
     private Contract contract;
 
+    public void assignCourseProvide(Contract contract) {
+        if (this.contract != null) {
+            throw new RuntimeException("계약 아이디가 없습니다.");
+        }
+        this.contract = contract;
+    }
+    public void cancelCourseProvide() {
+
+        this.contract = null;
+    }
+
+
+
 }
 
