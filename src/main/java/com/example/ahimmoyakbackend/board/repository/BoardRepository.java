@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.board.repository;
 
+import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.board.common.BoardType;
 import com.example.ahimmoyakbackend.board.entity.Board;
 import org.springframework.data.domain.Page;
@@ -12,4 +13,6 @@ import java.util.List;
 @Repository
 public interface BoardRepository extends JpaRepository<Board,Long> {
     Page<Board> findAllByTypeOrderByCreatedAtDesc(BoardType type,Pageable pageable);
+    Page<Board> findAllByUserOrderByCreatedAtDesc(User user, Pageable pageable);
+    Board findByIdAndUser(Long id, User user);
 }
