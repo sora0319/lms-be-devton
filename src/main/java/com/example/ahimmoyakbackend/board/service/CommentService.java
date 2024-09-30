@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.board.service;
 
+import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.board.dto.CommentCreateRequestDto;
 import com.example.ahimmoyakbackend.board.dto.CommentCreateResponseDto;
 import com.example.ahimmoyakbackend.board.entity.Board;
@@ -27,4 +28,10 @@ public class CommentService {
 
     }
 
+    public CommentCreateResponseDto deleteComment(User user, Long boardId, Long commentId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(()->new IllegalArgumentException("없는 게시물 입니다."));
+        Comment deleted = commentRepository.findByIdAndBoardAndUser(commentId,board,user);
+        commentRepository.delete(deleted);
+        return CommentCreateResponseDto.builder().msg("댓글 작성 성공").build();
+    }
 }

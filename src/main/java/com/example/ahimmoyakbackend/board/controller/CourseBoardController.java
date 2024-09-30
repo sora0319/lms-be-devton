@@ -1,5 +1,7 @@
 package com.example.ahimmoyakbackend.board.controller;
 
+import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
+import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.board.common.BoardType;
 import com.example.ahimmoyakbackend.board.dto.*;
 import com.example.ahimmoyakbackend.board.service.CourseBoardService;
@@ -21,41 +23,55 @@ public class CourseBoardController {
     private final CourseCommentService courseCommentService;
 
     @PostMapping("/v1/courseBoard/{type}/{courseId}")
-    public ResponseEntity<BoardCreateResponseDto> createBoard(@RequestBody BoardCreateRequestDto requestDTO, @PathVariable Long courseId, @PathVariable BoardType type){
-        BoardCreateResponseDto created = courseBoardService.create(requestDTO,courseId,type);
+    public ResponseEntity<BoardCreateResponseDto> createBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody BoardCreateRequestDto requestDTO, @PathVariable Long courseId, @PathVariable BoardType type){
+        BoardCreateResponseDto created = courseBoardService.create(userDetails.getUser(),requestDTO,courseId,type);
         return ResponseEntity.status(HttpStatus.OK).body(created);
     }
 
     @PatchMapping("/v1/courseBoard/{courseId}")
-    public ResponseEntity<BoardUpdateResponseDto> updateBoard(@AuthenticationPrincipal @RequestBody BoardUpdateRequestDto requestDTO, @PathVariable Long courseId, @RequestParam Long courseBoardId){
-        BoardUpdateResponseDto updated = courseBoardService.update(requestDTO,courseId,courseBoardId);
+    public ResponseEntity<BoardUpdateResponseDto> updateBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody BoardUpdateRequestDto requestDTO, @PathVariable Long courseId, @RequestParam Long courseBoardId){
+        BoardUpdateResponseDto updated = courseBoardService.update(userDetails.getUser(),requestDTO,courseId,courseBoardId);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 
     @DeleteMapping("/v1/courseBoard/{courseId}")
-    public ResponseEntity<BoardDeleteResponseDto> deleteBoard(@PathVariable Long courseId, @RequestParam Long courseBoardId){
-        BoardDeleteResponseDto deleted = courseBoardService.delete(courseId,courseBoardId);
+    public ResponseEntity<BoardDeleteResponseDto> deleteBoard(@AuthenticationPrincipal UserDetailsImpl userDetails,@PathVariable Long courseId, @RequestParam Long courseBoardId){
+        BoardDeleteResponseDto deleted = courseBoardService.delete(userDetails.getUser(),courseId,courseBoardId);
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
 
     @GetMapping("/v1/courseBoard/{courseId}")
-    public ResponseEntity<CourseBoardInquiryResponseDto> inquiryBoard(@PathVariable Long courseId,
+    public ResponseEntity<CourseBoardInquiryResponseDto> inquiryBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long courseId,
                                                                       @RequestParam BoardType type,
                                                                       @RequestParam(defaultValue = "1") int page,
                                                                       @RequestParam(defaultValue = "10") int size) {
-        CourseBoardInquiryResponseDto responseDto = courseBoardService.inquiry(courseId, type, page, size);
+        CourseBoardInquiryResponseDto responseDto = courseBoardService.inquiry(userDetails.getUser(),courseId, type, page, size);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+    @GetMapping("/v1/courseBoard/myBoard/{courseId}")
+    public ResponseEntity<CourseBoardInquiryResponseDto> inquiryBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long courseId,
+                                                                      @RequestParam(defaultValue = "1") int page,
+                                                                      @RequestParam(defaultValue = "10") int size) {
+        CourseBoardInquiryResponseDto responseDto = courseBoardService.inquiryCreatedBoard(userDetails.getUser(),courseId, page, size);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     @GetMapping("/v1/courseBoard/{courseId}/{type}")
-    public ResponseEntity<CourseBoardShowResponseDto> showBoard(@PathVariable Long courseId,  @PathVariable BoardType type, @RequestParam Long courseBoardId){
-        CourseBoardShowResponseDto board = courseBoardService.show(courseId,type,courseBoardId);
+    public ResponseEntity<CourseBoardShowResponseDto> showBoard(@AuthenticationPrincipal UserDetailsImpl userDetails,@PathVariable Long courseId,  @PathVariable BoardType type, @RequestParam Long courseBoardId){
+        CourseBoardShowResponseDto board = courseBoardService.show(userDetails.getUser(),courseId,type,courseBoardId);
         return ResponseEntity.status(HttpStatus.OK).body(board);
     }
 
     @PostMapping("/v1/courseBoard/comment/{courseBoardId}")
-    public ResponseEntity<CommentCreateResponseDto> createComment(@RequestBody CommentCreateRequestDto requestDto,@PathVariable Long courseBoardId){
-        CommentCreateResponseDto comment = courseCommentService.create(requestDto,courseBoardId);
+    public ResponseEntity<CommentCreateResponseDto> createComment(@AuthenticationPrincipal UserDetailsImpl userDetails,@RequestBody CommentCreateRequestDto requestDto,@PathVariable Long courseBoardId){
+        CommentCreateResponseDto comment = courseCommentService.create(userDetails.getUser(),requestDto,courseBoardId);
         return ResponseEntity.status(HttpStatus.OK).body(comment);
     }
+
+    @DeleteMapping("/v1/courseBoard/comment/{courseBoardId}")
+    public ResponseEntity<CommentCreateResponseDto> deleteComment(@AuthenticationPrincipal UserDetailsImpl userDetails,@PathVariable Long courseBoardId,@RequestParam Long commentId){
+        CommentCreateResponseDto comment = courseCommentService.deleteComment(userDetails.getUser(),courseBoardId,commentId);
+        return ResponseEntity.status(HttpStatus.OK).body(comment);
+    }
+
 }
