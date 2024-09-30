@@ -34,36 +34,62 @@ public class CourseBoardService {
     private final InstitutionRepository institutionRepository;
     private final ManagerRepository managerRepository;
 
-    public BoardCreateResponseDto create(BoardCreateRequestDto requestDTO, Long courseId, BoardType type) {
+    public BoardCreateResponseDto create(User user, BoardCreateRequestDto requestDTO, Long courseId, BoardType type) {
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new IllegalArgumentException("잘못된 코스입니다."));
+        Institution institution = institutionRepository.findById(course.getInstitution().getId()).orElseThrow(() -> new IllegalArgumentException("잘못된 기관입니다."));
+        Manager manager = managerRepository.findByInstitution(institution);
 
-        Course course = courseRepository.findById(courseId).orElseThrow(()->new IllegalArgumentException("잘못된 코스입니다."));
-
-        CourseBoard board = CourseBoard.builder()
-                .title(requestDTO.getTitle())
-                .content(requestDTO.getContent())
-                .type(type)
-                .course(course)
-                .build();
-        courseBoardRepository.save(board);
-        return BoardCreateResponseDto.builder().msg("게시물 작성 완료").build();
+        if (type.equals(BoardType.NOTICE) && (user.getId().equals(course.getTutor().getId()) || user.getId().equals(manager.getUser().getId()))) {
+            String msg = createdBoard(user, requestDTO, type, course);
+            return BoardCreateResponseDto.builder().msg(msg).build();
+        }
+        if (type.equals(BoardType.QNA)) {
+            String msg = createdBoard(user, requestDTO, type, course);
+            return BoardCreateResponseDto.builder().msg(msg).build();
+        } else {
+            throw new IllegalArgumentException("잘못된 접근입니다.");
+        }
     }
 
-    public BoardUpdateResponseDto update(BoardUpdateRequestDto requestDTO, Long courseId, Long courseBoardId) {
-        Course course = courseRepository.findById(courseId).orElseThrow(()->new IllegalArgumentException("없는 코스 입니다."));
-        CourseBoard updated = courseBoardRepository.findByCourseAndId(course,courseBoardId);
-        updated.patch(requestDTO, courseBoardId,courseId);
-        courseBoardRepository.save(updated);
-        return BoardUpdateResponseDto.builder().msg("게시물 수정 완료").build();
+    public BoardUpdateResponseDto update(User user, BoardUpdateRequestDto requestDTO, Long courseId, Long courseBoardId) {
+        User user1 = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("잘못된 유저입니다."));
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new IllegalArgumentException("잘못된 코스입니다."));
+        CourseBoard updated = courseBoardRepository.findByCourseAndIdAndUser(course, courseBoardId, user1);
+        Institution institution = institutionRepository.findById(course.getInstitution().getId()).orElseThrow(() -> new IllegalArgumentException("잘못된 기관입니다."));
+        Manager manager = managerRepository.findByInstitution(institution);
+        if (updated.getType().equals(BoardType.NOTICE) && (user1.getId().equals(course.getTutor().getId()) || user1.getId().equals(manager.getUser().getId()))) {
+            updated.patch(requestDTO, courseBoardId, courseId);
+            courseBoardRepository.save(updated);
+            return BoardUpdateResponseDto.builder().msg("공지 게시물 수정 완료").build();
+        }
+        if (updated.getType().equals(BoardType.QNA)) {
+            updated.patch(requestDTO, courseBoardId, courseId);
+            courseBoardRepository.save(updated);
+            return BoardUpdateResponseDto.builder().msg("질문 게시물 수정 완료").build();
+        } else {
+            throw new IllegalArgumentException("잘못된 접근입니다.");
+        }
     }
 
-    public BoardDeleteResponseDto delete(Long courseId, Long courseBoardId) {
-        Course course = courseRepository.findById(courseId).orElseThrow(()->new IllegalArgumentException("없는 코스 입니다."));
-        CourseBoard deleted = courseBoardRepository.findByCourseAndId(course,courseBoardId);
-        courseBoardRepository.delete(deleted);
-        return BoardDeleteResponseDto.builder().msg("게시물 삭제 완료").build();
+    public BoardDeleteResponseDto delete(User user, Long courseId, Long courseBoardId) {
+        User user1 = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("잘못된 유저입니다."));
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new IllegalArgumentException("잘못된 코스입니다."));
+        Institution institution = institutionRepository.findById(course.getInstitution().getId()).orElseThrow(() -> new IllegalArgumentException("잘못된 기관입니다."));
+        Manager manager = managerRepository.findByInstitution(institution);
+        CourseBoard deleted = courseBoardRepository.findByCourseAndIdAndUser(course, courseBoardId, user1);
+
+        if (deleted.getType().equals(BoardType.NOTICE) && (user1.getId().equals(course.getTutor().getId()) || user1.getId().equals(manager.getUser().getId()))) {
+            courseBoardRepository.delete(deleted);
+            return BoardDeleteResponseDto.builder().msg("공지 게시물 삭제 완료").build();
+        } else if (deleted.getType().equals(BoardType.QNA)) {
+            courseBoardRepository.delete(deleted);
+            return BoardDeleteResponseDto.builder().msg("질문 게시물 삭제 완료").build();
+        } else {
+            throw new IllegalArgumentException("잘못된 접근입니다.");
+        }
     }
 
-    public CourseBoardInquiryResponseDto inquiry(Long courseId, BoardType type, int page, int size) {
+    public CourseBoardInquiryResponseDto inquiry(User user, Long courseId, BoardType type, int page, int size) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("없는 코스 입니다."));
 
@@ -79,8 +105,9 @@ public class CourseBoardService {
         return new CourseBoardInquiryResponseDto(
                 course.getTitle(),
                 boards,
-                new Pagination(page,size)
+                new Pagination(page, size)
         );
+    }
 
     //내가 적은 게시물 조회
     public CourseBoardInquiryResponseDto inquiryCreatedBoard(User user, Long courseId, int page, int size) {
@@ -102,9 +129,10 @@ public class CourseBoardService {
                 new Pagination(page, size)
         );
     }
-    public CourseBoardShowResponseDto show(Long courseId, BoardType type, Long courseBoardId) {
-        Course course = courseRepository.findById(courseId).orElseThrow(()->new IllegalArgumentException("없는 코스 입니다."));
-        CourseBoard board = courseBoardRepository.findByCourseAndId(course,courseBoardId);
+
+    public CourseBoardShowResponseDto show(User user, Long courseId, BoardType type, Long courseBoardId) {
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new IllegalArgumentException("없는 코스 입니다."));
+        CourseBoard board = courseBoardRepository.findByCourseAndId(course, courseBoardId);
 
         return CourseBoardShowResponseDto.builder()
                 .courseTitle(board.getCourse().getTitle())
@@ -115,5 +143,17 @@ public class CourseBoardService {
                 .createAt(board.getCreatedAt())
                 .comments(courseCommentRepository.findAllByCourseBoardId(courseBoardId).stream().map(CourseComment::toDto).toList())
                 .build();
+    }
+
+    public String createdBoard(User user, BoardCreateRequestDto requestDTO, BoardType type, Course course) {
+        CourseBoard board = CourseBoard.builder()
+                .user(user)
+                .title(requestDTO.getTitle())
+                .content(requestDTO.getContent())
+                .type(type)
+                .course(course)
+                .build();
+        courseBoardRepository.save(board);
+        return type+"게시글 작성 성공";
     }
 }

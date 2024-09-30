@@ -22,31 +22,48 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
 
-    public BoardCreateResponseDto create(BoardCreateRequestDto requestDTO, BoardType type) {
-        Board board = Board.builder()
-                .title(requestDTO.getTitle())
-                .content(requestDTO.getContent())
-                .type(type)
-                .build();
-        boardRepository.save(board);
-        return BoardCreateResponseDto.builder().msg("게시물 작성 완료").build();
+    public BoardCreateResponseDto create(User user, BoardCreateRequestDto requestDTO, BoardType type) {
+        if (type.equals(BoardType.NOTICE) && user.getRole().equals(UserRole.ADMIN)) {
+            String msg = createBoard(requestDTO,type);
+            return BoardCreateResponseDto.builder().msg(msg).build();
+        } else if (type.equals(BoardType.QNA)) {
+            String msg = createBoard(requestDTO,type);
+            return BoardCreateResponseDto.builder().msg(msg).build();
+        } else {
+            throw new IllegalArgumentException("잘못된 접근입니다.");
+        }
     }
 
-    public BoardUpdateResponseDto update(BoardUpdateRequestDto requestDTO, Long boardId) {
-        Board updated = boardRepository.findById(boardId).orElseThrow(()->new IllegalArgumentException("없는 게시물 입니다."));
-        updated.patch(requestDTO, boardId);
-        boardRepository.save(updated);
-        return BoardUpdateResponseDto.builder().msg("게시물 수정 완료").build();
+    public BoardUpdateResponseDto update(User user, BoardUpdateRequestDto requestDTO, Long boardId) {
+        Board updated = boardRepository.findByIdAndUser(boardId,user);
+        if (updated.getType().equals(BoardType.NOTICE) && user.getRole().equals(UserRole.ADMIN)) {
+            updated.patch(requestDTO, boardId);
+            boardRepository.save(updated);
+            return BoardUpdateResponseDto.builder().msg("공지 게시물 수정 완료").build();
+        } else if (updated.getType().equals(BoardType.QNA)) {
+            updated.patch(requestDTO, boardId);
+            boardRepository.save(updated);
+            return BoardUpdateResponseDto.builder().msg("게시물 수정 완료").build();
+        } else {
+            throw new IllegalArgumentException("잘못된 접근입니다.");
+        }
     }
 
-    public BoardDeleteResponseDto delete(Long boardId) {
-        Board deleted = boardRepository.findById(boardId).orElseThrow(()->new IllegalArgumentException("없는 게시물 입니다."));
-        boardRepository.delete(deleted);
-        return BoardDeleteResponseDto.builder().msg("게시물 삭제 완료").build();
+    public BoardDeleteResponseDto delete(User user, Long boardId) {
+        Board deleted = boardRepository.findByIdAndUser(boardId,user);
+        if (deleted.getType().equals(BoardType.NOTICE) && user.getRole().equals(UserRole.ADMIN)) {
+            boardRepository.delete(deleted);
+            return BoardDeleteResponseDto.builder().msg("게시물 삭제 완료").build();
+        }else if (deleted.getType().equals(BoardType.QNA)) {
+            boardRepository.delete(deleted);
+            return BoardDeleteResponseDto.builder().msg("게시물 삭제 완료").build();
+        }else {
+            throw new IllegalArgumentException("잘못된 접근입니다.");
+        }
     }
 
     public Page<BoardInquiryResponseDto> inquiry(BoardType type, int page, int size) {
-        Pageable pageable = PageRequest.of(page-1,size);
+        Pageable pageable = PageRequest.of(page - 1, size);
         return boardRepository.findAllByTypeOrderByCreatedAtDesc(type, pageable).map(Board::toDto);
     }
 
@@ -56,7 +73,7 @@ public class BoardService {
     }
 
     public BoardShowResponseDto show(BoardType type, Long boardId) {
-        Board board = boardRepository.findById(boardId).orElseThrow(()->new IllegalArgumentException("없는 게시물 입니다."));
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("없는 게시물 입니다."));
         return BoardShowResponseDto.builder()
                 .username(board.getUser().getUsername())
                 .title(board.getTitle())
@@ -66,4 +83,15 @@ public class BoardService {
                 .comments(commentRepository.findAllByBoardId(boardId).stream().map(Comment::toDto).toList())
                 .build();
     }
+
+    public String createBoard(BoardCreateRequestDto requestDTO, BoardType type){
+        Board board = Board.builder()
+                .title(requestDTO.getTitle())
+                .content(requestDTO.getContent())
+                .type(type)
+                .build();
+        boardRepository.save(board);
+        return type+"게시글 작성 완료";
+    }
+
 }
