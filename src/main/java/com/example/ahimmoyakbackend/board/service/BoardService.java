@@ -1,5 +1,7 @@
 package com.example.ahimmoyakbackend.board.service;
 
+import com.example.ahimmoyakbackend.auth.common.UserRole;
+import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.board.common.BoardType;
 import com.example.ahimmoyakbackend.board.dto.*;
 import com.example.ahimmoyakbackend.board.entity.Board;
@@ -46,6 +48,11 @@ public class BoardService {
     public Page<BoardInquiryResponseDto> inquiry(BoardType type, int page, int size) {
         Pageable pageable = PageRequest.of(page-1,size);
         return boardRepository.findAllByTypeOrderByCreatedAtDesc(type, pageable).map(Board::toDto);
+    }
+
+    public Page<BoardInquiryResponseDto> inquiryCreatedBoard(User user, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return boardRepository.findAllByUserOrderByCreatedAtDesc(user, pageable).map(Board::toDto);
     }
 
     public BoardShowResponseDto show(BoardType type, Long boardId) {

@@ -1,5 +1,7 @@
 package com.example.ahimmoyakbackend.board.service;
 
+import com.example.ahimmoyakbackend.auth.entity.User;
+import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import com.example.ahimmoyakbackend.board.common.BoardType;
 import com.example.ahimmoyakbackend.board.dto.*;
 import com.example.ahimmoyakbackend.board.entity.CourseBoard;
@@ -8,6 +10,10 @@ import com.example.ahimmoyakbackend.board.repository.CourseBoardRepository;
 import com.example.ahimmoyakbackend.board.repository.CourseCommentRepository;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.course.repository.CourseRepository;
+import com.example.ahimmoyakbackend.institution.entity.Institution;
+import com.example.ahimmoyakbackend.institution.entity.Manager;
+import com.example.ahimmoyakbackend.institution.repository.InstitutionRepository;
+import com.example.ahimmoyakbackend.institution.repository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +30,9 @@ public class CourseBoardService {
     private final CourseBoardRepository courseBoardRepository;
     private final CourseRepository courseRepository;
     private final CourseCommentRepository courseCommentRepository;
-
+    private final UserRepository userRepository;
+    private final InstitutionRepository institutionRepository;
+    private final ManagerRepository managerRepository;
 
     public BoardCreateResponseDto create(BoardCreateRequestDto requestDTO, Long courseId, BoardType type) {
 
@@ -74,6 +82,25 @@ public class CourseBoardService {
                 new Pagination(page,size)
         );
 
+    //내가 적은 게시물 조회
+    public CourseBoardInquiryResponseDto inquiryCreatedBoard(User user, Long courseId, int page, int size) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("없는 코스 입니다."));
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<CourseBoard> courseBoardPage = courseBoardRepository
+                .findAllByUserAndCourseOrderByCreatedAtDesc(user, course, pageable);
+
+        List<CourseBoardsResponseDto> boards = courseBoardPage
+                .stream()
+                .map(CourseBoard::toBoardResponseDto)
+                .collect(Collectors.toList());
+
+        return new CourseBoardInquiryResponseDto(
+                course.getTitle(),
+                boards,
+                new Pagination(page, size)
+        );
     }
     public CourseBoardShowResponseDto show(Long courseId, BoardType type, Long courseBoardId) {
         Course course = courseRepository.findById(courseId).orElseThrow(()->new IllegalArgumentException("없는 코스 입니다."));
