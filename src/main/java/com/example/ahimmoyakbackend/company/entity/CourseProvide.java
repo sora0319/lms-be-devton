@@ -59,7 +59,7 @@ public class CourseProvide extends Timestamped {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @OneToMany(mappedBy = "contract")
+    @OneToMany(mappedBy = "id")
     private List<Enrollment> enrollments = new ArrayList<>();
 
 }
