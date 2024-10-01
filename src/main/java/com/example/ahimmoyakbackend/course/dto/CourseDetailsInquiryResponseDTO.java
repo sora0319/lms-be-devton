@@ -1,6 +1,5 @@
 package com.example.ahimmoyakbackend.course.dto;
 
-import com.example.ahimmoyakbackend.company.entity.Contract;
 import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import com.example.ahimmoyakbackend.course.common.CourseCategory;
 import com.example.ahimmoyakbackend.course.entity.Course;
