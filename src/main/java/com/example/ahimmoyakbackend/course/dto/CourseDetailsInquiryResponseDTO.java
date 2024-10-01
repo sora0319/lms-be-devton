@@ -1,6 +1,7 @@
 package com.example.ahimmoyakbackend.course.dto;
 
 import com.example.ahimmoyakbackend.company.entity.Contract;
+import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import com.example.ahimmoyakbackend.course.common.CourseCategory;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.curriculum.dto.CurriculumInquiryResponseDTO;
@@ -28,15 +29,15 @@ public class CourseDetailsInquiryResponseDTO {
     private Integer totalContents;  // 진행률 계산을 위한 총 콘텐츠 수
     private Integer completedContents;  // 진행률 계산을 위한 완료된 콘텐츠 수
 
-    public static CourseDetailsInquiryResponseDTO from(Course course, Contract contract) {
+    public static CourseDetailsInquiryResponseDTO from(Course course, CourseProvide courseProvide) {
         return CourseDetailsInquiryResponseDTO.builder()
                 .title(course.getTitle())
                 .introduction(course.getIntroduction())
                 .category(course.getCategory())
                 .institutionName(course.getInstitution().getName())
                 .tutorName(course.getTutor().getUser().getName())
-                .beginDate(contract.getBeginDate())
-                .endDate(contract.getEndDate())
+                .beginDate(courseProvide.getBeginDate())
+                .endDate(courseProvide.getEndDate())
                 .build();
     }
 
