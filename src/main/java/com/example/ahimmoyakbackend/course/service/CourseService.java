@@ -1,8 +1,8 @@
 package com.example.ahimmoyakbackend.course.service;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
-import com.example.ahimmoyakbackend.company.entity.Contract;
-import com.example.ahimmoyakbackend.company.repository.ContractRepository;
+import com.example.ahimmoyakbackend.company.entity.CourseProvide;
+import com.example.ahimmoyakbackend.company.repository.CourseProvideRepository;
 import com.example.ahimmoyakbackend.contents.dto.ContentsInquiryResponseDTO;
 import com.example.ahimmoyakbackend.course.common.ContentsHistoryState;
 import com.example.ahimmoyakbackend.course.dto.*;
@@ -27,15 +27,16 @@ import java.util.List;
 public class CourseService {
     private final CourseRepository courseRepository;
     private final ContentsHistoryRepository contentsHistoryRepository;
-    private final ContractRepository contractRepository;
+    private final CourseProvideRepository courseProvideRepository;
     private final TutorRepository tutorRepository;
 
 
     @Transactional
     public CourseDetailsInquiryResponseDTO inquiry(User user, Long courseId) {
+
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new IllegalArgumentException("코스가 없습니다."));
-        Contract contract = contractRepository.findByCourseAndEnrollments_User(course, user).orElseThrow(() -> new IllegalArgumentException("컨텐츠가 없습니다."));
-        CourseDetailsInquiryResponseDTO courseDto = CourseDetailsInquiryResponseDTO.from(course, contract);
+        CourseProvide courseProvide = courseProvideRepository.findByCourseAndEnrollments_User(course, user).orElseThrow(() -> new IllegalArgumentException("컨텐츠가 없습니다."));
+        CourseDetailsInquiryResponseDTO courseDto = CourseDetailsInquiryResponseDTO.from(course, courseProvide);
 
         List<CurriculumInquiryResponseDTO> curriculumDTOList = new ArrayList<>();
         int courseTotalContents = 0;
@@ -51,9 +52,7 @@ public class CourseService {
             for (Contents contents : curriculum.getContentsList()) {
 
                 ContentsHistory history = contentsHistoryRepository.findByContentsAndEnrollment_User(contents, user).orElseThrow(() -> new IllegalArgumentException("컨텐츠의 히스토리가 없습니다."));
-
                 ContentsInquiryResponseDTO contentsDTO = ContentsInquiryResponseDTO.from(contents, history.getState());
-
                 courseTotalContents++;
 
                 if (history.getState().equals(ContentsHistoryState.COMPLETED)) {
