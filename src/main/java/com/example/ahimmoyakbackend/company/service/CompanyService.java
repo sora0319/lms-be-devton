@@ -1,7 +1,10 @@
 package com.example.ahimmoyakbackend.company.service;
 
 import com.example.ahimmoyakbackend.auth.common.UserRole;
+import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
+import com.example.ahimmoyakbackend.auth.config.security.UserDetailsServiceImpl;
 import com.example.ahimmoyakbackend.auth.entity.User;
+import com.example.ahimmoyakbackend.auth.jwt.JwtUtil;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import com.example.ahimmoyakbackend.company.dto.*;
 import com.example.ahimmoyakbackend.company.entity.Affiliation;
@@ -29,6 +32,8 @@ public class CompanyService {
     private final CompanyRepository companyRepository;
     private final AddressRepository addressRepository;
     private final UserRepository userRepository;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private final JwtUtil jwtUtil;
 
     @Transactional
     public List<CompanyInquiryUserResponseDto> getUserbyCompany(Long companyId, Long departmentId) {
@@ -181,4 +186,21 @@ public class CompanyService {
                 .collect(Collectors.toList());
 
     }
+
+    @Transactional
+    public Long getCompanyIdFromToken(String token) {
+
+        String username = jwtUtil.getUserInfoFromToken(token);
+        UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsServiceImpl.loadUserByUsername(username);
+
+        User user = userDetails.getUser();
+        Affiliation affiliation = user.getAffiliation();
+
+        if(affiliation != null && affiliation.getDepartment() != null) {
+            return affiliation.getDepartment().getCompany().getId();
+        }
+
+        return null;
+    }
+
 }
