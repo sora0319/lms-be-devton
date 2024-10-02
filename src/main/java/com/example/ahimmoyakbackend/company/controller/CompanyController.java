@@ -80,6 +80,12 @@ public class CompanyController {
         CompanyUpdateResponseDto updated = companyService.updateCompany(companyId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
+
+    @GetMapping("/v1/company/find")
+    public ResponseEntity<FindCompanyResponseDto> findcompanyName(@RequestBody FindCompanyRequestDto requestDto) {
+        return null;
+    }
+
 }
 
 
