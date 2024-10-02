@@ -61,6 +61,7 @@ public class CourseBoard extends Timestamped {
                 courseBoard.getUser().getUsername(),
                 courseBoard.getTitle(),
                 courseBoard.getType(),
+                courseBoard.getId(),
                 courseBoard.getCreatedAt()
         );
     }

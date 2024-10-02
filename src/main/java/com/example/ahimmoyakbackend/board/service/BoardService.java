@@ -79,6 +79,7 @@ public class BoardService {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .type(type)
+                .boardId(board.getId())
                 .createAt(board.getCreatedAt())
                 .comments(commentRepository.findAllByBoardId(boardId).stream().map(Comment::toDto).toList())
                 .build();

@@ -22,6 +22,8 @@ public class BoardInquiryResponseDto {
 
     private BoardType type;
 
+    private Long boardId;
+
     private LocalDateTime createAt;
 
 }

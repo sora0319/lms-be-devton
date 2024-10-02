@@ -18,6 +18,8 @@ public class CourseBoardsResponseDto {
 
     private BoardType type;
 
+    private Long boardId;
+
     private LocalDateTime createdAt;
 
 }

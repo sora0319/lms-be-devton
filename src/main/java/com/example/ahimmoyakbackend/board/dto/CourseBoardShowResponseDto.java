@@ -25,6 +25,8 @@ public class CourseBoardShowResponseDto {
 
     private BoardType type;
 
+    private Long boardId;
+
     private LocalDateTime createAt;
 
     private List<CommentOnBoardResponseDto> comments;

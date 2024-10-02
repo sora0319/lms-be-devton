@@ -138,6 +138,7 @@ public class CourseBoardService {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .type(type)
+                .boardId(board.getId())
                 .createAt(board.getCreatedAt())
                 .comments(courseCommentRepository.findAllByCourseBoardId(courseBoardId).stream().map(CourseComment::toDto).toList())
                 .build();
