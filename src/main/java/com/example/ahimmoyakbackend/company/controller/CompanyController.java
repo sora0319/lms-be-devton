@@ -1,8 +1,10 @@
 package com.example.ahimmoyakbackend.company.controller;
 
+import com.example.ahimmoyakbackend.auth.jwt.JwtUtil;
 import com.example.ahimmoyakbackend.company.dto.*;
 import com.example.ahimmoyakbackend.company.service.CompanyService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import java.util.List;
 public class CompanyController {
 
     private final CompanyService companyService;
+    private final JwtUtil jwtUtil;
 
     // User
     @RequestMapping(value = "/v1/supervisor/", method = RequestMethod.GET)
@@ -85,6 +88,24 @@ public class CompanyController {
     public ResponseEntity<List<FindCompanyResponseDto>> findcompanyName(@RequestBody FindCompanyRequestDto requestDto) {
         List<FindCompanyResponseDto> companyName = companyService.findCompanyName(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(companyName);
+    }
+
+    @GetMapping("/v1/users/companyId")
+    public ResponseEntity<Long> getLoggedInUserCompanyId(HttpServletRequest request) {
+
+        String token = jwtUtil.getTokenFromHeader(request, JwtUtil.ACCESS_TOKEN);
+
+        if(token != null && jwtUtil.validateToken(token)) {
+            Long companyId = companyService.getCompanyIdFromToken(token);
+
+            if (companyId != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(companyId);
+            } else { // 소속된 회사 없음
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        }
+        //유효하지 않은 토큰
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
 
 }
