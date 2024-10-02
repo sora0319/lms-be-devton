@@ -52,12 +52,11 @@ public class CourseBoardService {
     }
 
     public BoardUpdateResponseDto update(User user, BoardUpdateRequestDto requestDTO, Long courseId, Long courseBoardId) {
-        User user1 = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("잘못된 유저입니다."));
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new IllegalArgumentException("잘못된 코스입니다."));
-        CourseBoard updated = courseBoardRepository.findByCourseAndIdAndUser(course, courseBoardId, user1);
+        CourseBoard updated = courseBoardRepository.findByCourseAndIdAndUser(course, courseBoardId, user);
         Institution institution = institutionRepository.findById(course.getInstitution().getId()).orElseThrow(() -> new IllegalArgumentException("잘못된 기관입니다."));
         Manager manager = managerRepository.findByInstitution(institution);
-        if (updated.getType().equals(BoardType.NOTICE) && (user1.getId().equals(course.getTutor().getId()) || user1.getId().equals(manager.getUser().getId()))) {
+        if (updated.getType().equals(BoardType.NOTICE) && (user.getId().equals(course.getTutor().getId()) || user.getId().equals(manager.getUser().getId()))) {
             updated.patch(requestDTO, courseBoardId, courseId);
             courseBoardRepository.save(updated);
             return BoardUpdateResponseDto.builder().msg("공지 게시물 수정 완료").build();
@@ -72,13 +71,12 @@ public class CourseBoardService {
     }
 
     public BoardDeleteResponseDto delete(User user, Long courseId, Long courseBoardId) {
-        User user1 = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("잘못된 유저입니다."));
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new IllegalArgumentException("잘못된 코스입니다."));
         Institution institution = institutionRepository.findById(course.getInstitution().getId()).orElseThrow(() -> new IllegalArgumentException("잘못된 기관입니다."));
         Manager manager = managerRepository.findByInstitution(institution);
-        CourseBoard deleted = courseBoardRepository.findByCourseAndIdAndUser(course, courseBoardId, user1);
+        CourseBoard deleted = courseBoardRepository.findByCourseAndIdAndUser(course, courseBoardId, user);
 
-        if (deleted.getType().equals(BoardType.NOTICE) && (user1.getId().equals(course.getTutor().getId()) || user1.getId().equals(manager.getUser().getId()))) {
+        if (deleted.getType().equals(BoardType.NOTICE) && (user.getId().equals(course.getTutor().getId()) || user.getId().equals(manager.getUser().getId()))) {
             courseBoardRepository.delete(deleted);
             return BoardDeleteResponseDto.builder().msg("공지 게시물 삭제 완료").build();
         } else if (deleted.getType().equals(BoardType.QNA)) {
