@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -132,10 +133,6 @@ public class CompanyService {
     public CompanyEnrollResponseDto enrollCompany(Long userId, CompanyEnrollRequestDto requestDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 userId 가 없습니다"));
 
-        if (!user.getRole().equals(UserRole.MANAGER)) {
-            throw new IllegalArgumentException("회사 등록 권한이 없습니다");
-        }
-
         Company company = Company.builder()
                 .companyName(requestDto.getCompanyName())
                 .ownerName(requestDto.getOwnerName())
@@ -146,6 +143,10 @@ public class CompanyService {
                 .build();
 
         companyRepository.save(company);
+
+        // affiliation update
+        // department update
+
 
         return CompanyEnrollResponseDto.builder()
                 .msg("회사 등록 완료")
@@ -161,4 +162,23 @@ public class CompanyService {
         return CompanyUpdateResponseDto.toDto(updated);
     }
 
+    @Transactional
+    public List<FindCompanyResponseDto> findCompanyName(FindCompanyRequestDto requestDto) {
+
+        List<Company> companies = companyRepository.findByCompanyNameContaining(requestDto.getCompanyName());
+
+        if (companies.isEmpty()) {
+            return Collections.singletonList(FindCompanyResponseDto.builder()
+                    .msg("검색한 회사가 없습니다.")
+                    .build());
+        }
+
+        return companies.stream()
+                .map(company -> FindCompanyResponseDto.builder()
+                        .id(company.getId())
+                        .companyName(company.getCompanyName())
+                        .build())
+                .collect(Collectors.toList());
+
+    }
 }
