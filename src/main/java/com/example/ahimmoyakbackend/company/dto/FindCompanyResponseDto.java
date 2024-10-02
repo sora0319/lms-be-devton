@@ -11,4 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FindCompanyResponseDto {
     private String msg;
+    private Long id;
+    private String companyName;
 }
