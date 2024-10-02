@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CompanyUpdateResponseDto {
-    private String name;
+    private String companyName;
     private String ownerName;
     private String businessNumber;
     private String email;
@@ -19,12 +19,11 @@ public class CompanyUpdateResponseDto {
 
     public static CompanyUpdateResponseDto toDto(Company company) {
         return CompanyUpdateResponseDto.builder()
-                .name(company.getCompanyName())
+                .companyName(company.getCompanyName())
                 .ownerName(company.getOwnerName())
                 .businessNumber(company.getBusinessNumber())
                 .email(company.getEmail())
                 .phone(company.getPhone())
                 .build();
-
     }
 }
