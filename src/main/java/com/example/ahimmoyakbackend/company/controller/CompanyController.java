@@ -81,9 +81,10 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 
-    @GetMapping("/v1/company/find")
-    public ResponseEntity<FindCompanyResponseDto> findcompanyName(@RequestBody FindCompanyRequestDto requestDto) {
-        return null;
+    @PostMapping("/v1/company/search")
+    public ResponseEntity<List<FindCompanyResponseDto>> findcompanyName(@RequestBody FindCompanyRequestDto requestDto) {
+        List<FindCompanyResponseDto> companyName = companyService.findCompanyName(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(companyName);
     }
 
 }
