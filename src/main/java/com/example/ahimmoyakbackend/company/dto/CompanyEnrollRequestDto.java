@@ -33,4 +33,6 @@ public class CompanyEnrollRequestDto {
     @NotBlank(message = "전화번호를 입력하세요")
     private String phoneNumber;
 
+    @NotBlank(message = "담당자 부서를 입력하세요")
+    private String userDepartment;
 }
