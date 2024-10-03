@@ -149,8 +149,23 @@ public class CompanyService {
 
         companyRepository.save(company);
 
-        // affiliation update
         // department update
+        Department department = Department.builder()
+                .name(requestDto.getUserDepartment())
+                .company(company)
+                .build();
+
+        departmentRepository.save(department);
+
+        // affiliation update
+        Affiliation affiliation = Affiliation.builder()
+                .user(user)
+                .department(department)
+                .approval(true)
+                .isSupervisor(true)
+                .build();
+
+        affiliationRepository.save(affiliation);
 
 
         return CompanyEnrollResponseDto.builder()
