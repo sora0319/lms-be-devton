@@ -74,6 +74,9 @@ public class CompanyService {
 
         Affiliation updatedAffiliation = Affiliation.builder()
                 .id(affiliation.getId())
+                .user(affiliation.getUser())
+                .isSupervisor(affiliation.getIsSupervisor())
+                .approval(affiliation.getApproval())
                 .department(department)
                 .build();
 
