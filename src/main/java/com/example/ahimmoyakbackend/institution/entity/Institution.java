@@ -1,11 +1,15 @@
 package com.example.ahimmoyakbackend.institution.entity;
 
+import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,4 +40,7 @@ public class Institution extends Timestamped {
 
     @Column(length = 20)
     private String phone;
+
+    @OneToMany(mappedBy = "id")
+    private List<CourseProvide> courseProvide = new ArrayList<>();
 }
