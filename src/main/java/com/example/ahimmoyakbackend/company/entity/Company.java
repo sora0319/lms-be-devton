@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -36,4 +38,7 @@ public class Company extends Timestamped {
 
     @Column(nullable = false)
     private String phone;
+
+    @OneToMany(mappedBy = "id")
+    private List<CourseProvide> courseProvide;
 }
