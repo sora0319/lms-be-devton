@@ -1,6 +1,6 @@
 package com.example.ahimmoyakbackend.course.entity;
 
-import com.example.ahimmoyakbackend.company.entity.Contract;
+import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import com.example.ahimmoyakbackend.course.common.CourseCategory;
 import com.example.ahimmoyakbackend.course.common.TrainingCourseType;
 import com.example.ahimmoyakbackend.course.dto.CourseModifyRequestDTO;
@@ -52,8 +52,8 @@ public class Course extends Timestamped {
     private Tutor tutor;
 
     @OneToMany
-    @JoinColumn(name = "contract_id")
-    private List<Contract> contractList;
+    @JoinColumn(name = "courseProvide_id")
+    private List<CourseProvide> courseProvideList;
 
     @OneToOne
     @JoinColumn(name = "image_id")
