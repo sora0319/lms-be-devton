@@ -154,7 +154,7 @@ public class CompanyService {
 
         // department update
         Department department = Department.builder()
-                .name(requestDto.getUserDepartment())
+                .name("default department")
                 .company(company)
                 .build();
 
