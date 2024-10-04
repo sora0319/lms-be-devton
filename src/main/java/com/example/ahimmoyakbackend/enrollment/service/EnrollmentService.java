@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,14 +34,23 @@ public class EnrollmentService {
     private final AffiliationRepository affiliationRepository;
     private final UserRepository userRepository;
 
-    public List<EnrollmentGetListResponseDTO> getEnrollmentList(User user, Long institutionId, Long companyId) {
+    public List<EnrollmentGetListResponseDTO> getEnrollmentList(User user, Long companyId) {
+        List<Company> companyList;
+        if (companyId == null) {
+            System.out.println("없음");
+            companyList = companyRepository.findAll();
+        } else {
+            System.out.println("있음");
+            companyList = companyRepository.findAllById(companyId);
+
+        }
 
         Manager manager = managerRepository.findByUser(user);
         Institution institution = manager.getInstitution();
-
-        Company company = companyRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("회사가 없습니다."));
-
-        List<CourseProvide> courseProvideList = courseProvideRepository.findAllByCompanyAndCourse_Institution(company, institution);
+        List<CourseProvide> courseProvideList = new ArrayList<>();
+        for (Company company : companyList) {
+            courseProvideList.add(courseProvideRepository.findByCompanyAndCourse_Institution(company, institution));
+        }
 
         return courseProvideList.stream().map(contract -> {
             LocalDate endDate = contract.getEndDate();
@@ -64,7 +74,7 @@ public class EnrollmentService {
 
     public EnrollmentClassRegistrationResponseDTO registration(EnrollmentClassRegistrationRequestDTO dto) {
 
-        Enrollment enrollment = enrollmentRepository.findByContract_Company_IdAndContract_Course_Id(dto.getCompanyId(), dto.getCourseId());
+        Enrollment enrollment = enrollmentRepository.findByCourseProvide_Company_IdAndCourseProvide_Course_Id(dto.getCompanyId(), dto.getCourseId());
 
         CourseProvide courseProvide = courseProvideRepository.findById(dto.getCourse_providerId()).orElseThrow(() -> new IllegalArgumentException("계약 아이디가없습니다."));
 
@@ -113,4 +123,20 @@ public class EnrollmentService {
 
 
     }
+
+//    public List<EnrollmentReturnCompanyListResponseDTO> returnCompanyList(User user) {
+//
+//        List <CourseProvide> courseProvideList = user.getManager().getInstitution().getCourseProvide();
+//        for (CourseProvide courseProvide : courseProvideList) {
+//            courseProvide.getCompany();
+//        }
+//
+//
+//        return EnrollmentReturnCompanyListResponseDTO.builder()
+//                .companyName("asd")
+//                .companyId(123L)
+//                .build();
+//
+//
+//    }
 }
