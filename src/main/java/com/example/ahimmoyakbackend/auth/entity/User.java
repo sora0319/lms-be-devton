@@ -4,6 +4,7 @@ import com.example.ahimmoyakbackend.auth.common.Gender;
 import com.example.ahimmoyakbackend.company.entity.Affiliation;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import com.example.ahimmoyakbackend.auth.common.UserRole;
+import com.example.ahimmoyakbackend.institution.entity.Manager;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,5 +56,9 @@ public class User extends Timestamped {
     @OneToOne
     @JoinColumn(name = "affiliation_id")
     private Affiliation affiliation;
+
+    @OneToOne
+    @JoinColumn(name = "manager_id")
+    private Manager manager;
 
 }
