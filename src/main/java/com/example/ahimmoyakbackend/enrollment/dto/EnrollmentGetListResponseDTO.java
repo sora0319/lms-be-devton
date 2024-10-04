@@ -1,15 +1,11 @@
 package com.example.ahimmoyakbackend.enrollment.dto;
 
-import com.example.ahimmoyakbackend.company.entity.Contract;
-import com.example.ahimmoyakbackend.course.entity.Course;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 @Getter
 @Builder
