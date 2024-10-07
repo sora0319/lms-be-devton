@@ -24,7 +24,7 @@ public class CurriculumService {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 코스입니다."));
 
-        if (user.getRole() != UserRole.MANAGE) {
+        if (user.getRole() != UserRole.MANAGER) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
 
@@ -43,7 +43,7 @@ public class CurriculumService {
         courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 코스입니다."));
 
-        if (user.getRole() != UserRole.MANAGE) {
+        if (user.getRole() != UserRole.MANAGER) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
 
@@ -63,7 +63,7 @@ public class CurriculumService {
         courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 코스입니다."));
 
-        if (user.getRole() != UserRole.MANAGE) {
+        if (user.getRole() != UserRole.MANAGER) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
 
