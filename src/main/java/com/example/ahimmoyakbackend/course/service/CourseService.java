@@ -1,6 +1,7 @@
 package com.example.ahimmoyakbackend.course.service;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
+import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import com.example.ahimmoyakbackend.company.entity.Affiliation;
 import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import com.example.ahimmoyakbackend.company.repository.AffiliationRepository;
@@ -8,7 +9,9 @@ import com.example.ahimmoyakbackend.company.repository.CourseProvideRepository;
 import com.example.ahimmoyakbackend.course.common.CourseCategory;
 import com.example.ahimmoyakbackend.course.dto.*;
 import com.example.ahimmoyakbackend.course.entity.Course;
+import com.example.ahimmoyakbackend.course.entity.Enrollment;
 import com.example.ahimmoyakbackend.course.repository.CourseRepository;
+import com.example.ahimmoyakbackend.course.repository.EnrollmentRepository;
 import com.example.ahimmoyakbackend.institution.entity.Manager;
 import com.example.ahimmoyakbackend.institution.entity.Tutor;
 import com.example.ahimmoyakbackend.institution.repository.ManagerRepository;
@@ -35,6 +38,8 @@ public class CourseService {
     private final AffiliationRepository affiliationRepository;
     private final CourseProvideRepository courseProvideRepository;
     private final ManagerRepository managerRepository;
+    private final UserRepository userRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     // 마이페이지 코스리스트 조회
     @Transactional
@@ -140,9 +145,34 @@ public class CourseService {
     }
 
     // 수강신청 요청 사항 조회
-    public List<CourseProvideListResponseDTO> getCourseProvideList(
-            User user, Long courseProvideId, CourseProvideListResponseDTO requestDTO
-    ) {
-        return null;
+    @Transactional
+    public CourseProvideListResponseDTO getCourseProvideRequestList(User user, Long courseProvideId) {
+        CourseProvide findCourseProvide = courseProvideRepository.findById(courseProvideId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 요청입니다."));
+        User findSupervisor = userRepository.findById(findCourseProvide.getSupervisor().getId())
+                .orElseThrow(() -> new IllegalArgumentException("교육담당자가 존재하지 않습니다."));
+        List<CourseLearnerResponseDTO> learners = new ArrayList<>();
+        List<Enrollment> findEnrollment = enrollmentRepository.findAllByCourseProvideId(findCourseProvide.getId());
+        for (Enrollment enrollment : findEnrollment) {
+            learners.add(
+                    CourseLearnerResponseDTO.builder()
+                            .department(enrollment.getUser().getAffiliation().getDepartment().getName())
+                            .username(enrollment.getUser().getUsername())
+                            .name(enrollment.getUser().getName())
+                            .birth(enrollment.getUser().getBirth().toString())
+                            .build()
+            );
+        }
+        return CourseProvideListResponseDTO.builder()
+                .beginDate(findCourseProvide.getBeginDate())
+                .endDate(findCourseProvide.getEndDate())
+                .state(findCourseProvide.getState())
+                .attendeeCount(findCourseProvide.getAttendeeCount())
+                .applicantName(findSupervisor.getName())
+                .applicantPhone(findSupervisor.getPhone())
+                .applicantEmail(findSupervisor.getEmail())
+                .applicationDate(findCourseProvide.getCreatedAt().toLocalDate())
+                .learners(learners)
+                .build();
     }
 }

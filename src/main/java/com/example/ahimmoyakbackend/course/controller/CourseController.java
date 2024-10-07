@@ -22,7 +22,7 @@ import java.util.List;
 public class CourseController {
     private final CourseService courseService;
 
-    // 마이페이지 코스리스트 조회
+    // 마이페이지 코스목록 조회
     @GetMapping("/myPage")
     public ResponseEntity<Page<CourseListResponseDTO>> getCourseListMyPage(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -79,12 +79,12 @@ public class CourseController {
 
     // 수강신청 요청 사항 조회
     @GetMapping("/{courseProvideId}")
-    public ResponseEntity<List<CourseProvideListResponseDTO>> getCourseProvideList(
+    public ResponseEntity<CourseProvideListResponseDTO> getCourseProvideRequestList(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long courseProvideId,
-            @RequestParam CourseProvideListResponseDTO requestDTO
+            @PathVariable Long courseProvideId
     ) {
-        List<CourseProvideListResponseDTO> responseDTO = courseService.getCourseProvideList(userDetails.getUser(), courseProvideId, requestDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+        CourseProvideListResponseDTO response =
+                courseService.getCourseProvideRequestList(userDetails.getUser(), courseProvideId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
