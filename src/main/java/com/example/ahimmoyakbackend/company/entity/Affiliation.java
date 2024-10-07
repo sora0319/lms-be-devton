@@ -32,8 +32,6 @@ public class Affiliation extends Timestamped {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    @OneToOne(mappedBy = "affiliation", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private User user;
-
 }

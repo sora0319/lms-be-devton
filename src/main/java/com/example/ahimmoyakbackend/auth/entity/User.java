@@ -1,8 +1,9 @@
 package com.example.ahimmoyakbackend.auth.entity;
 
 import com.example.ahimmoyakbackend.auth.common.Gender;
-import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import com.example.ahimmoyakbackend.auth.common.UserRole;
+import com.example.ahimmoyakbackend.company.entity.Affiliation;
+import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +22,7 @@ public class User extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
 
     @Column(nullable = false, length = 20, unique = true)
@@ -51,4 +53,7 @@ public class User extends Timestamped {
 //    @ColumnDefault("NORMAL")
     private UserRole role;
 
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @JoinColumn(name = "affiliation_id")
+    private Affiliation affiliation;
 }
