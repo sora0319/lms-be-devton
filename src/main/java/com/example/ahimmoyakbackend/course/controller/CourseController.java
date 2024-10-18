@@ -35,7 +35,7 @@ public class CourseController {
 
     ;
 
-    @PatchMapping("/update")
+    @PatchMapping("/course/update")
     public ResponseEntity<CourseModifyResponseDTO> modifyCourse(@RequestParam Long courseId, @RequestBody CourseModifyRequestDTO dto) {
 
         CourseModifyResponseDTO responseDTO = courseService.modify(courseId, dto);
@@ -44,7 +44,7 @@ public class CourseController {
 
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/course/delete")
     public ResponseEntity<CourseDeleteResponseDTO> deleteCourse(@RequestParam Long courseId) {
 
         CourseDeleteResponseDTO responseDTO = courseService.delete(courseId);

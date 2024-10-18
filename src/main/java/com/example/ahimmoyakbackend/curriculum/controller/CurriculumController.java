@@ -17,7 +17,7 @@ public class CurriculumController {
 
     private final CurriculumService curriculumService;
 
-    @PatchMapping("/changeOrder")
+    @PatchMapping("curriculum/changeOrder")
     public ResponseEntity<CurriculumChangeOrderResponseDTO> curriculumChangeOrder(
             @RequestParam Long courseId,
             @RequestParam Long target1,
