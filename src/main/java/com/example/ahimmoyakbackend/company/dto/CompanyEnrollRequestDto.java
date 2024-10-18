@@ -28,7 +28,7 @@ public class CompanyEnrollRequestDto {
     private String email;
 
     @NotBlank(message = "회사 도메인을 입력하세요")
-    private String emailDomail;
+    private String emailDomain;
 
     @NotBlank(message = "전화번호를 입력하세요")
     private String phoneNumber;

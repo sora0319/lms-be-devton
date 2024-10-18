@@ -144,7 +144,7 @@ public class CompanyService {
             throw new IllegalArgumentException("이미 존재하는 사업자 등록번호입니다.");
         }
 
-        if (companyRepository.existsByEmailDomain(requestDto.getEmailDomail())) {
+        if (companyRepository.existsByEmailDomain(requestDto.getEmailDomain())) {
             throw new IllegalArgumentException("이미 존재하는 이메일 도메인 입니다.");
         }
         Company company = Company.builder()
@@ -152,7 +152,7 @@ public class CompanyService {
                 .ownerName(requestDto.getOwnerName())
                 .businessNumber(requestDto.getBusinessNumber())
                 .email(requestDto.getEmail())
-                .emailDomain(requestDto.getEmailDomail())
+                .emailDomain(requestDto.getEmailDomain())
                 .phone(requestDto.getPhoneNumber())
                 .build();
 
