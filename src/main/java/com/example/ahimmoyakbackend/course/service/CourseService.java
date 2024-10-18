@@ -13,6 +13,7 @@ import com.example.ahimmoyakbackend.course.entity.Curriculum;
 import com.example.ahimmoyakbackend.course.repository.ContentsHistoryRepository;
 import com.example.ahimmoyakbackend.course.repository.CourseRepository;
 import com.example.ahimmoyakbackend.curriculum.dto.CurriculumInquiryResponseDTO;
+import com.example.ahimmoyakbackend.institution.entity.Institution;
 import com.example.ahimmoyakbackend.institution.entity.Tutor;
 import com.example.ahimmoyakbackend.institution.repository.TutorRepository;
 import lombok.RequiredArgsConstructor;
@@ -71,16 +72,16 @@ public class CourseService {
         return courseDto;
 
     }
-
-    public CourseCreateResponseDTO create(CourseCreateRequestDTO dto) {
+    @Transactional
+    public CourseCreateResponseDTO create(User user, CourseCreateRequestDTO dto) {
         Tutor tutor = tutorRepository.findByUser_Name(dto.getTutorName());
-        Course course = courseRepository.findById(dto.getId()).orElseThrow(()-> new IllegalArgumentException("코스가 없습니다."));
-
+        Institution institution =  user.getManager().getInstitution();
 
         Course newCourse = Course.builder()
                 .title(dto.getTitle())
                 .introduction(dto.getIntroduction())
-                .image(course.getImage())
+                //.image(course.getImage())
+                .institution(institution)
                 .category(dto.getCategory())
                 .type(dto.getType())
                 .tutor(tutor)
@@ -93,12 +94,15 @@ public class CourseService {
                 .build();
 
     }
-
+    @Transactional
     public CourseModifyResponseDTO modify(Long courseId, CourseModifyRequestDTO dto) {
 
         Course course = courseRepository.findById(courseId).orElseThrow(()-> new IllegalArgumentException("코스가 존재 하지 않습니다."));
 
-        course.patch(dto, courseId);
+
+        Course course1 = course.patch(dto);
+
+        courseRepository.save(course1);
 
         return CourseModifyResponseDTO.builder()
                 .msg("수정 되었습니다.")
@@ -106,7 +110,7 @@ public class CourseService {
 
     }
 
-
+    @Transactional
     public CourseDeleteResponseDTO delete(Long courseId) {
 
         Course course = courseRepository.findById(courseId).orElseThrow(()-> new IllegalArgumentException("코스가 존재 하지 않습니다."));
