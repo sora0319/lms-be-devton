@@ -5,7 +5,7 @@ import com.example.ahimmoyakbackend.auth.common.UserRole;
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import com.example.ahimmoyakbackend.board.repository.*;
-import com.example.ahimmoyakbackend.company.common.ContractState;
+import com.example.ahimmoyakbackend.company.common.CourseProvideState;
 import com.example.ahimmoyakbackend.company.entity.Affiliation;
 import com.example.ahimmoyakbackend.company.entity.Company;
 import com.example.ahimmoyakbackend.company.entity.CourseProvide;
@@ -22,6 +22,7 @@ import com.example.ahimmoyakbackend.course.repository.*;
 import com.example.ahimmoyakbackend.global.entity.Address;
 import com.example.ahimmoyakbackend.global.repository.AddressRepository;
 import com.example.ahimmoyakbackend.global.repository.ImageRepository;
+
 import com.example.ahimmoyakbackend.institution.entity.Institution;
 import com.example.ahimmoyakbackend.institution.entity.Manager;
 import com.example.ahimmoyakbackend.institution.entity.Tutor;
@@ -339,7 +340,7 @@ public class DataGenerate {
                 .supervisor(affiliation1)
                 .beginDate(LocalDate.of(2024, 9, 10))
                 .endDate(LocalDate.of(2024, 12, 31))
-                .state(ContractState.ACCEPTED)
+                .state(CourseProvideState.ACCEPTED)
                 .attendeeCount(10)
                 .deposit(1000000L)
                 .build();

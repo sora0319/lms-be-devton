@@ -4,6 +4,7 @@ import com.example.ahimmoyakbackend.company.common.CourseProvideState;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.course.entity.Enrollment;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
+import com.example.ahimmoyakbackend.institution.entity.Institution;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

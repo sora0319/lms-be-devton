@@ -3,7 +3,6 @@ package com.example.ahimmoyakbackend.course.controller;
 import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
 import com.example.ahimmoyakbackend.course.dto.*;
 import com.example.ahimmoyakbackend.course.service.CourseService;
-import lombok.AllArgsConstructor;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import java.util.List;
 
 @Tag(name = "CourseController")
 @RestController
-@AllArgsConstructor
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/course")
 public class CourseController {
@@ -70,6 +68,8 @@ public class CourseController {
     public ResponseEntity<CourseCreateResponseDTO> createCourse(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CourseCreateRequestDTO dto) {
 
         CourseCreateResponseDTO responseDTO = courseService.create(userDetails.getUser(), dto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
     // 수강신청 요청
