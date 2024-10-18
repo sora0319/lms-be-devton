@@ -31,8 +31,7 @@ public class Curriculum extends Timestamped {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @OneToMany
-    @JoinColumn(name = "content_id")
+    @OneToMany(mappedBy = "curriculum")
     private List<Contents> contentsList;
 
 
