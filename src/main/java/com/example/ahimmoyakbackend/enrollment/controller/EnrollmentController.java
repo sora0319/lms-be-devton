@@ -55,7 +55,7 @@ public class EnrollmentController {
     }
 
     @GetMapping("/enrollment/company")
-    public ResponseEntity<List<EnrollmentReturnCompanyListResponseDTO>> returnCompanyList(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<List<EnrollmentReturnCompanyListResponseDTO>> returnCompanyList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         List<EnrollmentReturnCompanyListResponseDTO> responseDTO = enrollmentService.returnCompanyList(userDetails.getUser());
 

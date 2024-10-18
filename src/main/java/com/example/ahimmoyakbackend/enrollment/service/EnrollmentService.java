@@ -144,7 +144,7 @@ public class EnrollmentService {
     public List<EnrollmentReturnCompanyListResponseDTO> returnCompanyList(User user) {
         Manager manager = managerRepository.findByUser(user);
 
-        List <CourseProvide> courseProvideList = manager.getInstitution().getCourseProvide();
+        List<CourseProvide> courseProvideList = manager.getInstitution().getCourseProvide();
         for (CourseProvide courseProvide : courseProvideList) {
             courseProvide.getCompany();
         }
