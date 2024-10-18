@@ -39,7 +39,7 @@ public class Course extends Timestamped {
     @Enumerated(EnumType.STRING)
     private CourseCategory category;
 
-    @Column(nullable = false)
+    @Column
     @Enumerated(EnumType.STRING)
     private TrainingCourseType type;
 
@@ -51,27 +51,25 @@ public class Course extends Timestamped {
     @JoinColumn(name = "tutor_id")
     private Tutor tutor;
 
-    @OneToMany
-    @JoinColumn(name = "courseProvide_id")
+    @OneToMany(mappedBy = "course")
     private List<CourseProvide> courseProvideList;
 
     @OneToOne
     @JoinColumn(name = "image_id")
     private Image image;
 
-    @OneToMany
-    @JoinColumn(name = "curriculum_id")
+    @OneToMany(mappedBy = "course")
     private List<Curriculum> curriculumList;
 
-    public void patch(CourseModifyRequestDTO requestDTO, Long courseId) {
+    public Course patch(CourseModifyRequestDTO requestDTO) {
 
-        if (this.id != courseId) {
-            throw new IllegalArgumentException("잘못된 게시물 입니다.");
-        }
         if (requestDTO.getTitle() != null) {
             this.title = requestDTO.getTitle();
         }
         if (requestDTO.getIntroduction() != null) {
+            this.introduction = requestDTO.getIntroduction();
+        }
+        if (requestDTO.getCategory() != null) {
             this.category = requestDTO.getCategory();
         }
         if (requestDTO.getImage() != null) {
@@ -80,6 +78,6 @@ public class Course extends Timestamped {
         if (requestDTO.getType() != null) {
             this.type = requestDTO.getType();
         }
-
+        return this;
     }
 }
