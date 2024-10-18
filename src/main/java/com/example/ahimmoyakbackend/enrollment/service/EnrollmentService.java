@@ -35,6 +35,7 @@ public class EnrollmentService {
     private final AffiliationRepository affiliationRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public List<EnrollmentGetListResponseDTO> getEnrollmentList(User user, Long companyId) {
         List<Company> companyList;
         if (companyId == null) {
@@ -72,7 +73,7 @@ public class EnrollmentService {
 
 
     }
-
+    @Transactional
     public EnrollmentClassRegistrationResponseDTO registration(EnrollmentClassRegistrationRequestDTO dto) {
 
         Enrollment enrollment = enrollmentRepository.findByCourseProvide_Company_IdAndCourseProvide_Course_Id(dto.getCompanyId(), dto.getCourseId());
@@ -90,7 +91,7 @@ public class EnrollmentService {
 
 
     }
-
+    @Transactional
     public EnrollmentClassCancelResponseDTO cancelEnrollment(Long id) {
         Enrollment enrollment = enrollmentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("수강신청 아이디가 없습니다."));
 
@@ -102,7 +103,7 @@ public class EnrollmentService {
                 .msg("수강 인원 삭제 완료")
                 .build();
     }
-
+    @Transactional
     public EnrollmentTossRosterResponseDTO tossRoster(User user, EnrollmentTossRosterRequestDTO dto) {
 
         // DTO에서 넘어온 체크된 사원 명단 (이름 or ID)
