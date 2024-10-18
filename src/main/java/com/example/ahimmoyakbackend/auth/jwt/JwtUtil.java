@@ -2,8 +2,6 @@ package com.example.ahimmoyakbackend.auth.jwt;
 
 import com.example.ahimmoyakbackend.auth.config.security.UserDetailsServiceImpl;
 import com.example.ahimmoyakbackend.auth.dto.JwsDTO;
-import com.example.ahimmoyakbackend.auth.entity.RefreshToken;
-import com.example.ahimmoyakbackend.auth.repository.RefreshTokenRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -24,14 +22,12 @@ import org.springframework.util.StringUtils;
 import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Optional;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
     private final UserDetailsServiceImpl userDetailsService;
-    private final RefreshTokenRepository refreshTokenRepository;
     public static final String ACCESS_TOKEN = "Authorization";
     public static final String REFRESH_TOKEN = "refresh";
     private static final String BEARER_PREFIX = "[Bearer]";
@@ -102,11 +98,6 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(key).build().parseSignedClaims(jws).getPayload().getSubject();
     }
 
-    public boolean refreshTokenValid(String jws) {
-        if (!validateToken(jws)) return false;
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(getUserInfoFromToken(jws));
-        return refreshToken.isPresent() && jws.equals(refreshToken.get().getRefreshToken().substring(8));
-    }
 
     public void setHeaderAccessToken(HttpServletResponse response, String newAccessToken) {
         response.setHeader(ACCESS_TOKEN, newAccessToken);
