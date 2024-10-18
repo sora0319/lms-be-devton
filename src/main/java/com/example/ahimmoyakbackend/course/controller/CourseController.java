@@ -24,6 +24,7 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
 
     }
+
     @PostMapping("/course")
     public ResponseEntity<CourseCreateResponseDTO> createCourse(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CourseCreateRequestDTO dto) {
 
