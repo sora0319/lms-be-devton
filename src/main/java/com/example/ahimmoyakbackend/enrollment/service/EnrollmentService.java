@@ -2,12 +2,12 @@ package com.example.ahimmoyakbackend.enrollment.service;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
-import com.example.ahimmoyakbackend.company.entity.Affiliation;
 import com.example.ahimmoyakbackend.company.entity.Company;
 import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import com.example.ahimmoyakbackend.company.repository.AffiliationRepository;
 import com.example.ahimmoyakbackend.company.repository.CompanyRepository;
 import com.example.ahimmoyakbackend.company.repository.CourseProvideRepository;
+import com.example.ahimmoyakbackend.course.common.EnrollmentState;
 import com.example.ahimmoyakbackend.course.entity.Enrollment;
 import com.example.ahimmoyakbackend.course.repository.EnrollmentRepository;
 import com.example.ahimmoyakbackend.enrollment.dto.*;
@@ -16,6 +16,7 @@ import com.example.ahimmoyakbackend.institution.entity.Manager;
 import com.example.ahimmoyakbackend.institution.repository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -104,39 +105,59 @@ public class EnrollmentService {
 
     public EnrollmentTossRosterResponseDTO tossRoster(User user, EnrollmentTossRosterRequestDTO dto) {
 
-        Long companyId = user.getAffiliation().getDepartment().getCompany().getId();
+        // DTO에서 넘어온 체크된 사원 명단 (이름 or ID)
+        List<String> selectedUserNames = dto.getUserName();
 
-        List<Affiliation> affiliation = affiliationRepository.findAllByDepartment_Company_Id(companyId);
+        // 해당 회사 소속의 모든 사용자 정보 조회
+        List<User> users = userRepository.findAllByAffiliation_Department_Company_Id(user.getAffiliation().getDepartment().getCompany().getId());
 
-        List<String> affiliationList =
-                affiliation.stream().map(aff -> aff.getUser().getName()).toList();
+        // 선택된 사원들을 Enrollment에 저장
+        List<Enrollment> enrollments = selectedUserNames.stream()
+                .map(userName -> {
+                    // User 엔티티에서 이름에 해당하는 사원을 찾아 Enrollment로 저장
+                    User selectedUser = users.stream()
+                            .filter(u -> u.getName().equals(userName))
+                            .findFirst()
+                            .orElseThrow(() -> new RuntimeException("해당 사원이 존재하지 않습니다."));
 
-        List<String> filteredNames = affiliationList.stream()
-                .filter(dto.getUserName()::contains)
+                    // Enrollment 객체 생성 (빌더 패턴 사용)
+                    Enrollment enrollment = Enrollment.builder()
+                            .user(selectedUser)
+                            .state(EnrollmentState.ONPROGRESS)
+                            .build();
+
+                    // Enrollment 저장
+                    enrollmentRepository.save(enrollment);
+                    return enrollment;
+                })
                 .toList();
 
-
+        // 응답 생성
         return EnrollmentTossRosterResponseDTO.builder()
-                .msg("사원 명단이 정상적으로 넘겨졌습니다.")
-                .userName(filteredNames)
+                .msg("선택한 사원들이 정상적으로 등록되었습니다.")
+                .userName(selectedUserNames)  // 선택한 사원들의 이름 리스트 반환
                 .build();
-
 
     }
 
-//    public List<EnrollmentReturnCompanyListResponseDTO> returnCompanyList(User user) {
-//
-//        List <CourseProvide> courseProvideList = user.getManager().getInstitution().getCourseProvide();
-//        for (CourseProvide courseProvide : courseProvideList) {
-//            courseProvide.getCompany();
-//        }
-//
-//
-//        return EnrollmentReturnCompanyListResponseDTO.builder()
-//                .companyName("asd")
-//                .companyId(123L)
-//                .build();
-//
-//
-//    }
+    @Transactional
+    public List<EnrollmentReturnCompanyListResponseDTO> returnCompanyList(User user) {
+        Manager manager = managerRepository.findByUser(user);
+
+        List <CourseProvide> courseProvideList = manager.getInstitution().getCourseProvide();
+        for (CourseProvide courseProvide : courseProvideList) {
+            courseProvide.getCompany();
+        }
+
+
+        List<EnrollmentReturnCompanyListResponseDTO> responseDTOs = courseProvideList.stream()
+                .map(courseProvide -> EnrollmentReturnCompanyListResponseDTO.builder()
+                        .companyName(courseProvide.getCompany().getName())  // 회사 이름 가져오기
+                        .companyId(courseProvide.getCompany().getId())      // 회사 ID 가져오기
+                        .build())
+                .toList();
+
+        return responseDTOs;
+
+    }
 }
