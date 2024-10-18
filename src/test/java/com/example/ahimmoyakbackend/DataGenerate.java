@@ -164,7 +164,7 @@ public class DataGenerate {
                 .phone("01011111111")
                 .email("one@ahim.com")
                 .gender(Gender.MALE)
-                .role(UserRole.EMPLOYEE)
+                .role(UserRole.COMPANY)
                 .build();
         userRepository.save(user1);
         Address address1 = Address.builder()
@@ -233,7 +233,7 @@ public class DataGenerate {
                 .phone("01033333333")
                 .email("three@tutor.com")
                 .gender(Gender.MALE)
-                .role(UserRole.TUTOR)
+                .role(UserRole.INSTRUCTOR)
                 .build();
         userRepository.save(user3);
         Tutor tutor1 = Tutor.builder()
@@ -353,7 +353,7 @@ public class DataGenerate {
                 .phone("01010101010")
                 .email("st1@ahim.com")
                 .gender(Gender.MALE)
-                .role(UserRole.EMPLOYEE)
+                .role(UserRole.COMPANY)
                 .build();
         userRepository.save(student1);
         User student2 = User.builder()
@@ -364,7 +364,7 @@ public class DataGenerate {
                 .phone("01020202020")
                 .email("st2@ahim.com")
                 .gender(Gender.MALE)
-                .role(UserRole.EMPLOYEE)
+                .role(UserRole.COMPANY)
                 .build();
         userRepository.save(student2);
 

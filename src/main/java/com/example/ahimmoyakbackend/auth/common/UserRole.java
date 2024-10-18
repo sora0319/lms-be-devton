@@ -1,5 +1,5 @@
 package com.example.ahimmoyakbackend.auth.common;
 
 public enum UserRole {
-    NORMAL, EMPLOYEE, MANAGER, ADMIN, TUTOR
+    NORMAL, COMPANY, MANAGER, ADMIN, INSTRUCTOR, SUPERVISOR, TESTER
 }

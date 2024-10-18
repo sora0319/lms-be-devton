@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.company.entity;
 
+import com.example.ahimmoyakbackend.company.dto.CompanyUpdateDepartmentRequestDto;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,4 +26,10 @@ public class Department extends Timestamped {
     @JoinColumn(name = "company_id")
     private Company company;
 
+
+    public void patch(CompanyUpdateDepartmentRequestDto requestDto) {
+        if (this.name != requestDto.getDepartmentName()) {
+            this.name = requestDto.getDepartmentName();
+        }
+    }
 }
