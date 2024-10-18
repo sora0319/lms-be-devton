@@ -53,12 +53,10 @@ public class User extends Timestamped {
 //    @ColumnDefault("NORMAL")
     private UserRole role;
 
-    @OneToOne
-    @JoinColumn(name = "affiliation_id")
+    @OneToOne(mappedBy = "user")
     private Affiliation affiliation;
 
-    @OneToOne
-    @JoinColumn(name = "manager_id")
+    @OneToOne(mappedBy = "user")
     private Manager manager;
 
 }
