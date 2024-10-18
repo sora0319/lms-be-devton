@@ -24,11 +24,10 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
 
     }
-
     @PostMapping("/course")
     public ResponseEntity<CourseCreateResponseDTO> createCourse(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CourseCreateRequestDTO dto) {
 
-        CourseCreateResponseDTO responseDTO = courseService.create(dto);
+        CourseCreateResponseDTO responseDTO = courseService.create(userDetails.getUser(), dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
@@ -36,7 +35,7 @@ public class CourseController {
     ;
 
     @PatchMapping("/update")
-    public ResponseEntity<CourseModifyResponseDTO> modifyCourse(@RequestParam Long courseId, CourseModifyRequestDTO dto) {
+    public ResponseEntity<CourseModifyResponseDTO> modifyCourse(@RequestParam Long courseId, @RequestBody CourseModifyRequestDTO dto) {
 
         CourseModifyResponseDTO responseDTO = courseService.modify(courseId, dto);
 
