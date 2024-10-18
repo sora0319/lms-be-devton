@@ -1,6 +1,5 @@
 package com.example.ahimmoyakbackend.enrollment.dto;
 
-import com.example.ahimmoyakbackend.company.entity.Contract;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
