@@ -1,6 +1,5 @@
 package com.example.ahimmoyakbackend.company.service;
 
-import com.example.ahimmoyakbackend.auth.common.UserRole;
 import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
 import com.example.ahimmoyakbackend.auth.config.security.UserDetailsServiceImpl;
 import com.example.ahimmoyakbackend.auth.entity.User;
@@ -141,8 +140,15 @@ public class CompanyService {
     public CompanyEnrollResponseDto enrollCompany(Long userId, CompanyEnrollRequestDto requestDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 userId 가 없습니다"));
 
+        if (companyRepository.existsByBusinessNumber(requestDto.getBusinessNumber())) {
+            throw new IllegalArgumentException("이미 존재하는 사업자 등록번호입니다.");
+        }
+
+        if (companyRepository.existsByEmailDomain(requestDto.getEmailDomail())) {
+            throw new IllegalArgumentException("이미 존재하는 이메일 도메인 입니다.");
+        }
         Company company = Company.builder()
-                .companyName(requestDto.getCompanyName())
+                .name(requestDto.getCompanyName())
                 .ownerName(requestDto.getOwnerName())
                 .businessNumber(requestDto.getBusinessNumber())
                 .email(requestDto.getEmail())
@@ -188,7 +194,7 @@ public class CompanyService {
     @Transactional
     public List<FindCompanyResponseDto> findCompanyName(FindCompanyRequestDto requestDto) {
 
-        List<Company> companies = companyRepository.findByCompanyNameContaining(requestDto.getCompanyName());
+        List<Company> companies = companyRepository.findByNameContaining(requestDto.getCompanyName());
 
         if (companies.isEmpty()) {
             return Collections.singletonList(FindCompanyResponseDto.builder()
@@ -199,7 +205,7 @@ public class CompanyService {
         return companies.stream()
                 .map(company -> FindCompanyResponseDto.builder()
                         .id(company.getId())
-                        .companyName(company.getCompanyName())
+                        .companyName(company.getName())
                         .build())
                 .collect(Collectors.toList());
 
