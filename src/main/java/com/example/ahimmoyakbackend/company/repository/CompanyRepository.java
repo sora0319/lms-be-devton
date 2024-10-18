@@ -8,6 +8,9 @@ import java.util.List;
 
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
-    List<Company> findByCompanyNameContaining(String companyName);
+    List<Company> findByNameContaining(String companyName);
 
+    boolean existsByBusinessNumber(String businessNumber);
+
+    boolean existsByEmailDomain(String emailDomain);
 }
