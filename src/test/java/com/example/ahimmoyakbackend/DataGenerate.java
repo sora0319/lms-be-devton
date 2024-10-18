@@ -12,7 +12,7 @@ import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import com.example.ahimmoyakbackend.company.entity.Department;
 import com.example.ahimmoyakbackend.company.repository.AffiliationRepository;
 import com.example.ahimmoyakbackend.company.repository.CompanyRepository;
-import com.example.ahimmoyakbackend.company.repository.ContractRepository;
+import com.example.ahimmoyakbackend.company.repository.CourseProvideRepository;
 import com.example.ahimmoyakbackend.company.repository.DepartmentRepository;
 import com.example.ahimmoyakbackend.course.common.ContentType;
 import com.example.ahimmoyakbackend.course.common.CourseCategory;
@@ -100,7 +100,8 @@ public class DataGenerate {
     @Autowired TargetUserRepository targetUserRepository;
     @Autowired AffiliationRepository affiliationRepository;
     @Autowired CompanyRepository companyRepository;
-    @Autowired ContractRepository contractRepository;
+    @Autowired
+    CourseProvideRepository courseProvideRepository;
     @Autowired DepartmentRepository departmentRepository;
     @Autowired AttendHistoryRepository attendHistoryRepository;
     @Autowired ContentsHistoryRepository contentsHistoryRepository;
@@ -342,7 +343,7 @@ public class DataGenerate {
                 .attendeeCount(10)
                 .deposit(1000000L)
                 .build();
-        contractRepository.save(courseProvide1);
+        courseProvideRepository.save(courseProvide1);
 
         // 수강할 User 들 생성
         User student1 = User.builder()

@@ -5,6 +5,7 @@ import com.example.ahimmoyakbackend.company.entity.Affiliation;
 import com.example.ahimmoyakbackend.global.entity.Address;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import com.example.ahimmoyakbackend.auth.common.UserRole;
+import com.example.ahimmoyakbackend.institution.entity.Manager;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -62,5 +63,7 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user")
     private List<Address> addresses = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user")
+    private Manager manager;
 
 }

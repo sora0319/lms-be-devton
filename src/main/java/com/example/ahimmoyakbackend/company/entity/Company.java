@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 import java.util.Objects;
 
 @Entity
@@ -39,6 +41,9 @@ public class Company extends Timestamped {
 
     @Column(nullable = false)
     private String phone;
+
+    @OneToMany(mappedBy = "id")
+    private List<CourseProvide> courseProvide;
 
     public void patch(CompanyUpdateRequestDto requestDto) {
         if (!Objects.equals(this.name,requestDto.getName()))
