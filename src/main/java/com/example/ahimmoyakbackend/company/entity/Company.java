@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Builder
@@ -39,15 +41,15 @@ public class Company extends Timestamped {
     private String phone;
 
     public void patch(CompanyUpdateRequestDto requestDto) {
-        if (this.name.equals(requestDto.getName()))
+        if (!Objects.equals(this.name,requestDto.getName()))
             this.name = requestDto.getName();
-        if (this.ownerName != requestDto.getOwnerName())
+        if (!Objects.equals(this.ownerName, requestDto.getOwnerName()))
             this.ownerName = requestDto.getOwnerName();
-        if (this.businessNumber != requestDto.getBusinessNumber())
+        if (!Objects.equals(this.businessNumber, requestDto.getBusinessNumber()))
             this.businessNumber = requestDto.getBusinessNumber();
-        if (this.email != requestDto.getEmail())
+        if (!Objects.equals(this.email, requestDto.getEmail()))
             this.email = requestDto.getEmail();
-        if (this.phone != requestDto.getPhone())
+        if (!Objects.equals(this.phone, requestDto.getPhone()))
             this.phone = requestDto.getPhone();
     }
 }
