@@ -3,7 +3,6 @@ package com.example.ahimmoyakbackend.curriculum.controller;
 import com.example.ahimmoyakbackend.curriculum.dto.CurriculumChangeOrderResponseDTO;
 import com.example.ahimmoyakbackend.curriculum.service.CurriculumService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -30,6 +29,4 @@ public class CurriculumController {
 
 
     }
-
-
 }
