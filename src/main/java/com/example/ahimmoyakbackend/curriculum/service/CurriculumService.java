@@ -15,17 +15,15 @@ public class CurriculumService {
     private final CurriculumRepository curriculumRepository;
     private final CourseRepository courseRepository;
 
-    public CurriculumChangeOrderResponseDTO changeOrder(Long courseId, Long target1, Long target2) {
+    public CurriculumChangeOrderResponseDTO changeOrder(Long courseId, Long target1, Long target2) throws IllegalArgumentException {
 
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new IllegalArgumentException("코스가 없습니다,"));
 
         Curriculum curriculum1 = curriculumRepository.findById(target1).orElseThrow(() -> new IllegalArgumentException("선택한 커리큘럼이 없습니다."));
         Curriculum curriculum2 = curriculumRepository.findById(target2).orElseThrow(() -> new IllegalArgumentException("바꿀 커리큘럼이 없습니다."));
 
-        if (!course.getCurriculumList().contains(curriculum1) || course.getCurriculumList().contains(curriculum2)) {
-            throw new IllegalArgumentException("해당 코스에 없는 커리큘럼입니다.");
-        }
-
+        if (!(course.getId().equals(curriculum1.getCourse().getId()) || course.getId().equals(curriculum2.getCourse().getId())))
+            throw new IllegalArgumentException("코스에 맞는 커리큘럼이 아닙니다.");
         Curriculum changeIdx1 = Curriculum.builder()
                 .id(curriculum1.getId())
                 .title(curriculum1.getTitle())
@@ -33,8 +31,8 @@ public class CurriculumService {
                 .build();
 
         Curriculum changeIdx2 = Curriculum.builder()
-                .id(curriculum1.getId())
-                .title(curriculum1.getTitle())
+                .id(curriculum2.getId())
+                .title(curriculum2.getTitle())
                 .idx(curriculum1.getIdx())
                 .build();
 
@@ -44,7 +42,6 @@ public class CurriculumService {
         return CurriculumChangeOrderResponseDTO.builder()
                 .msg("성공적으로 idx 변경됨.")
                 .build();
-
 
 
     }
