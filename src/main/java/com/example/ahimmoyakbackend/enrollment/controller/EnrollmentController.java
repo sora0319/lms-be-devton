@@ -28,12 +28,13 @@ public class EnrollmentController {
     }
 
 
-    @PatchMapping("/enrollment/registration") // 수강 신청  등록해주는거
+    @PostMapping("/enrollment/registration") // 수강 신청  등록해주는거
     public ResponseEntity<EnrollmentClassRegistrationResponseDTO> registrationEnrollment(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody EnrollmentClassRegistrationRequestDTO dto) {
 
         EnrollmentClassRegistrationResponseDTO responseDTO = enrollmentService.registration(dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+
 
     }
 
@@ -53,14 +54,14 @@ public class EnrollmentController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
-//    @GetMapping("/enrollment/company")
-//    public ResponseEntity<List<EnrollmentReturnCompanyListResponseDTO>> returnCompanyList(@AuthenticationPrincipal UserDetailsImpl userDetails){
-//
-//        List<EnrollmentReturnCompanyListResponseDTO> responseDTO = enrollmentService.returnCompanyList(userDetails.getUser());
-//
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
-//    }
+    @GetMapping("/enrollment/company")
+    public ResponseEntity<List<EnrollmentReturnCompanyListResponseDTO>> returnCompanyList(@AuthenticationPrincipal UserDetailsImpl userDetails){
+
+        List<EnrollmentReturnCompanyListResponseDTO> responseDTO = enrollmentService.returnCompanyList(userDetails.getUser());
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+    }
 
 
 }
