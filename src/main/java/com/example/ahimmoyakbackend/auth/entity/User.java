@@ -55,10 +55,12 @@ public class User extends Timestamped {
 //    @ColumnDefault("NORMAL")
     private UserRole role;
 
-    @OneToOne
-    @JoinColumn(name = "affiliation_id", nullable = true)
+    @OneToOne(mappedBy = "user")
     private Affiliation affiliation;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Address> address = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
+    private List<Address> addresses = new ArrayList<>();
+
+
 }
