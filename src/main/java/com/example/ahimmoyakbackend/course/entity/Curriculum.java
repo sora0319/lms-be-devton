@@ -35,4 +35,9 @@ public class Curriculum extends Timestamped {
     private List<Contents> contentsList;
 
 
+    public void patch(String title, Integer idx) {
+        this.title = title;
+        this.idx = idx;
+
+    }
 }

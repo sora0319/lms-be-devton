@@ -7,6 +7,6 @@ import com.example.ahimmoyakbackend.institution.entity.Manager;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ManagerRepository extends JpaRepository<Manager, Long> {
-    Manager findByInstitution(Institution institution);
     Manager findByUser(User user);
+    Manager findByInstitution(Institution institution);
 }

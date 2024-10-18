@@ -1,10 +1,9 @@
 package com.example.ahimmoyakbackend.company.entity;
 
-import com.example.ahimmoyakbackend.company.common.ContractState;
+import com.example.ahimmoyakbackend.company.common.CourseProvideState;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.course.entity.Enrollment;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
-import com.example.ahimmoyakbackend.institution.entity.Institution;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +34,7 @@ public class CourseProvide extends Timestamped {
     @Column(nullable = false)
 //    @ColumnDefault("PENDING")
     @Enumerated(value = EnumType.STRING)
-    private ContractState state;
+    private CourseProvideState state;
 
     @Column(nullable = false)
     private Integer attendeeCount;
@@ -62,4 +61,7 @@ public class CourseProvide extends Timestamped {
     @OneToMany(mappedBy = "id")
     private List<Enrollment> enrollments = new ArrayList<>();
 
+    public void patch(CourseProvideState state) {
+        this.state = state;
+    }
 }
