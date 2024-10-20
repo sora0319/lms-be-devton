@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -29,4 +31,13 @@ public class Curriculum extends Timestamped {
     @JoinColumn(name = "course_id")
     private Course course;
 
+    @OneToMany(mappedBy = "curriculum")
+    private List<Contents> contentsList;
+
+
+    public void patch(String title, Integer idx) {
+        this.title = title;
+        this.idx = idx;
+
+    }
 }

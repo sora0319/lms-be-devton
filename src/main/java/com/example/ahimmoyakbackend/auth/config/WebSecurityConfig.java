@@ -63,8 +63,8 @@ public class WebSecurityConfig {
                 }))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("api/v1/manager/test").hasRole("MANAGER")   // MANAGER 역할만 접근 가능
-                        .anyRequest().permitAll()               // 나머지 요청은 인증 필요
+                        .requestMatchers("api/v1/manager/test").hasRole("MANAGER")
+                        .anyRequest().permitAll()
                 )
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling

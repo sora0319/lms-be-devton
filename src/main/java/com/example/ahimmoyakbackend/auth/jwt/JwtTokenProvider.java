@@ -3,8 +3,6 @@ package com.example.ahimmoyakbackend.auth.jwt;
 import com.example.ahimmoyakbackend.auth.common.UserRole;
 import com.example.ahimmoyakbackend.auth.config.security.impl.UserDetailsServiceImpl;
 import com.example.ahimmoyakbackend.auth.dto.JwsDTO;
-import com.example.ahimmoyakbackend.auth.entity.RefreshToken;
-import com.example.ahimmoyakbackend.auth.repository.RefreshTokenRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -25,14 +23,12 @@ import org.springframework.util.StringUtils;
 import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Optional;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
     private final UserDetailsServiceImpl userDetailsService;
-    private final RefreshTokenRepository refreshTokenRepository;
     public static final String ACCESS_TOKEN = "Authorization";
     public static final String REFRESH_TOKEN = "refresh";
     private static final String BEARER_PREFIX = "[Bearer]";
