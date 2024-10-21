@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
-public class CompanyInquiryUserResponseDto {
+public class CompanyInquiryUserDetailResponseDto {
 
     private static AddressRepository addressRepository;
 
@@ -34,7 +34,7 @@ public class CompanyInquiryUserResponseDto {
     private final String departmentName;
     private final List<CompanyGetAddressDto> addresses;
 
-    public static CompanyInquiryUserResponseDto toDto(Affiliation affiliation, List<Address> addresses) {
+    public static CompanyInquiryUserDetailResponseDto toDto(Affiliation affiliation, List<Address> addresses) {
         User user = affiliation.getUser();
         Department department = affiliation.getDepartment();
 
@@ -42,7 +42,7 @@ public class CompanyInquiryUserResponseDto {
                 .map(CompanyGetAddressDto::fromEntity)
                 .collect(Collectors.toList());
 
-        return CompanyInquiryUserResponseDto.builder()
+        return CompanyInquiryUserDetailResponseDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .name(user.getName())
