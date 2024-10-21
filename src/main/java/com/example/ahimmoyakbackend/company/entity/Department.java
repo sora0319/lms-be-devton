@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Builder
@@ -28,7 +30,7 @@ public class Department extends Timestamped {
 
 
     public void patch(CompanyUpdateDepartmentRequestDto requestDto) {
-        if (this.name != requestDto.getDepartmentName()) {
+        if (!Objects.equals(this.name, requestDto.getDepartmentName())) {
             this.name = requestDto.getDepartmentName();
         }
     }
