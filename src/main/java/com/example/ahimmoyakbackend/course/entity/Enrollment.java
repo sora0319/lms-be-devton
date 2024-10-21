@@ -36,8 +36,21 @@ public class Enrollment extends Timestamped {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "course_provide_id")
+    @JoinColumn(name = "courseProvide_id")
     private CourseProvide courseProvide;
+
+    public void assignCourseProvide(CourseProvide courseProvide) {
+        if (this.courseProvide != null) {
+            throw new RuntimeException("계약 아이디가 없습니다.");
+        }
+        this.courseProvide = courseProvide;
+    }
+    public void cancelCourseProvide() {
+
+        this.courseProvide = null;
+    }
+
+
 
 }
 

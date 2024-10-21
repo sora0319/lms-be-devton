@@ -1,5 +1,5 @@
 package com.example.ahimmoyakbackend.company.common;
 
-public enum ContractState {
+public enum CourseProvideState {
     PENDING, ACCEPTED, REJECTED, CANCELED
 }

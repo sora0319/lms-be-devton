@@ -1,12 +1,20 @@
 package com.example.ahimmoyakbackend.board.entity;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
+import com.example.ahimmoyakbackend.board.dto.PostMessageResponseDto;
+import com.example.ahimmoyakbackend.board.dto.PostMessageShowResponseDto;
+import com.example.ahimmoyakbackend.board.dto.ReceivePostMessageResponseDto;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -26,10 +34,56 @@ public class PostMessage extends Timestamped {
     private String content;
 
     @Column
-    private Boolean isDelete;
+    @ColumnDefault("false")
+    private Boolean isDelete = false;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(mappedBy = "postMessage", orphanRemoval = true)
+    private List<TargetUser> targetUsers = new ArrayList<>();
+
+
+    public static PostMessageResponseDto toDto(PostMessage postMessage) {
+        List<Boolean> readMessageBool = postMessage.getTargetUsers().stream().map(TargetUser::getIsRead).toList();
+        Boolean readMessage = false;
+        for(Boolean bool:readMessageBool){
+            if(!bool){
+                readMessage =false;
+                break;
+            }else readMessage=true;
+        }
+        return PostMessageResponseDto.builder()
+                .title(postMessage.getTitle())
+                .content(postMessage.getContent())
+                .senderName(postMessage.getUser().getUsername())
+                .receiverName(postMessage.getTargetUsers().stream().map(user->user.getUser().getUsername()).collect(Collectors.toList()))
+                .isRead(readMessage)
+                .createdAt(postMessage.getCreatedAt())
+                .build();
+    }
+    public static PostMessageShowResponseDto toReadDto(PostMessage postMessage, TargetUser targetUser) {
+        return PostMessageShowResponseDto.builder()
+                .title(postMessage.getTitle())
+                .content(postMessage.getContent())
+                .senderName(postMessage.getUser().getUsername())
+                .receiverName(targetUser.getUser().getUsername())
+                .createdAt(postMessage.getCreatedAt())
+                .isRead(targetUser.getIsRead())
+                .build();
+    }
+
+    public static ReceivePostMessageResponseDto toReceiveMessageDto(PostMessage postMessage) {
+        return ReceivePostMessageResponseDto.builder()
+                .title(postMessage.getTitle())
+                .content(postMessage.getContent())
+                .senderName(postMessage.getUser().getUsername())
+                .createdAt(postMessage.getCreatedAt())
+                .build();
+    }
+
+    public void delete() {
+        this.isDelete=true;
+    }
 }

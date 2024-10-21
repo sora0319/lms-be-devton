@@ -25,7 +25,7 @@ public class ContentsHistory extends Timestamped {
     private ContentsHistoryState state;
 
     @Column
-    private Long progress;
+    private Long progress; // 이게 커리큘럼프로그래스
 
     @ManyToOne
     @JoinColumn(name = "enrollment_id")

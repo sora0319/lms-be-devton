@@ -5,14 +5,14 @@ import com.example.ahimmoyakbackend.auth.common.UserRole;
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import com.example.ahimmoyakbackend.board.repository.*;
-import com.example.ahimmoyakbackend.company.common.ContractState;
+import com.example.ahimmoyakbackend.company.common.CourseProvideState;
 import com.example.ahimmoyakbackend.company.entity.Affiliation;
 import com.example.ahimmoyakbackend.company.entity.Company;
 import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import com.example.ahimmoyakbackend.company.entity.Department;
 import com.example.ahimmoyakbackend.company.repository.AffiliationRepository;
 import com.example.ahimmoyakbackend.company.repository.CompanyRepository;
-import com.example.ahimmoyakbackend.company.repository.ContractRepository;
+import com.example.ahimmoyakbackend.company.repository.CourseProvideRepository;
 import com.example.ahimmoyakbackend.company.repository.DepartmentRepository;
 import com.example.ahimmoyakbackend.course.common.ContentType;
 import com.example.ahimmoyakbackend.course.common.CourseCategory;
@@ -22,6 +22,7 @@ import com.example.ahimmoyakbackend.course.repository.*;
 import com.example.ahimmoyakbackend.global.entity.Address;
 import com.example.ahimmoyakbackend.global.repository.AddressRepository;
 import com.example.ahimmoyakbackend.global.repository.ImageRepository;
+
 import com.example.ahimmoyakbackend.institution.entity.Institution;
 import com.example.ahimmoyakbackend.institution.entity.Manager;
 import com.example.ahimmoyakbackend.institution.entity.Tutor;
@@ -100,7 +101,8 @@ public class DataGenerate {
     @Autowired TargetUserRepository targetUserRepository;
     @Autowired AffiliationRepository affiliationRepository;
     @Autowired CompanyRepository companyRepository;
-    @Autowired ContractRepository contractRepository;
+    @Autowired
+    CourseProvideRepository courseProvideRepository;
     @Autowired DepartmentRepository departmentRepository;
     @Autowired AttendHistoryRepository attendHistoryRepository;
     @Autowired ContentsHistoryRepository contentsHistoryRepository;
@@ -233,7 +235,7 @@ public class DataGenerate {
                 .phone("01033333333")
                 .email("three@tutor.com")
                 .gender(Gender.MALE)
-                .role(UserRole.TUTOR)
+                .role(UserRole.INSTRUCTOR)
                 .build();
         userRepository.save(user3);
         Tutor tutor1 = Tutor.builder()
@@ -338,11 +340,11 @@ public class DataGenerate {
                 .supervisor(affiliation1)
                 .beginDate(LocalDate.of(2024, 9, 10))
                 .endDate(LocalDate.of(2024, 12, 31))
-                .state(ContractState.ACCEPTED)
+                .state(CourseProvideState.ACCEPTED)
                 .attendeeCount(10)
                 .deposit(1000000L)
                 .build();
-        contractRepository.save(courseProvide1);
+        courseProvideRepository.save(courseProvide1);
 
         // 수강할 User 들 생성
         User student1 = User.builder()
