@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.auth.jwt;
 
+import com.example.ahimmoyakbackend.auth.common.UserRole;
 import com.example.ahimmoyakbackend.auth.dto.validation.SecurityExceptionDto;
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
@@ -17,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import static com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider.ACCESS_TOKEN;
 import static com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider.REFRESH_TOKEN;
@@ -39,25 +41,29 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 setAuthentication(jwtTokenProvider.getUserInfoFromToken(accessToken));
                 filterChain.doFilter(request, response);
             } else {
-                jwtExceptionHandler(response, "Invalid Access Token.", HttpStatus.UNAUTHORIZED.value());
+                if(refreshToken == null) {
+                    jwtExceptionHandler(response, "Invalid Access Token.", HttpStatus.UNAUTHORIZED.value());
+                    return;
+                }
             }
-            return;
         }
 
-        if (refreshToken != null && jwtTokenProvider.refreshTokenValid(refreshToken)) {
-            String username = jwtTokenProvider.getUserInfoFromToken(refreshToken);
-            User user = userRepository.findUserByUsername(username)
-                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
-            String newAccessToken = jwtTokenProvider.createRefreshToken(username);
-            jwtTokenProvider.setHeaderAccessToken(response, newAccessToken);
-            setAuthentication(username);
-            filterChain.doFilter(request, response);
-            return;
-        }
+        if(Objects.equals(request.getRequestURI(), "/api/v1/reissue")){
+            if(refreshToken == null) {
+                jwtExceptionHandler(response, "refresh token is not found.", HttpStatus.UNAUTHORIZED.value());
+                return;
+            }
+            if (jwtTokenProvider.validateToken(refreshToken)) {
+                String username = jwtTokenProvider.getUserInfoFromToken(refreshToken);
+                User user = userRepository.findUserByUsername(username)
+                        .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        if (refreshToken != null) {
-            jwtExceptionHandler(response, "Invalid or Expired Refresh Token.", HttpStatus.UNAUTHORIZED.value());
-            return;
+                String email = user.getEmail();
+                UserRole role = user.getRole();
+
+                String newAccessToken = jwtTokenProvider.createAccessToken(username, email, role);
+                response.addHeader(ACCESS_TOKEN, newAccessToken);
+            }
         }
 
         filterChain.doFilter(request, response);
