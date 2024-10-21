@@ -50,8 +50,6 @@ public class Company extends Timestamped {
             this.name = requestDto.getName();
         if (!Objects.equals(this.ownerName, requestDto.getOwnerName()))
             this.ownerName = requestDto.getOwnerName();
-        if (!Objects.equals(this.businessNumber, requestDto.getBusinessNumber()))
-            this.businessNumber = requestDto.getBusinessNumber();
         if (!Objects.equals(this.email, requestDto.getEmail()))
             this.email = requestDto.getEmail();
         if (!Objects.equals(this.phone, requestDto.getPhone()))

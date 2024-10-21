@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class CompanyUpdateRequestDto {
     private String name;
     private String ownerName;
-    private String businessNumber;
     private String email;
     private String phone;
 }
