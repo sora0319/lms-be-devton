@@ -1,13 +1,10 @@
 package com.example.ahimmoyakbackend.auth.service;
 
 import com.example.ahimmoyakbackend.auth.common.UserRole;
-import com.example.ahimmoyakbackend.auth.config.security.impl.UserDetailsImpl;
+import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
 import com.example.ahimmoyakbackend.auth.dto.*;
-import com.example.ahimmoyakbackend.auth.entity.RefreshToken;
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider;
-import com.example.ahimmoyakbackend.auth.jwt.JwtUtil;
-import com.example.ahimmoyakbackend.auth.repository.RefreshTokenRepository;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,14 +12,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -57,18 +51,18 @@ public class UserService {
 
         JwsDTO jwsDto = jwtTokenProvider.createAllToken(findUser.getUsername(), findUser.getEmail(), findUser.getRole());
 
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(requestDTO.getUsername());
-
-        if (refreshToken.isPresent()) {
-            refreshTokenRepository.save(refreshToken.get().updateToken(jwsDto.getRefreshToken()));
-        } else {
-            RefreshToken newToken = RefreshToken.builder()
-                    .refreshToken(jwsDto.getRefreshToken())
-                    .username(requestDTO.getUsername())
-                    .build();
-
-            refreshTokenRepository.save(newToken);
-        }
+//        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(requestDTO.getUsername());
+//
+//        if (refreshToken.isPresent()) {
+//            refreshTokenRepository.save(refreshToken.get().updateToken(jwsDto.getRefreshToken()));
+//        } else {
+//            RefreshToken newToken = RefreshToken.builder()
+//                    .refreshToken(jwsDto.getRefreshToken())
+//                    .username(requestDTO.getUsername())
+//                    .build();
+//
+//            refreshTokenRepository.save(newToken);
+//        }
 
         response.addHeader(JwtTokenProvider.ACCESS_TOKEN, jwsDto.getAccessToken());
         response.addHeader(JwtTokenProvider.REFRESH_TOKEN, jwsDto.getRefreshToken());

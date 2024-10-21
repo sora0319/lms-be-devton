@@ -1,4 +1,4 @@
-package com.example.ahimmoyakbackend.auth.config.security.impl;
+package com.example.ahimmoyakbackend.auth.config.security;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;

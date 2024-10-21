@@ -1,7 +1,7 @@
 package com.example.ahimmoyakbackend.auth.jwt;
 
 import com.example.ahimmoyakbackend.auth.common.UserRole;
-import com.example.ahimmoyakbackend.auth.config.security.impl.UserDetailsServiceImpl;
+import com.example.ahimmoyakbackend.auth.config.security.UserDetailsServiceImpl;
 import com.example.ahimmoyakbackend.auth.dto.JwsDTO;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -114,11 +114,11 @@ public class JwtTokenProvider {
         return Jwts.parser().verifyWith(key).build().parseSignedClaims(jws).getPayload().getSubject();
     }
 
-    public boolean refreshTokenValid(String jws) {
-        if (!validateToken(jws)) return false;
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(getUserInfoFromToken(jws));
-        return refreshToken.isPresent() && jws.equals(refreshToken.get().getRefreshToken().substring(8));
-    }
+//    public boolean refreshTokenValid(String jws) {
+//        if (!validateToken(jws)) return false;
+//        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(getUserInfoFromToken(jws));
+//        return refreshToken.isPresent() && jws.equals(refreshToken.get().getRefreshToken().substring(8));
+//    }
 
     public void setHeaderAccessToken(HttpServletResponse response, String newAccessToken) {
         response.setHeader(ACCESS_TOKEN, newAccessToken);
