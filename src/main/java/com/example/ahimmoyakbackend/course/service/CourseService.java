@@ -172,7 +172,7 @@ public class CourseService {
                     .map(course -> CourseListResponseDTO.builder()
                             .id(course.getId())
                             .title(course.getTitle())
-                            .image(course.getImage().getPath())
+                            .image(course.getImage() == null ? null : course.getImage().getPath() )
                             .tutor(course.getTutor())
                             .build());
         }
