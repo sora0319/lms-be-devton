@@ -94,6 +94,7 @@ public class CourseBoardService {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<CourseBoard> courseBoardPage = courseBoardRepository
                 .findAllByCourseAndTypeOrderByCreatedAtDesc(course, type, pageable);
+        int totalPage = courseBoardPage.getTotalPages();
 
         List<CourseBoardsResponseDto> boards = courseBoardPage
                 .stream()
@@ -103,7 +104,8 @@ public class CourseBoardService {
         return new CourseBoardInquiryResponseDto(
                 course.getTitle(),
                 boards,
-                new Pagination(page, size)
+                new Pagination(page, size),
+                totalPage
         );
     }
 
@@ -120,11 +122,12 @@ public class CourseBoardService {
                 .stream()
                 .map(CourseBoard::toBoardResponseDto)
                 .collect(Collectors.toList());
-
+        int totalPage = courseBoardPage.getTotalPages();
         return new CourseBoardInquiryResponseDto(
                 course.getTitle(),
                 boards,
-                new Pagination(page, size)
+                new Pagination(page, size),
+                totalPage
         );
     }
 
