@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.live.dto;
 
+import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.live.common.LiveState;
 import com.example.ahimmoyakbackend.live.entity.LiveStreaming;
@@ -23,12 +24,12 @@ public class LiveCourseResponseDTO {
     private LocalDateTime endTime;
     private LiveState state;
 
-    public static LiveCourseResponseDTO from(LiveStreaming liveStreaming, Course course) {
+    public static LiveCourseResponseDTO from(LiveStreaming liveStreaming, CourseProvide courseProvide) {
         return LiveCourseResponseDTO.builder()
                 .key(liveStreaming.getId())
                 .title(liveStreaming.getTitle())
-                .course(course.getTitle())
-                .tutor(course.getTutor().getUser().getName())
+                .course(courseProvide.getCourse().getTitle())
+                .tutor(courseProvide.getCourse().getTutor().getUser().getName())
                 .startTime(liveStreaming.getStartTime())
                 .endTime(liveStreaming.getEndTime())
                 .state(liveStreaming.getState())

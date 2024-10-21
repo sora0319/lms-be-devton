@@ -29,7 +29,7 @@ public class LiveTutorResponseDTO {
         return LiveTutorResponseDTO.builder()
                 .key(liveStreaming.getId())
                 .title(liveStreaming.getTitle())
-                .course(liveStreaming.getCourse().getTitle())
+                .course(liveStreaming.getCourseProvide().getCourse().getTitle())
                 .tutor(tutor.getUser().getName())
                 .startTime(liveStreaming.getStartTime())
                 .endTime(liveStreaming.getEndTime())

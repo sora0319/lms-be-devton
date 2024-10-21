@@ -21,14 +21,14 @@ public class LiveController {
     private final LiveService liveService;
 
     @PostMapping
-    public ResponseEntity<Void> createLive(@AuthenticationPrincipal UserDetails userDetails, @RequestParam Long courseId, @RequestBody LiveCreateRequestDTO requestDTO) {
-        boolean result = liveService.createLive(requestDTO, courseId, userDetails.getUsername());
+    public ResponseEntity<Void> createLive(@AuthenticationPrincipal UserDetails userDetails, @RequestParam Long courseProvideId, @RequestBody LiveCreateRequestDTO requestDTO) {
+        boolean result = liveService.createLive(requestDTO, courseProvideId, userDetails.getUsername());
         return result ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/course")
-    public ResponseEntity<List<LiveCourseResponseDTO>> getCourseLives(@AuthenticationPrincipal UserDetails userDetails, @RequestParam Long courseId) {
-        List<LiveCourseResponseDTO> liveList = liveService.getLiveListByCourse(courseId);
+    public ResponseEntity<List<LiveCourseResponseDTO>> getCourseLives(@AuthenticationPrincipal UserDetails userDetails, @RequestParam Long courseProvideId) {
+        List<LiveCourseResponseDTO> liveList = liveService.getLiveListByCourse(courseProvideId);
         return ResponseEntity.ok().body(liveList);
     }
 
