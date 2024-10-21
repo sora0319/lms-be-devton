@@ -51,19 +51,6 @@ public class UserService {
 
         JwsDTO jwsDto = jwtTokenProvider.createAllToken(findUser.getUsername(), findUser.getEmail(), findUser.getRole());
 
-//        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(requestDTO.getUsername());
-//
-//        if (refreshToken.isPresent()) {
-//            refreshTokenRepository.save(refreshToken.get().updateToken(jwsDto.getRefreshToken()));
-//        } else {
-//            RefreshToken newToken = RefreshToken.builder()
-//                    .refreshToken(jwsDto.getRefreshToken())
-//                    .username(requestDTO.getUsername())
-//                    .build();
-//
-//            refreshTokenRepository.save(newToken);
-//        }
-
         response.addHeader(JwtTokenProvider.ACCESS_TOKEN, jwsDto.getAccessToken());
         response.addHeader(JwtTokenProvider.REFRESH_TOKEN, jwsDto.getRefreshToken());
 
@@ -77,5 +64,12 @@ public class UserService {
                 ()-> new IllegalArgumentException("인증되지 않은 사용자입니다.")
         );
 
+    }
+
+    public UserReissueResponseDTO reissue(HttpServletResponse response) {
+
+        return UserReissueResponseDTO.builder()
+                .msg("refresh token reissue complete")
+                .build();
     }
 }
