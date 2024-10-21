@@ -21,14 +21,15 @@ public class CompanyController {
     private final CompanyService companyService;
     private final JwtUtil jwtUtil;
 
-    // User
+    // EmployeeList
     @RequestMapping(value = "/v1/supervisor/", method = RequestMethod.GET)
-    public ResponseEntity<List<CompanyInquiryUserResponseDto>> getUserList(@RequestParam("companyId") Long companyId,
-                                                                           @RequestParam("departmentId") Long departmentId
+    public ResponseEntity<List<CompanyInquiryEmployeeListResponseDto>> getUserList(@RequestParam("companyId") Long companyId
     ) {
-        List<CompanyInquiryUserResponseDto> userList = companyService.getUserbyCompany(companyId, departmentId);
+        List<CompanyInquiryEmployeeListResponseDto> userList = companyService.getUserbyCompany(companyId);
         return ResponseEntity.status(HttpStatus.OK).body(userList);
     }
+
+    // EmployeeDetail
 
     // Department
     @RequestMapping(value = "/v1/supervisor/department", method = RequestMethod.POST)

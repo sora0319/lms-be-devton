@@ -35,23 +35,18 @@ public class CompanyService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public List<CompanyInquiryUserResponseDto> getUserbyCompany(Long companyId, Long departmentId) {
+    public List<CompanyInquiryEmployeeListResponseDto> getUserbyCompany(Long companyId) {
 
         Company company = companyRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("해당 companyId 가 없습니다"));
 
         List<Affiliation> affiliations;
+        affiliations = affiliationRepository.findAllByDepartment_Company_Id(companyId);
 
-        if (departmentId != null) {
-            affiliations = affiliationRepository.findAllByDepartment_CompanyIdAndDepartmentId(companyId, departmentId);
-        } else {
-            affiliations = affiliationRepository.findAllByDepartment_Company_Id(companyId);
-        }
 
         return affiliations.stream()
                 .map( affiliation -> {
                     User user = affiliation.getUser();
-                    List<Address> addresses = addressRepository.findByUser_Id(user.getId());
-                    return CompanyInquiryUserResponseDto.toDto(affiliation, addresses);
+                    return CompanyInquiryEmployeeListResponseDto.toDto(affiliation);
                 }
                 )
                 .collect(Collectors.toList());
