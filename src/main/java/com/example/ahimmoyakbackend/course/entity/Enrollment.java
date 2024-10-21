@@ -36,7 +36,7 @@ public class Enrollment extends Timestamped {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "courseProvide_id")
+    @JoinColumn(name = "course_Provide_id")
     private CourseProvide courseProvide;
 
     public void assignCourseProvide(CourseProvide courseProvide) {
