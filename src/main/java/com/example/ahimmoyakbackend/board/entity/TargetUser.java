@@ -23,6 +23,7 @@ public class TargetUser extends Timestamped {
     private Boolean isRead;
 
     @Column
+    @Builder.Default
     @ColumnDefault("false")
     private Boolean isDelete = false;
 
