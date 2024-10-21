@@ -1,6 +1,5 @@
 package com.example.ahimmoyakbackend.auth.jwt;
 
-import com.example.ahimmoyakbackend.auth.common.UserRole;
 import com.example.ahimmoyakbackend.auth.dto.validation.SecurityExceptionDto;
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
@@ -36,33 +35,36 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String accessToken = jwtTokenProvider.getTokenFromHeader(request, ACCESS_TOKEN);
         String refreshToken = jwtTokenProvider.getTokenFromHeader(request, REFRESH_TOKEN);
 
-        if (accessToken != null) {
-            if (jwtTokenProvider.validateToken(accessToken)) {
-                setAuthentication(jwtTokenProvider.getUserInfoFromToken(accessToken));
-                filterChain.doFilter(request, response);
-            } else {
-                if(refreshToken == null) {
-                    jwtExceptionHandler(response, "Invalid Access Token.", HttpStatus.UNAUTHORIZED.value());
-                    return;
-                }
-            }
-        }
-
         if(Objects.equals(request.getRequestURI(), "/api/v1/reissue")){
             if(refreshToken == null) {
                 jwtExceptionHandler(response, "refresh token is not found.", HttpStatus.UNAUTHORIZED.value());
                 return;
             }
-            if (jwtTokenProvider.validateToken(refreshToken)) {
-                String username = jwtTokenProvider.getUserInfoFromToken(refreshToken);
+            if (jwtTokenProvider.validateToken(refreshToken) && jwtTokenProvider.validateToken(accessToken)) {
+                String username = jwtTokenProvider.getUserInfoFromToken(accessToken);
+                String refresh_username = jwtTokenProvider.getUserInfoFromToken(refreshToken);
+                if(username == null || refresh_username == null || !Objects.equals(username, refresh_username)){
+                    jwtExceptionHandler(response, "Invalid Tokens or Not same user.", HttpStatus.UNAUTHORIZED.value());
+                    return;
+                }
                 User user = userRepository.findUserByUsername(username)
                         .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-                String email = user.getEmail();
-                UserRole role = user.getRole();
+                String newAccessToken = jwtTokenProvider.createAccessToken(username, user.getEmail(), user.getRole());
+                response.setHeader(ACCESS_TOKEN, newAccessToken);
+            }
+            else {
+                jwtExceptionHandler(response, "Invalid Tokens.", HttpStatus.UNAUTHORIZED.value());
+                return;
+            }
+        }
 
-                String newAccessToken = jwtTokenProvider.createAccessToken(username, email, role);
-                response.addHeader(ACCESS_TOKEN, newAccessToken);
+        if (accessToken != null) {
+            if (jwtTokenProvider.validateToken(accessToken)) {
+                setAuthentication(jwtTokenProvider.getUserInfoFromToken(accessToken));
+            } else {
+                jwtExceptionHandler(response, "Invalid Access Token.", HttpStatus.UNAUTHORIZED.value());
+                return;
             }
         }
 
