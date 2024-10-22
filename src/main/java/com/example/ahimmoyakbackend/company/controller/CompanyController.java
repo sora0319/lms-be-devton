@@ -1,7 +1,6 @@
 package com.example.ahimmoyakbackend.company.controller;
 
 import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
-import com.example.ahimmoyakbackend.auth.jwt.JwtUtil;
 import com.example.ahimmoyakbackend.auth.service.UserService;
 import com.example.ahimmoyakbackend.company.dto.*;
 import com.example.ahimmoyakbackend.company.service.CompanyService;
@@ -22,7 +21,7 @@ import java.util.List;
 public class CompanyController {
 
     private final CompanyService companyService;
-    private final JwtUtil jwtUtil;
+
     private final UserService userService;
 
     // EmployeeList
