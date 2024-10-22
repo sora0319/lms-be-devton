@@ -39,32 +39,29 @@ public class CompanyController {
     public ResponseEntity<CompanyEnrollDepartmentResponseDto> enrollDepartment(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                                @RequestBody CompanyEnrollDepartmentRequestDto requestDto
     ) {
-        Long companyId = userService.getAuth(userDetails).getId();
+        Long companyId = userService.getAuth(userDetails).getAffiliation().getDepartment().getCompany().getId();
         Long affiliationId = userService.getAuth(userDetails).getAffiliation().getId();
 
         CompanyEnrollDepartmentResponseDto enrolled = companyService.enrollDepartment(companyId, affiliationId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(enrolled);
     }
 
-    @DeleteMapping("/v1/supervisor/department")
-    public ResponseEntity<CompanyDeleteDepartmentResponseDto> deleteDepartment(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    @RequestMapping(value = "/v1/supervisor/department", method = RequestMethod.DELETE)
+    public ResponseEntity<CompanyDeleteDepartmentResponseDto> deleteDepartment(@RequestParam("companyId") Long companyId,
+                                                                               @RequestParam("affiliationId") Long affiliationId,
+                                                                               @RequestParam("departmentId") Long departmentId
 
-        Long companyId = userService.getAuth(userDetails).getId();
-        Long affiliationId = userService.getAuth(userDetails).getAffiliation().getId();
-        Long departmentId = userService.getAuth(userDetails).getAffiliation().getDepartment().getId();
-
+    ) {
         CompanyDeleteDepartmentResponseDto deleted = companyService.deleteDepartment(companyId, affiliationId, departmentId);
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
 
-    @PatchMapping("/v1/supervisor/department")
-    public ResponseEntity<CompanyUpdateDepartmentResponseDto> updateDepartment(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    @RequestMapping(value = "/v1/supervisor/department", method = RequestMethod.PATCH)
+    public ResponseEntity<CompanyUpdateDepartmentResponseDto> updateDepartment(@RequestParam("companyId") Long companyId,
+                                                                               @RequestParam("departmentId") Long departmentId,
                                                                                @RequestBody CompanyUpdateDepartmentRequestDto requestDto
 
     ) {
-        Long companyId = userService.getAuth(userDetails).getId();
-        Long departmentId = userService.getAuth(userDetails).getAffiliation().getDepartment().getId();
-
         CompanyUpdateDepartmentResponseDto updated = companyService.updateDepartment(companyId, departmentId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
