@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -170,40 +171,40 @@ public class CourseService {
                         .id(course.getId())
                         .title(course.getTitle())
                         .image(course.getImage() == null ? null : course.getImage().getPath())
-                        .tutor(course.getTutor())
+                        .tutorName(course.getTutor().getUser().getName())
                         .build()
                 ).toList();
 
     }
 
-//    // 수강신청할 코스 탐색
-//    @Transactional
-//    public Page<CourseListResponseDTO> getCourseByCategory(int categoryNum, int currentPage, int size) {
-//        Pageable pageable = PageRequest.of(currentPage - 1, size);
-//        CourseCategory category = Arrays.stream(CourseCategory.values())
-//                .filter(course -> course.getCategoryNumber() == categoryNum)
-//                .findFirst()
-//                .orElseThrow(() -> new NoSuchElementException("해당 카테고리를 찾을 수 없습니다. : " + categoryNum));
-//        if (CourseCategory.ALL.getCategoryNumber() == categoryNum) {
-//            return courseRepository.findAll(pageable)
-//                    .map(course -> CourseListResponseDTO.builder()
-//                            .id(course.getId())
-//                            .title(course.getTitle())
-//                            .image(course.getImage() == null ? null : course.getImage().getPath() )
-//                            .tutor(course.getTutor())
-//                            .build());
-//        }
-//        Page<Course> page = courseRepository.findAllByCategory(category, pageable);
-//        List<CourseListResponseDTO> list = page.stream()
-//                .map(course -> CourseListResponseDTO.builder()
-//                        .id(course.getId())
-//                        .title(course.getTitle())
-//                        .image(course.getImage().getPath())
-//                        .tutor(course.getTutor())
-//                        .build())
-//                .toList();
-//        return new PageImpl<>(list, page.getPageable(), page.getTotalElements());
-//    }
+    // 수강신청할 코스 탐색
+    @Transactional
+    public Page<CourseListResponseDTO> getCourseByCategory(int categoryNum, int currentPage, int size) {
+        Pageable pageable = PageRequest.of(currentPage - 1, size);
+        CourseCategory category = Arrays.stream(CourseCategory.values())
+                .filter(course -> course.getCategoryNumber() == categoryNum)
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("해당 카테고리를 찾을 수 없습니다. : " + categoryNum));
+        if (CourseCategory.ALL.getCategoryNumber() == categoryNum) {
+            return courseRepository.findAll(pageable)
+                    .map(course -> CourseListResponseDTO.builder()
+                            .id(course.getId())
+                            .title(course.getTitle())
+                            .image(course.getImage() == null ? null : course.getImage().getPath())
+                            .tutorName(course.getTutor().getUser().getName())
+                            .build());
+        }
+        Page<Course> page = courseRepository.findAllByCategory(category, pageable);
+        List<CourseListResponseDTO> list = page.stream()
+                .map(course -> CourseListResponseDTO.builder()
+                        .id(course.getId())
+                        .title(course.getTitle())
+                        .image(course.getImage().getPath())
+                        .tutorName(course.getTutor().getUser().getName())
+                        .build())
+                .toList();
+        return new PageImpl<>(list, page.getPageable(), page.getTotalElements());
+    }
 
     // 강사 대시보드리스트 조회
     @Transactional
