@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.auth.controller;
 
+import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
 import com.example.ahimmoyakbackend.auth.dto.*;
 import com.example.ahimmoyakbackend.auth.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "UserController")
@@ -40,6 +42,12 @@ public class UserController {
     public ResponseEntity<ExistNameResponseDTO> checkExistName(@RequestBody ExistNameRequestDTO requestDTO){
         ExistNameResponseDTO responseDTO = userService.checkExistName(requestDTO);
         return ResponseEntity.ok(responseDTO);
+    }
+
+    @PostMapping("/user/verification")
+    public ResponseEntity<UserVerificationResponseDTO> checkVerification(@RequestBody UserVerificationRequestDTO requestDTO, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UserVerificationResponseDTO responseDTO = userService.checkVerification(requestDTO, userDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
     @GetMapping("/v1/manager/test")

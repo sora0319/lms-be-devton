@@ -4,6 +4,7 @@ import com.example.ahimmoyakbackend.auth.common.UserRole;
 import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
 import com.example.ahimmoyakbackend.auth.dto.*;
 import com.example.ahimmoyakbackend.auth.entity.User;
+import com.example.ahimmoyakbackend.auth.exception.InvalidPasswordException;
 import com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -84,6 +85,20 @@ public class UserService {
 
         return ExistNameResponseDTO.builder()
                 .message("false")
+                .build();
+    }
+
+    public UserVerificationResponseDTO checkVerification(UserVerificationRequestDTO requestDTO, UserDetailsImpl userDetails) {
+        User findUser = userRepository.findUserByUsername(userDetails.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("잘못된 요청입니다.")
+        );
+
+        if (!passwordEncoder.matches(requestDTO.getPassword(), findUser.getPassword())) {
+            throw new InvalidPasswordException("false");
+        }
+        return UserVerificationResponseDTO
+                .builder()
+                .message("true")
                 .build();
     }
 }
