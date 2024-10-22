@@ -6,20 +6,16 @@ import com.example.ahimmoyakbackend.company.entity.Affiliation;
 import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import com.example.ahimmoyakbackend.company.repository.AffiliationRepository;
 import com.example.ahimmoyakbackend.company.repository.CourseProvideRepository;
-import com.example.ahimmoyakbackend.course.common.CourseCategory;
 import com.example.ahimmoyakbackend.contents.dto.ContentsInquiryResponseDTO;
 import com.example.ahimmoyakbackend.course.common.ContentsHistoryState;
+import com.example.ahimmoyakbackend.course.common.CourseCategory;
 import com.example.ahimmoyakbackend.course.dto.*;
-import com.example.ahimmoyakbackend.course.entity.Contents;
-import com.example.ahimmoyakbackend.course.entity.ContentsHistory;
-import com.example.ahimmoyakbackend.course.entity.Course;
-import com.example.ahimmoyakbackend.course.entity.Curriculum;
+import com.example.ahimmoyakbackend.course.entity.*;
 import com.example.ahimmoyakbackend.course.repository.ContentsHistoryRepository;
-import com.example.ahimmoyakbackend.course.entity.Enrollment;
 import com.example.ahimmoyakbackend.course.repository.CourseRepository;
+import com.example.ahimmoyakbackend.course.repository.EnrollmentRepository;
 import com.example.ahimmoyakbackend.curriculum.dto.CurriculumInquiryResponseDTO;
 import com.example.ahimmoyakbackend.institution.entity.Institution;
-import com.example.ahimmoyakbackend.course.repository.EnrollmentRepository;
 import com.example.ahimmoyakbackend.institution.entity.Manager;
 import com.example.ahimmoyakbackend.institution.entity.Tutor;
 import com.example.ahimmoyakbackend.institution.repository.ManagerRepository;
@@ -33,11 +29,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -91,10 +85,11 @@ public class CourseService {
         return courseDto;
 
     }
+
     @Transactional
     public CourseCreateResponseDTO create(User user, CourseCreateRequestDTO dto) {
         Tutor tutor = tutorRepository.findByUser_Name(dto.getTutorName());
-        Institution institution =  user.getManager().getInstitution();
+        Institution institution = user.getManager().getInstitution();
 
         Course newCourse = Course.builder()
                 .title(dto.getTitle())
@@ -113,10 +108,11 @@ public class CourseService {
                 .build();
 
     }
+
     @Transactional
     public CourseModifyResponseDTO modify(Long courseId, CourseModifyRequestDTO dto) {
 
-        Course course = courseRepository.findById(courseId).orElseThrow(()-> new IllegalArgumentException("코스가 존재 하지 않습니다."));
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new IllegalArgumentException("코스가 존재 하지 않습니다."));
 
 
         Course course1 = course.patch(dto);
@@ -132,7 +128,7 @@ public class CourseService {
     @Transactional
     public CourseDeleteResponseDTO delete(Long courseId) {
 
-        Course course = courseRepository.findById(courseId).orElseThrow(()-> new IllegalArgumentException("코스가 존재 하지 않습니다."));
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new IllegalArgumentException("코스가 존재 하지 않습니다."));
 
         courseRepository.delete(course);
 
@@ -159,34 +155,55 @@ public class CourseService {
         return new PageImpl<>(list, coursePage.getPageable(), coursePage.getTotalElements());
     }
 
-    // 수강신청할 코스 탐색
+    // 메인페이지 랜덤코스 탐색
     @Transactional
-    public Page<CourseListResponseDTO> getCourseByCategory(int categoryNum, int currentPage, int size) {
-        Pageable pageable = PageRequest.of(currentPage - 1, size);
+    public List<CourseListResponseDTO> getRandomCourseByCategory(int categoryNum, int size) {
         CourseCategory category = Arrays.stream(CourseCategory.values())
                 .filter(course -> course.getCategoryNumber() == categoryNum)
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("해당 카테고리를 찾을 수 없습니다. : " + categoryNum));
-        if (CourseCategory.ALL.getCategoryNumber() == categoryNum) {
-            return courseRepository.findAll(pageable)
-                    .map(course -> CourseListResponseDTO.builder()
-                            .id(course.getId())
-                            .title(course.getTitle())
-                            .image(course.getImage().getPath())
-                            .tutor(course.getTutor())
-                            .build());
-        }
-        Page<Course> page = courseRepository.findAllByCategory(category, pageable);
-        List<CourseListResponseDTO> list = page.stream()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid category number." + categoryNum));
+
+        List<Course> randomCourses = courseRepository.findRandomCoursesBySize(category, size);
+
+        return randomCourses.stream()
                 .map(course -> CourseListResponseDTO.builder()
                         .id(course.getId())
                         .title(course.getTitle())
-                        .image(course.getImage().getPath())
+                        .image(course.getImage() == null ? null : course.getImage().getPath())
                         .tutor(course.getTutor())
-                        .build())
-                .toList();
-        return new PageImpl<>(list, page.getPageable(), page.getTotalElements());
+                        .build()
+                ).toList();
+
     }
+
+//    // 수강신청할 코스 탐색
+//    @Transactional
+//    public Page<CourseListResponseDTO> getCourseByCategory(int categoryNum, int currentPage, int size) {
+//        Pageable pageable = PageRequest.of(currentPage - 1, size);
+//        CourseCategory category = Arrays.stream(CourseCategory.values())
+//                .filter(course -> course.getCategoryNumber() == categoryNum)
+//                .findFirst()
+//                .orElseThrow(() -> new NoSuchElementException("해당 카테고리를 찾을 수 없습니다. : " + categoryNum));
+//        if (CourseCategory.ALL.getCategoryNumber() == categoryNum) {
+//            return courseRepository.findAll(pageable)
+//                    .map(course -> CourseListResponseDTO.builder()
+//                            .id(course.getId())
+//                            .title(course.getTitle())
+//                            .image(course.getImage() == null ? null : course.getImage().getPath() )
+//                            .tutor(course.getTutor())
+//                            .build());
+//        }
+//        Page<Course> page = courseRepository.findAllByCategory(category, pageable);
+//        List<CourseListResponseDTO> list = page.stream()
+//                .map(course -> CourseListResponseDTO.builder()
+//                        .id(course.getId())
+//                        .title(course.getTitle())
+//                        .image(course.getImage().getPath())
+//                        .tutor(course.getTutor())
+//                        .build())
+//                .toList();
+//        return new PageImpl<>(list, page.getPageable(), page.getTotalElements());
+//    }
 
     // 강사 대시보드리스트 조회
     @Transactional
