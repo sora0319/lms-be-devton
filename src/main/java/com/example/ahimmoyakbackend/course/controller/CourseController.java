@@ -42,11 +42,10 @@ public class CourseController {
     @GetMapping("/myPage")
     public ResponseEntity<Page<CourseListResponseDTO>> getCourseListMyPage(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestParam Long institutionId,
             @Positive @RequestParam @PageableDefault(value = 1) int page,
             @Positive @RequestParam @PageableDefault(value = 6) int size
     ) {
-        Page<CourseListResponseDTO> pageCourse = courseService.findUserCourseList(userDetails.getUser(), institutionId, page, size);
+        Page<CourseListResponseDTO> pageCourse = courseService.findUserCourseList(userDetails.getUser(), page, size);
         return ResponseEntity.status(HttpStatus.OK).body(pageCourse);
     }
 
