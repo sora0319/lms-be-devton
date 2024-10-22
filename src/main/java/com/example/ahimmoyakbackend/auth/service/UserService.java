@@ -66,7 +66,7 @@ public class UserService {
 
     }
 
-    public UserReissueResponseDTO reissue(HttpServletResponse response) {
+    public UserReissueResponseDTO reissue() {
 
         return UserReissueResponseDTO.builder()
                 .msg("refresh token reissue complete")

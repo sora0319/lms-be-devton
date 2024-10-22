@@ -31,8 +31,8 @@ public class UserController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<UserReissueResponseDTO> checkRefreshToken( HttpServletResponse response) {
-        UserReissueResponseDTO responseDto = userService.reissue( response);
+    public ResponseEntity<UserReissueResponseDTO> checkRefreshToken() {
+        UserReissueResponseDTO responseDto = userService.reissue();
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
