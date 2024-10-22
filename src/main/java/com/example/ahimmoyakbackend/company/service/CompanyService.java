@@ -67,7 +67,7 @@ public class CompanyService {
                 .user(affiliation.getUser())
                 .isSupervisor(affiliation.getIsSupervisor())
                 .approval(affiliation.getApproval())
-                .department(department)
+                .department(affiliation.getDepartment())
                 .build();
 
         affiliationRepository.save(updatedAffiliation);
