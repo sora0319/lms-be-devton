@@ -24,7 +24,7 @@ public class CompanyController {
     private final UserService userService;
 
     // EmployeeList
-    @GetMapping("/v1/supervisor/")
+    @GetMapping("/v1/supervisor")
     public ResponseEntity<List<CompanyInquiryEmployeeListResponseDto>> getUserList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long companyId = userService.getAuth(userDetails).getId();
 
@@ -33,6 +33,11 @@ public class CompanyController {
 
     }
     // EmployeeDetail
+    @RequestMapping(value = "v1/supervisor/user")
+    public ResponseEntity<CompanyInquiryUserDetailResponseDto> getUserDetail(@RequestParam ("userId") Long userId) {
+        CompanyInquiryUserDetailResponseDto detail = companyService.getUserDetail(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(detail);
+    }
 
     // Department
     @PostMapping("/v1/supervisor/department")
