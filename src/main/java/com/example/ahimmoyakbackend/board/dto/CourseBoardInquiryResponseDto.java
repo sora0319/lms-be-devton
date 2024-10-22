@@ -19,4 +19,6 @@ public class CourseBoardInquiryResponseDto {
 
     private Pagination pagination;
 
+    private int totalPage;
+
 }

@@ -1,7 +1,7 @@
 package com.example.ahimmoyakbackend.board.controller;
 
 import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
-import com.example.ahimmoyakbackend.auth.entity.User;
+import com.example.ahimmoyakbackend.auth.service.UserService;
 import com.example.ahimmoyakbackend.board.common.BoardType;
 import com.example.ahimmoyakbackend.board.dto.*;
 import com.example.ahimmoyakbackend.board.service.CourseBoardService;
@@ -21,10 +21,11 @@ public class CourseBoardController {
 
     private final CourseBoardService courseBoardService;
     private final CourseCommentService courseCommentService;
+    private final UserService userService;
 
     @PostMapping("/v1/courseBoard/{type}/{courseId}")
     public ResponseEntity<BoardCreateResponseDto> createBoard(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody BoardCreateRequestDto requestDTO, @PathVariable Long courseId, @PathVariable BoardType type){
-        BoardCreateResponseDto created = courseBoardService.create(userDetails.getUser(),requestDTO,courseId,type);
+        BoardCreateResponseDto created = courseBoardService.create(userService.getAuth(userDetails),requestDTO,courseId,type);
         return ResponseEntity.status(HttpStatus.OK).body(created);
     }
 
