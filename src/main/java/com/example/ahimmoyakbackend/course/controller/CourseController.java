@@ -23,7 +23,7 @@ public class CourseController {
 
     private final CourseService courseService;
 
-    @GetMapping("/course/{courseId}")
+    @GetMapping("/{courseId}")
     public ResponseEntity<CourseDetailsInquiryResponseDTO> inquiryCourse(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long courseId) {
 
         CourseDetailsInquiryResponseDTO responseDTO = courseService.inquiry(userDetails.getUser(), courseId);
