@@ -1,7 +1,8 @@
 package com.example.ahimmoyakbackend.auth.config;
 
+import com.example.ahimmoyakbackend.auth.config.handler.CustomAccessDeniedHandler;
 import com.example.ahimmoyakbackend.auth.jwt.JwtAuthFilter;
-import com.example.ahimmoyakbackend.auth.jwt.JwtUtil;
+import com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
@@ -28,7 +30,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
 
     @Bean
@@ -61,9 +63,16 @@ public class WebSecurityConfig {
                 }))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll())
+                        .requestMatchers("api/v1/manager/test").hasRole("MANAGER")
+                        .anyRequest().permitAll()
+                )
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling
+                                .accessDeniedHandler(new CustomAccessDeniedHandler())
+//                                .authenticationEntryPoint(customAuthenticationEntryPoint)
+                )
                 .addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class)
-                .addFilterAfter(new JwtAuthFilter(jwtUtil, userRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new JwtAuthFilter(jwtTokenProvider, userRepository), UsernamePasswordAuthenticationFilter.class)
         ;
 
         return http.build();

@@ -3,7 +3,7 @@ package com.example.ahimmoyakbackend.company.service;
 import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
 import com.example.ahimmoyakbackend.auth.config.security.UserDetailsServiceImpl;
 import com.example.ahimmoyakbackend.auth.entity.User;
-import com.example.ahimmoyakbackend.auth.jwt.JwtUtil;
+import com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import com.example.ahimmoyakbackend.company.dto.*;
 import com.example.ahimmoyakbackend.company.entity.Affiliation;
@@ -32,7 +32,7 @@ public class CompanyService {
     private final AddressRepository addressRepository;
     private final UserRepository userRepository;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider JwtTokenProvider;
 
     @Transactional
     public List<CompanyInquiryUserResponseDto> getUserbyCompany(Long companyId, Long departmentId) {
@@ -214,7 +214,7 @@ public class CompanyService {
     @Transactional
     public Long getCompanyIdFromToken(String token) {
 
-        String username = jwtUtil.getUserInfoFromToken(token);
+        String username = JwtTokenProvider.getUserInfoFromToken(token);
         UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsServiceImpl.loadUserByUsername(username);
 
         User user = userDetails.getUser();

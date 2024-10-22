@@ -41,7 +41,6 @@ public class Institution extends Timestamped {
     @Column(length = 20)
     private String phone;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "institution")
+    @OneToMany(mappedBy = "id")
     private List<CourseProvide> courseProvide = new ArrayList<>();
 }

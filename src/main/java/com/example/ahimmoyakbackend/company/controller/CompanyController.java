@@ -1,6 +1,6 @@
 package com.example.ahimmoyakbackend.company.controller;
 
-import com.example.ahimmoyakbackend.auth.jwt.JwtUtil;
+import com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider;
 import com.example.ahimmoyakbackend.company.dto.*;
 import com.example.ahimmoyakbackend.company.service.CompanyService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,7 +19,7 @@ import java.util.List;
 public class CompanyController {
 
     private final CompanyService companyService;
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider JwtTokenProvider;
 
     // User
     @RequestMapping(value = "/v1/supervisor/", method = RequestMethod.GET)
@@ -93,9 +93,9 @@ public class CompanyController {
     @GetMapping("/v1/users/companyId")
     public ResponseEntity<Long> getLoggedInUserCompanyId(HttpServletRequest request) {
 
-        String token = jwtUtil.getTokenFromHeader(request, JwtUtil.ACCESS_TOKEN);
+        String token = JwtTokenProvider.getTokenFromHeader(request, JwtTokenProvider.ACCESS_TOKEN);
 
-        if(token != null && jwtUtil.validateToken(token)) {
+        if(token != null && JwtTokenProvider.validateToken(token)) {
             Long companyId = companyService.getCompanyIdFromToken(token);
 
             if (companyId != null) {
