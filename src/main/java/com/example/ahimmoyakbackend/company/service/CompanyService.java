@@ -164,7 +164,7 @@ public class CompanyService {
         Affiliation affiliation = Affiliation.builder()
                 .user(user)
                 .department(department)
-                .approval(true)
+                .approval(false)
                 .isSupervisor(true)
                 .build();
 
