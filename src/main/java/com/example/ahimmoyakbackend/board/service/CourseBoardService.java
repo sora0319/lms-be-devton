@@ -94,6 +94,10 @@ public class CourseBoardService {
     }
 
     public CourseBoardInquiryResponseDto inquiry(User user, Long courseId, BoardType type, int page, int size) {
+        Enrollment enrollment = enrollmentRepository.findByUser(user);
+        if (enrollment == null) {
+            throw new IllegalArgumentException("해당 사용자는 등록되지 않았습니다.");
+        }
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("없는 코스 입니다."));
 
