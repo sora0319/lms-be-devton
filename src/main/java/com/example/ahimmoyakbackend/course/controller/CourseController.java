@@ -123,4 +123,5 @@ public class CourseController {
                 courseService.getCourseProvideRequestList(userDetails.getUser(), courseProvideId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
 }
