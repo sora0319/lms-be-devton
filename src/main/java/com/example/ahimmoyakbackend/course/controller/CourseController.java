@@ -31,6 +31,13 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
+    // 아무나 볼 수 있는 코스 상세 페이지
+    @GetMapping("/detail/{courseId}")
+    public ResponseEntity<CourseDetailResponseDTO> getCourseDetailPage(@PathVariable Long courseId) {
+        CourseDetailResponseDTO response = courseService.detailCourse(courseId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     // 마이페이지 코스목록 조회
     @GetMapping("/myPage")
     public ResponseEntity<Page<CourseListResponseDTO>> getCourseListMyPage(

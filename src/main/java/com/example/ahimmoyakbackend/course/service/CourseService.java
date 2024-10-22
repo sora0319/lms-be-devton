@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -85,6 +86,40 @@ public class CourseService {
                 .setCurriculums(curriculumDTOList);
         return courseDto;
 
+    }
+
+    @Transactional
+    public CourseDetailResponseDTO detailCourse(Long courseId) {
+        // courseId로 코스를 찾고, 없으면 예외를 던짐
+        Course course = courseRepository.findById(courseId).orElseThrow(
+                () -> new IllegalArgumentException("코스가 없습니다."));
+
+        // 커리큘럼 목록 생성 (각 커리큘럼의 콘텐츠 목록 포함)
+        List<CurriculumListResponseDTO> curriculumList = course.getCurriculumList().stream()
+                .map(curriculum -> CurriculumListResponseDTO.builder()
+                        .id(curriculum.getId())
+                        .title(curriculum.getTitle())
+                        .contentList(
+                                curriculum.getContentsList().stream()
+                                        .map(content -> ContentListResponseDTO.builder()
+                                                .id(content.getId())
+                                                .title(content.getTitle())
+                                                .build())
+                                        .collect(Collectors.toList())
+                        )
+                        .build())
+                .collect(Collectors.toList());
+
+        // CourseDetailResponseDTO를 빌더 패턴으로 생성
+        return CourseDetailResponseDTO.builder()
+//                .imagePath(course.getImage().getPath())
+                .title(course.getTitle())
+                .courseIntroduction(course.getIntroduction())
+                .category(course.getCategory())
+                .tutorName(course.getTutor().getUser().getName())
+                .tutorIntroduction(course.getTutor().getIntroduction())
+                .curriculumList(curriculumList)
+                .build();
     }
 
     @Transactional
