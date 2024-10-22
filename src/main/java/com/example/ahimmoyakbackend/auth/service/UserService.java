@@ -72,4 +72,18 @@ public class UserService {
                 .msg("refresh token reissue complete")
                 .build();
     }
+
+    public ExistNameResponseDTO checkExistName(ExistNameRequestDTO requestDTO) {
+        try {
+            User user = userRepository.findUserByUsername(requestDTO.getUsername()).orElseThrow(() -> new IllegalArgumentException("잘못된 요청입니다."));
+        } catch (Exception e) {
+            return ExistNameResponseDTO.builder()
+                    .message("true")
+                    .build();
+        }
+
+        return ExistNameResponseDTO.builder()
+                .message("false")
+                .build();
+    }
 }

@@ -3,7 +3,6 @@ package com.example.ahimmoyakbackend.auth.controller;
 import com.example.ahimmoyakbackend.auth.dto.*;
 import com.example.ahimmoyakbackend.auth.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +31,15 @@ public class UserController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<?> checkRefreshToken( HttpServletResponse response) {
+    public ResponseEntity<UserReissueResponseDTO> checkRefreshToken( HttpServletResponse response) {
         UserReissueResponseDTO responseDto = userService.reissue( response);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+    @PostMapping("/exist/name")
+    public ResponseEntity<ExistNameResponseDTO> checkExistName(@RequestBody ExistNameRequestDTO requestDTO){
+        ExistNameResponseDTO responseDTO = userService.checkExistName(requestDTO);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping("/v1/manager/test")
