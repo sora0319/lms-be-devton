@@ -59,7 +59,8 @@ public class CourseProvide extends Timestamped {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @OneToMany(mappedBy = "id")
+    @Builder.Default
+    @OneToMany(mappedBy = "courseProvide")
     private List<Enrollment> enrollments = new ArrayList<>();
 
     public void patch(CourseProvideState state) {
