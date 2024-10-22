@@ -73,9 +73,11 @@ public class CompanyController {
     }
 
     // Company
-    @RequestMapping(value = "v1/supervisor/company", method = RequestMethod.POST)
-    public ResponseEntity<CompanyEnrollResponseDto> enrollCompany(@RequestParam("userId") Long userId,
+    @PostMapping("/v1/supervisor/company")
+    public ResponseEntity<CompanyEnrollResponseDto> enrollCompany(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                   @RequestBody CompanyEnrollRequestDto requestDto) {
+        Long userId = userService.getAuth(userDetails).getId();
+        System.out.println(userId);
         CompanyEnrollResponseDto enrolled = companyService.enrollCompany(userId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(enrolled);
     }
