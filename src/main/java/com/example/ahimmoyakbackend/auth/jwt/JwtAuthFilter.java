@@ -17,47 +17,55 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Objects;
 
-import static com.example.ahimmoyakbackend.auth.jwt.JwtUtil.ACCESS_TOKEN;
-import static com.example.ahimmoyakbackend.auth.jwt.JwtUtil.REFRESH_TOKEN;
+import static com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider.ACCESS_TOKEN;
+import static com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider.REFRESH_TOKEN;
 
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = jwtUtil.getTokenFromHeader(request, ACCESS_TOKEN);
-        String refreshToken = jwtUtil.getTokenFromHeader(request, REFRESH_TOKEN);
+        String accessToken = jwtTokenProvider.getTokenFromHeader(request, ACCESS_TOKEN);
+        String refreshToken = jwtTokenProvider.getTokenFromHeader(request, REFRESH_TOKEN);
+
+        if(Objects.equals(request.getRequestURI(), "/api/v1/reissue")){
+            if(refreshToken == null) {
+                jwtExceptionHandler(response, "refresh token is not found.", HttpStatus.UNAUTHORIZED.value());
+                return;
+            }
+            if (jwtTokenProvider.validateToken(refreshToken) && jwtTokenProvider.validateToken(accessToken)) {
+                String username = jwtTokenProvider.getUserInfoFromToken(accessToken);
+                String refresh_username = jwtTokenProvider.getUserInfoFromToken(refreshToken);
+                if(username == null || refresh_username == null || !Objects.equals(username, refresh_username)){
+                    jwtExceptionHandler(response, "Invalid Tokens or Not same user.", HttpStatus.UNAUTHORIZED.value());
+                    return;
+                }
+                User user = userRepository.findUserByUsername(username)
+                        .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+                String newAccessToken = jwtTokenProvider.createAccessToken(username, user.getEmail(), user.getRole());
+                response.setHeader(ACCESS_TOKEN, newAccessToken);
+            }
+            else {
+                jwtExceptionHandler(response, "Invalid Tokens.", HttpStatus.UNAUTHORIZED.value());
+                return;
+            }
+        }
 
         if (accessToken != null) {
-            if (jwtUtil.validateToken(accessToken)) {
-                setAuthentication(jwtUtil.getUserInfoFromToken(accessToken));
-                filterChain.doFilter(request, response);
+            if (jwtTokenProvider.validateToken(accessToken)) {
+                setAuthentication(jwtTokenProvider.getUserInfoFromToken(accessToken));
             } else {
                 jwtExceptionHandler(response, "Invalid Access Token.", HttpStatus.UNAUTHORIZED.value());
+                return;
             }
-            return;
-        }
-
-        if (refreshToken != null && jwtUtil.validateToken(refreshToken)) {
-            String username = jwtUtil.getUserInfoFromToken(refreshToken);
-            User user = userRepository.findUserByUsername(username)
-                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
-            String newAccessToken = jwtUtil.createToken(username, user.getEmail(), ACCESS_TOKEN);
-            jwtUtil.setHeaderAccessToken(response, newAccessToken);
-            setAuthentication(username);
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        if (refreshToken != null) {
-            jwtExceptionHandler(response, "Invalid or Expired Refresh Token.", HttpStatus.UNAUTHORIZED.value());
-            return;
         }
 
         filterChain.doFilter(request, response);
@@ -65,7 +73,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     public void setAuthentication(String username) {
-        Authentication authentication = jwtUtil.createAuthentication(username);
+        Authentication authentication = jwtTokenProvider.getAuthentication(username);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 

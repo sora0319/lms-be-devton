@@ -12,6 +12,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -41,6 +43,9 @@ public class CourseBoard extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(mappedBy = "courseBoard")
+    private List<CourseComment> commits;
+
     public void patch(BoardUpdateRequestDto requestDTO, Long courseBoardId, Long courseId) {
         if(this.course.getId() != courseId || this.course.getId() != courseBoardId){
             throw new IllegalArgumentException("잘못된 게시물 입니다.");
@@ -62,7 +67,11 @@ public class CourseBoard extends Timestamped {
                 courseBoard.getTitle(),
                 courseBoard.getType(),
                 courseBoard.getId(),
-                courseBoard.getCreatedAt()
+                courseBoard.getCreatedAt(),
+                courseBoard.getCommitCount()
         );
+    }
+    public int getCommitCount(){
+        return commits != null ? commits.size() : 0;
     }
 }

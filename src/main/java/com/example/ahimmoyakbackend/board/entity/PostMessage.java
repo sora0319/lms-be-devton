@@ -34,6 +34,7 @@ public class PostMessage extends Timestamped {
     private String content;
 
     @Column
+    @Builder.Default
     @ColumnDefault("false")
     private Boolean isDelete = false;
 
@@ -41,6 +42,7 @@ public class PostMessage extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Builder.Default
     @OneToMany(mappedBy = "postMessage", orphanRemoval = true)
     private List<TargetUser> targetUsers = new ArrayList<>();
 

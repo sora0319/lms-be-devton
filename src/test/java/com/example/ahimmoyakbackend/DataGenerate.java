@@ -239,6 +239,7 @@ public class DataGenerate {
                 .build();
         userRepository.save(user3);
         Tutor tutor1 = Tutor.builder()
+                .introduction("강사 경력은 이렇습니다. 의 예시입니다.")
                 .user(user3)
                 .build();
         tutorRepository.save(tutor1);

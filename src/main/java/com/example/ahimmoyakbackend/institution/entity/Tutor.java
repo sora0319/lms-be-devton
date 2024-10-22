@@ -20,6 +20,9 @@ public class Tutor extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private String introduction;
+
     @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "user_id")
     private User user;
