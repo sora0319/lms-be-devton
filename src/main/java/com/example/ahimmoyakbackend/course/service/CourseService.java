@@ -171,18 +171,20 @@ public class CourseService {
             return courseRepository.findAll(pageable)
                     .map(course -> CourseListResponseDTO.builder()
                             .id(course.getId())
+                            .category(course.getCategory())
                             .title(course.getTitle())
-                            .image(course.getImage().getPath())
-                            .tutor(course.getTutor())
+//                            .image(course.getImage().getPath())
+                            .tutorName(course.getTutor().getUser().getName())
                             .build());
         }
         Page<Course> page = courseRepository.findAllByCategory(category, pageable);
         List<CourseListResponseDTO> list = page.stream()
                 .map(course -> CourseListResponseDTO.builder()
                         .id(course.getId())
+                        .category(course.getCategory())
                         .title(course.getTitle())
-                        .image(course.getImage().getPath())
-                        .tutor(course.getTutor())
+//                        .image(course.getImage().getPath())
+                        .tutorName(course.getTutor().getUser().getName())
                         .build())
                 .toList();
         return new PageImpl<>(list, page.getPageable(), page.getTotalElements());
