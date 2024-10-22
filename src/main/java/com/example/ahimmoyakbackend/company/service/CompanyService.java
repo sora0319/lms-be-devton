@@ -12,7 +12,6 @@ import com.example.ahimmoyakbackend.company.entity.Department;
 import com.example.ahimmoyakbackend.company.repository.AffiliationRepository;
 import com.example.ahimmoyakbackend.company.repository.CompanyRepository;
 import com.example.ahimmoyakbackend.company.repository.DepartmentRepository;
-import com.example.ahimmoyakbackend.global.entity.Address;
 import com.example.ahimmoyakbackend.global.repository.AddressRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -207,19 +206,9 @@ public class CompanyService {
     }
 
     @Transactional
-    public Long getCompanyIdFromToken(String token) {
-
-        String username = jwtUtil.getUserInfoFromToken(token);
-        UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsServiceImpl.loadUserByUsername(username);
-
-        User user = userDetails.getUser();
-        Affiliation affiliation = user.getAffiliation();
-
-        if(affiliation != null && affiliation.getDepartment() != null) {
-            return affiliation.getDepartment().getCompany().getId();
-        }
-
-        return null;
+    public Long getCompanyIdFromToken(User user) {
+        System.out.println(user.getAffiliation().getDepartment().getCompany().getId());
+        return user.getAffiliation().getDepartment().getCompany().getId();
     }
 
 }

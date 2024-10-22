@@ -1,6 +1,8 @@
 package com.example.ahimmoyakbackend.company.controller;
 
+import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
 import com.example.ahimmoyakbackend.auth.jwt.JwtUtil;
+import com.example.ahimmoyakbackend.auth.service.UserService;
 import com.example.ahimmoyakbackend.company.dto.*;
 import com.example.ahimmoyakbackend.company.service.CompanyService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +23,7 @@ public class CompanyController {
 
     private final CompanyService companyService;
     private final JwtUtil jwtUtil;
+    private final UserService userService;
 
     // EmployeeList
     @RequestMapping(value = "/v1/supervisor/", method = RequestMethod.GET)
@@ -92,23 +96,16 @@ public class CompanyController {
     }
 
     @GetMapping("/v1/users/companyId")
-    public ResponseEntity<Long> getLoggedInUserCompanyId(HttpServletRequest request) {
+    public ResponseEntity<Long> getLoggedInUserCompanyId(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        String token = jwtUtil.getTokenFromHeader(request, JwtUtil.ACCESS_TOKEN);
+        Long employeeCompanyId = companyService.getCompanyIdFromToken(userService.getAuth(userDetails));
 
-        if(token != null && jwtUtil.validateToken(token)) {
-            Long companyId = companyService.getCompanyIdFromToken(token);
-
-            if (companyId != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(companyId);
-            } else { // 소속된 회사 없음
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
+        if (employeeCompanyId != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(employeeCompanyId);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        //유효하지 않은 토큰
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
-
 }
 
 
