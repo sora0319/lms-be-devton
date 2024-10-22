@@ -17,6 +17,7 @@ import com.example.ahimmoyakbackend.live.repository.LiveStreamingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class LiveService {
     private final CourseRepository courseRepository;
     private final CourseProvideRepository courseProvideRepository;
 
+    @Transactional
     public boolean createLive(LiveCreateRequestDTO requestDTO, Long courseProvideId, String username) {
         Optional<Manager> optionalManager = managerRepository.findByUser_Username(username);
         Optional<CourseProvide> optionalCourseProvide = courseProvideRepository.findById(courseProvideId);
@@ -70,6 +72,7 @@ public class LiveService {
                 .toList();
     }
 
+    @Transactional
     public boolean publishLive(String streamKey) {
         String[] keyAndTutor = streamKey.split("_");
         Long liveId = Long.parseLong(keyAndTutor[0]);
@@ -83,10 +86,11 @@ public class LiveService {
                 return true;
             }
         }
-        log.error("Publish live streaming failed. stream_key: {}, tutor_id: {}", streamKey, tutorId);
+        log.error("Publish live streaming failed. stream_key: {}, tutor_id: {}", liveId, tutorId);
         return false;
     }
 
+    @Transactional
     public void endLive(String streamKey) {
         String[] keyAndTutor = streamKey.split("_");
         Long liveId = Long.parseLong(keyAndTutor[0]);
