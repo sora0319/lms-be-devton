@@ -17,5 +17,5 @@ public class CourseListResponseDTO {
     private String title;
     private String image;
     private CourseCategory category;
-    private Tutor tutor;
+    private String tutorName;
 }
