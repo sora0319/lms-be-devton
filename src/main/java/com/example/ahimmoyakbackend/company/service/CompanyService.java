@@ -10,8 +10,10 @@ import com.example.ahimmoyakbackend.company.entity.Department;
 import com.example.ahimmoyakbackend.company.repository.AffiliationRepository;
 import com.example.ahimmoyakbackend.company.repository.CompanyRepository;
 import com.example.ahimmoyakbackend.company.repository.DepartmentRepository;
+import com.example.ahimmoyakbackend.global.entity.Address;
 import com.example.ahimmoyakbackend.global.repository.AddressRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,15 +40,19 @@ public class CompanyService {
         List<Affiliation> affiliations;
         affiliations = affiliationRepository.findAllByDepartment_Company_Id(companyId);
 
-
         return affiliations.stream()
-                .map( affiliation -> {
-                    User user = affiliation.getUser();
-                    return CompanyInquiryEmployeeListResponseDto.toDto(affiliation);
-                }
-                )
+                .map(CompanyInquiryEmployeeListResponseDto::toDto)
                 .collect(Collectors.toList());
 
+    }
+
+    @Transactional
+    public CompanyInquiryUserDetailResponseDto getUserDetail(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("userId 가 없습니다."));
+        Affiliation affiliation = user.getAffiliation();
+        List<Address> addresses = user.getAddresses();
+
+        return CompanyInquiryUserDetailResponseDto.toDto(affiliation, addresses);
     }
 
     @Transactional
