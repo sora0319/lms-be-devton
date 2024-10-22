@@ -45,12 +45,11 @@ public class CourseController {
 
     // 수강신청할 코스 탐색
     @GetMapping("/main")
-    public ResponseEntity<Page<CourseListResponseDTO>> getCourseListMainPage(
+    public ResponseEntity<List<CourseListResponseDTO>> getCourseListMainPage(
             @RequestParam int categoryNum,
-            @Positive @RequestParam @PageableDefault(value = 1) int page,
             @Positive @RequestParam @PageableDefault(value = 6) int size
     ) {
-        Page<CourseListResponseDTO> coursePage = courseService.getCourseByCategory(categoryNum, page, size);
+        List<CourseListResponseDTO> coursePage = courseService.getRandomCourseByCategory(categoryNum, size);
         return ResponseEntity.status(HttpStatus.OK).body(coursePage);
     }
 
@@ -82,8 +81,6 @@ public class CourseController {
         CourseResponseDTO responseDTO = courseService.createCourseFormRegistration(userDetails.getUser(), courseId, requestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
-
-    ;
 
     @PatchMapping("/course/update")
     public ResponseEntity<CourseModifyResponseDTO> modifyCourse(@RequestParam Long courseId, @RequestBody CourseModifyRequestDTO dto) {
