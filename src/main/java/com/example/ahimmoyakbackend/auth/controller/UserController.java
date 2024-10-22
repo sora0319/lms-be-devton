@@ -50,6 +50,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
+    @PostMapping("/user/update")
+    public ResponseEntity<UserInformationResponseDTO> updatePersonalInformation(@RequestBody UserInformationRequestDTO requestDTO, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UserInformationResponseDTO responseDTO = userService.updatePersonalInformation(requestDTO, userDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+    }
+
     @GetMapping("/v1/manager/test")
     public ResponseEntity<Object> test() {
         return ResponseEntity.status(HttpStatus.OK).build();

@@ -101,4 +101,17 @@ public class UserService {
                 .message("true")
                 .build();
     }
+
+    public UserInformationResponseDTO updatePersonalInformation(UserInformationRequestDTO requestDTO, UserDetailsImpl userDetails) {
+        User findUser = userRepository.findUserByUsername(userDetails.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("잘못된 요청입니다.")
+        );
+
+        findUser.patch(requestDTO, passwordEncoder.encode(requestDTO.getPassword()));
+        userRepository.save(findUser);
+
+        return UserInformationResponseDTO.builder()
+                .message("complete")
+                .build();
+    }
 }
