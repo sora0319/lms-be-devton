@@ -252,7 +252,7 @@ public class CourseService {
             tutorGetCourseList.add(TutorGetCourseListResponseDTO.builder()
                     .id(course.getId())
                     .title(course.getTitle())
-                    .image(course.getImage().getPath())
+                    .image(course.getImage() == null ? null : course.getImage().getPath() )
                     .category(course.getCategory())
                     .build());
         }

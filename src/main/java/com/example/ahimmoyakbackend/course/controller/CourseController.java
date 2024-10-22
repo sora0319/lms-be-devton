@@ -23,7 +23,7 @@ public class CourseController {
 
     private final CourseService courseService;
 
-    @GetMapping("/inquiry/{courseId}")
+    @GetMapping("/course/{courseId}")
     public ResponseEntity<CourseDetailsInquiryResponseDTO> inquiryCourse(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long courseId) {
 
         CourseDetailsInquiryResponseDTO responseDTO = courseService.inquiry(userDetails.getUser(), courseId);
@@ -50,13 +50,22 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.OK).body(pageCourse);
     }
 
-    // 수강신청할 코스 탐색
-    @GetMapping("/main")
-    public ResponseEntity<List<CourseListResponseDTO>> getCourseListMainPage(
+    @GetMapping("/preview")
+    public ResponseEntity<List<CourseListResponseDTO>> getPreviewRandomCourseList(
             @RequestParam int categoryNum,
             @Positive @RequestParam @PageableDefault(value = 6) int size
     ) {
         List<CourseListResponseDTO> coursePage = courseService.getRandomCourseByCategory(categoryNum, size);
+        return ResponseEntity.status(HttpStatus.OK).body(coursePage);
+    }
+
+    @GetMapping("/main")
+    public ResponseEntity<Page<CourseListResponseDTO>> getCourseListMainPage(
+            @RequestParam int categoryNum,
+            @Positive @RequestParam @PageableDefault(value = 1) int page,
+            @Positive @RequestParam @PageableDefault(value = 6) int size
+    ) {
+        Page<CourseListResponseDTO> coursePage = courseService.getCourseByCategory(categoryNum, page, size);
         return ResponseEntity.status(HttpStatus.OK).body(coursePage);
     }
 
@@ -70,7 +79,7 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
-    @PostMapping("/course")
+    @PostMapping
     public ResponseEntity<CourseCreateResponseDTO> createCourse(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CourseCreateRequestDTO dto) {
 
         CourseCreateResponseDTO responseDTO = courseService.create(userDetails.getUser(), dto);
@@ -89,7 +98,7 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
-    @PatchMapping("/course/update")
+    @PatchMapping
     public ResponseEntity<CourseModifyResponseDTO> modifyCourse(@RequestParam Long courseId, @RequestBody CourseModifyRequestDTO dto) {
 
         CourseModifyResponseDTO responseDTO = courseService.modify(courseId, dto);
@@ -98,7 +107,7 @@ public class CourseController {
 
     }
 
-    @DeleteMapping("/course/delete")
+    @DeleteMapping
     public ResponseEntity<CourseDeleteResponseDTO> deleteCourse(@RequestParam Long courseId) {
 
         CourseDeleteResponseDTO responseDTO = courseService.delete(courseId);
