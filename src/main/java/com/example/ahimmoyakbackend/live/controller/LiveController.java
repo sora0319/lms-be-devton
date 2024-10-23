@@ -26,6 +26,12 @@ public class LiveController {
         return result ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
     }
 
+    @GetMapping("/{liveId}")
+    public ResponseEntity<LiveCourseResponseDTO> getLive(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long liveId) {
+        LiveCourseResponseDTO liveCourseResponseDTO = liveService.getLive(liveId);
+        return (liveCourseResponseDTO != null) ? ResponseEntity.ok(liveCourseResponseDTO) : ResponseEntity.notFound().build();
+    }
+
     @GetMapping
     public ResponseEntity<List<LiveCourseResponseDTO>> getCourseLives(@AuthenticationPrincipal UserDetails userDetails, @RequestParam Long courseProvideId) {
         List<LiveCourseResponseDTO> liveList = liveService.getLiveListByCourse(courseProvideId);
