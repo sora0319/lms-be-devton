@@ -1,6 +1,7 @@
 package com.example.ahimmoyakbackend.auth.entity;
 
 import com.example.ahimmoyakbackend.auth.common.Gender;
+import com.example.ahimmoyakbackend.auth.dto.UserInformationRequestDTO;
 import com.example.ahimmoyakbackend.company.entity.Affiliation;
 import com.example.ahimmoyakbackend.global.entity.Address;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
@@ -66,5 +67,23 @@ public class User extends Timestamped {
 
     @OneToOne(mappedBy = "user")
     private Manager manager;
+
+    public void patch(UserInformationRequestDTO requestDTO, String passwordEncoder) {
+        if(passwordEncoder != null){
+            this.password = passwordEncoder;
+        }
+        if(requestDTO.getPhone() != null){
+            this.phone = requestDTO.getPhone();
+        }
+        if(requestDTO.getEmail() != null){
+            this.email = requestDTO.getEmail();
+        }
+    }
+
+    public void updateRole(UserRole role) {
+        if (role != null) {
+            this.role = role;
+        }
+    }
 
 }
