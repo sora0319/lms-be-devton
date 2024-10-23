@@ -6,7 +6,6 @@ import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.institution.entity.Institution;
 import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,4 +16,6 @@ public interface CourseProvideRepository extends JpaRepository<CourseProvide, Lo
     List<CourseProvide> findAllByCompanyAndCourse_Institution(Company company, Institution institution);
 
     CourseProvide findByCompanyAndCourse_Institution(Company company, Institution institution);
+
+    List<CourseProvide> findAllByEnrollments_User(User user);
 }
