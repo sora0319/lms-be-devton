@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CompanyDeleteUserResponseDto {
-    String msg;
+    private String msg;
 }
