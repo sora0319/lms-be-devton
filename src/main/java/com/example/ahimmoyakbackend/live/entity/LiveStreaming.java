@@ -1,6 +1,7 @@
 package com.example.ahimmoyakbackend.live.entity;
 
 import com.example.ahimmoyakbackend.company.entity.CourseProvide;
+import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import com.example.ahimmoyakbackend.live.common.LiveState;
 import jakarta.persistence.*;

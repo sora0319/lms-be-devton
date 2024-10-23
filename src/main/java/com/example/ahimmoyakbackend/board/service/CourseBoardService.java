@@ -9,7 +9,9 @@ import com.example.ahimmoyakbackend.board.entity.CourseComment;
 import com.example.ahimmoyakbackend.board.repository.CourseBoardRepository;
 import com.example.ahimmoyakbackend.board.repository.CourseCommentRepository;
 import com.example.ahimmoyakbackend.course.entity.Course;
+import com.example.ahimmoyakbackend.course.entity.Enrollment;
 import com.example.ahimmoyakbackend.course.repository.CourseRepository;
+import com.example.ahimmoyakbackend.course.repository.EnrollmentRepository;
 import com.example.ahimmoyakbackend.institution.entity.Institution;
 import com.example.ahimmoyakbackend.institution.entity.Manager;
 import com.example.ahimmoyakbackend.institution.repository.InstitutionRepository;
@@ -30,14 +32,18 @@ public class CourseBoardService {
     private final CourseBoardRepository courseBoardRepository;
     private final CourseRepository courseRepository;
     private final CourseCommentRepository courseCommentRepository;
-    private final UserRepository userRepository;
     private final InstitutionRepository institutionRepository;
     private final ManagerRepository managerRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     public BoardCreateResponseDto create(User user, BoardCreateRequestDto requestDTO, Long courseId, BoardType type) {
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new IllegalArgumentException("잘못된 코스입니다."));
         Institution institution = institutionRepository.findById(course.getInstitution().getId()).orElseThrow(() -> new IllegalArgumentException("잘못된 기관입니다."));
         Manager manager = managerRepository.findByInstitution(institution);
+        Enrollment enrollment = enrollmentRepository.findByUser(user);
+        if (enrollment == null) {
+            throw new IllegalArgumentException("해당 사용자는 등록되지 않았습니다.");
+        }
 
         if (type.equals(BoardType.NOTICE) && (user.getId().equals(course.getTutor().getId()) || user.getId().equals(manager.getUser().getId()))) {
             String msg = createdBoard(user, requestDTO, type, course);
@@ -88,12 +94,17 @@ public class CourseBoardService {
     }
 
     public CourseBoardInquiryResponseDto inquiry(User user, Long courseId, BoardType type, int page, int size) {
+        Enrollment enrollment = enrollmentRepository.findByUser(user);
+        if (enrollment == null) {
+            throw new IllegalArgumentException("해당 사용자는 등록되지 않았습니다.");
+        }
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("없는 코스 입니다."));
 
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<CourseBoard> courseBoardPage = courseBoardRepository
                 .findAllByCourseAndTypeOrderByCreatedAtDesc(course, type, pageable);
+        int totalPage = courseBoardPage.getTotalPages();
 
         List<CourseBoardsResponseDto> boards = courseBoardPage
                 .stream()
@@ -103,7 +114,8 @@ public class CourseBoardService {
         return new CourseBoardInquiryResponseDto(
                 course.getTitle(),
                 boards,
-                new Pagination(page, size)
+                new Pagination(page, size),
+                totalPage
         );
     }
 
@@ -120,11 +132,12 @@ public class CourseBoardService {
                 .stream()
                 .map(CourseBoard::toBoardResponseDto)
                 .collect(Collectors.toList());
-
+        int totalPage = courseBoardPage.getTotalPages();
         return new CourseBoardInquiryResponseDto(
                 course.getTitle(),
                 boards,
-                new Pagination(page, size)
+                new Pagination(page, size),
+                totalPage
         );
     }
 
@@ -153,6 +166,6 @@ public class CourseBoardService {
                 .course(course)
                 .build();
         courseBoardRepository.save(board);
-        return type+"게시글 작성 성공";
+        return "게시글 작성 성공";
     }
 }

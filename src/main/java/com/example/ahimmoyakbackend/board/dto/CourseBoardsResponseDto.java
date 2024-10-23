@@ -22,4 +22,6 @@ public class CourseBoardsResponseDto {
 
     private LocalDateTime createdAt;
 
+    private int commitCount;
+
 }
