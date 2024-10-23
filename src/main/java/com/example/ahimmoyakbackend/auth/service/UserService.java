@@ -155,4 +155,14 @@ public class UserService {
                 .message("register complete")
                 .build();
     }
+
+    public UserDeleteResponseDTO delete(UserDetailsImpl userDetails) {
+        User targetUser = userRepository.findUserByUsername(userDetails.getUsername()).orElseThrow(() -> new IllegalArgumentException("회원이 없습니다"));
+        targetUser.updateRole(UserRole.NONMEMBER);
+        userRepository.save(targetUser);
+
+        return UserDeleteResponseDTO.builder()
+                .message("delete complete")
+                .build();
+    }
 }

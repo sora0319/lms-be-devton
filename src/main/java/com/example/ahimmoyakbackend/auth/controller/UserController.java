@@ -38,7 +38,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
-
+    @PostMapping("/delete")
+    public ResponseEntity<UserDeleteResponseDTO> deleteUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UserDeleteResponseDTO responseDto = userService.delete(userDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
 
     @PostMapping("/reissue")
     public ResponseEntity<UserReissueResponseDTO> checkRefreshToken() {
