@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface AffiliationRepository extends JpaRepository<Affiliation, Long> {
-    List<Affiliation> findAllByDepartment_Company_Id(Long id);
+    List<Affiliation> findAllByDepartment_Company_IdAndApprovalTrue(Long id);
 
     Affiliation findByUser(User user);
 }

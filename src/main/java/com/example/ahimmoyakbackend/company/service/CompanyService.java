@@ -1,6 +1,5 @@
 package com.example.ahimmoyakbackend.company.service;
 
-import com.example.ahimmoyakbackend.auth.config.security.UserDetailsServiceImpl;
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import com.example.ahimmoyakbackend.company.dto.*;
@@ -11,9 +10,7 @@ import com.example.ahimmoyakbackend.company.repository.AffiliationRepository;
 import com.example.ahimmoyakbackend.company.repository.CompanyRepository;
 import com.example.ahimmoyakbackend.company.repository.DepartmentRepository;
 import com.example.ahimmoyakbackend.global.entity.Address;
-import com.example.ahimmoyakbackend.global.repository.AddressRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +25,7 @@ public class CompanyService {
     private final AffiliationRepository affiliationRepository;
     private final DepartmentRepository departmentRepository;
     private final CompanyRepository companyRepository;
-    private final AddressRepository addressRepository;
     private final UserRepository userRepository;
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Transactional
     public List<CompanyInquiryEmployeeListResponseDto> getUserbyCompany(Long companyId) {
@@ -38,7 +33,7 @@ public class CompanyService {
         Company company = companyRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("해당 companyId 가 없습니다"));
 
         List<Affiliation> affiliations;
-        affiliations = affiliationRepository.findAllByDepartment_Company_Id(companyId);
+        affiliations = affiliationRepository.findAllByDepartment_Company_IdAndApprovalTrue(companyId);
 
         return affiliations.stream()
                 .map(CompanyInquiryEmployeeListResponseDto::toDto)

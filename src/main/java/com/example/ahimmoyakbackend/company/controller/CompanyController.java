@@ -24,7 +24,7 @@ public class CompanyController {
     private final UserService userService;
 
     // EmployeeList
-    @GetMapping("/v1/supervisor/")
+    @GetMapping("/v1/supervisor")
     public ResponseEntity<List<CompanyInquiryEmployeeListResponseDto>> getUserList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long companyId = userService.getAuth(userDetails).getId();
 
