@@ -85,7 +85,9 @@ public class UserService {
 
     public ExistNameResponseDTO checkExistName(ExistNameRequestDTO requestDTO) {
         try {
-            User user = userRepository.findUserByUsername(requestDTO.getUsername()).orElseThrow(() -> new IllegalArgumentException("잘못된 요청입니다."));
+            if(!userRepository.existsByUsername(requestDTO.getUsername())) {
+                throw new IllegalArgumentException("잘못된 요청입니다.");
+            }
         } catch (Exception e) {
             return ExistNameResponseDTO.builder()
                     .message("true")
