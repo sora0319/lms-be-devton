@@ -235,7 +235,7 @@ public class DataGenerate {
                 .phone("01033333333")
                 .email("three@tutor.com")
                 .gender(Gender.MALE)
-                .role(UserRole.INSTRUCTOR)
+                .role(UserRole.TUTOR)
                 .build();
         userRepository.save(user3);
         Tutor tutor1 = Tutor.builder()
