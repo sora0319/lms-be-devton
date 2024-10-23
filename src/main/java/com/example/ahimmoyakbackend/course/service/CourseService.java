@@ -23,6 +23,7 @@ import com.example.ahimmoyakbackend.institution.repository.TutorRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -332,5 +333,26 @@ public class CourseService {
                 .applicationDate(findCourseProvide.getCreatedAt().toLocalDate())
                 .learners(learners)
                 .build();
+    }
+
+    @Transactional
+    public List<UserCourseListResponseDTO> UserCourseList(User user, Long userId) {
+        User findUser = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
+        );
+        if (!user.getAffiliation().getDepartment().getCompany()
+                .equals(findUser.getAffiliation().getDepartment().getCompany())) {
+            throw new IllegalArgumentException("접근 권한이 없습니다.");
+        }
+        return courseProvideRepository.findAllByEnrollments_User(findUser)
+                .stream().map(cp -> UserCourseListResponseDTO.builder()
+                        .courseId(cp.getCourse().getId())
+                        .title(cp.getCourse().getTitle())
+                        .institutionName(cp.getInstitution().getName())
+                        .category(cp.getCourse().getCategory())
+                        .beginDate(cp.getBeginDate())
+                        .endDate(cp.getEndDate())
+                        .build()
+                ).toList();
     }
 }
