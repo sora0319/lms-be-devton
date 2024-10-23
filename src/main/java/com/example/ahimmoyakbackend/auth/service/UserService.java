@@ -7,6 +7,11 @@ import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.auth.exception.InvalidPasswordException;
 import com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
+import com.example.ahimmoyakbackend.company.entity.Affiliation;
+import com.example.ahimmoyakbackend.company.entity.Department;
+import com.example.ahimmoyakbackend.company.repository.AffiliationRepository;
+import com.example.ahimmoyakbackend.company.repository.CompanyRepository;
+import com.example.ahimmoyakbackend.company.repository.DepartmentRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final CompanyRepository companyRepository;
+    private final DepartmentRepository departmentRepository;
+    private final AffiliationRepository affiliationRepository;
+
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -112,6 +121,36 @@ public class UserService {
 
         return UserInformationResponseDTO.builder()
                 .message("complete")
+                .build();
+    }
+
+    public EmployeeJoinResponseDTO register(EmployeeJoinRequestDTO requestDTO, UserDetailsImpl userDetails) {
+        User targetUser = userRepository.findUserByUsername(userDetails.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("회원이 없습니다")
+        );
+
+        Department targetDepartment = departmentRepository.findById(Long.valueOf(requestDTO.getDepartmentId())).orElseThrow(
+                () -> new IllegalArgumentException("부서가 없습니다")
+        );
+
+        if(!companyRepository.existsById(Long.valueOf(requestDTO.getCompanyId()))){
+            throw new IllegalArgumentException("회사가 없습니다");
+        }
+
+        Affiliation affiliation = Affiliation.builder()
+                .department(targetDepartment)
+                .user(targetUser)
+                .isSupervisor(false)
+                .approval(true)
+                .build();
+
+        affiliationRepository.save(affiliation);
+
+        targetUser.updateRole(UserRole.EMPLOYEE);
+        userRepository.save(targetUser);
+
+        return EmployeeJoinResponseDTO.builder()
+                .message("register complete")
                 .build();
     }
 }
