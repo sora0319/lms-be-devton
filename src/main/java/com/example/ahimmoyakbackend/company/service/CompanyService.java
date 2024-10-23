@@ -49,6 +49,26 @@ public class CompanyService {
 
         return CompanyInquiryUserDetailResponseDto.toDto(affiliation, addresses);
     }
+    
+    @Transactional
+    public CompanyDeleteUserResponseDto deleteUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("userId 가 없습니다."));
+        Affiliation affiliation = user.getAffiliation();
+
+        Affiliation updateAffiliation = Affiliation.builder()
+                .id(affiliation.getId())
+                .isSupervisor(affiliation.getIsSupervisor())
+                .approval(false)
+                .department(null)
+                .user(affiliation.getUser())
+                .build();
+
+        affiliationRepository.save(updateAffiliation);
+
+        return CompanyDeleteUserResponseDto.builder()
+                .msg("사원 삭제가 완료되었습니다")
+                .build();
+    }
 
     @Transactional
     public CompanyEnrollDepartmentResponseDto enrollDepartment(Long affiliationId, Long companyId, CompanyEnrollDepartmentRequestDto requestDto) {
@@ -210,5 +230,5 @@ public class CompanyService {
                 .id(companyId)
                 .build();
     }
-
+    
 }

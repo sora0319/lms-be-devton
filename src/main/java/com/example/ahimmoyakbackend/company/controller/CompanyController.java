@@ -32,12 +32,20 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).body(userList);
 
     }
+
     // EmployeeDetail
-    @RequestMapping(value = "v1/supervisor/user")
-    public ResponseEntity<CompanyInquiryUserDetailResponseDto> getUserDetail(@RequestParam ("userId") Long userId) {
+    @RequestMapping(value = "/v1/supervisor/user", method = RequestMethod.GET)
+    public ResponseEntity<CompanyInquiryUserDetailResponseDto> getUserDetail(@RequestParam("userId") Long userId) {
         CompanyInquiryUserDetailResponseDto detail = companyService.getUserDetail(userId);
         return ResponseEntity.status(HttpStatus.OK).body(detail);
     }
+
+    @RequestMapping(value = "/v1/supervisor/user", method = RequestMethod.DELETE)
+    public ResponseEntity<CompanyDeleteUserResponseDto> deleteUser(@RequestParam("userId") Long userId) {
+        CompanyDeleteUserResponseDto deleted = companyService.deleteUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(deleted);
+    }
+
 
     // Department
     @PostMapping("/v1/supervisor/department")
