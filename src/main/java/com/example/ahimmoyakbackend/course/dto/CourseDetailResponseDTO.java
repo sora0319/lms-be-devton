@@ -1,21 +1,23 @@
 package com.example.ahimmoyakbackend.course.dto;
 
 import com.example.ahimmoyakbackend.course.common.CourseCategory;
-import com.example.ahimmoyakbackend.global.entity.Image;
-import com.example.ahimmoyakbackend.institution.entity.Tutor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class CourseListResponseDTO {
-    private Long id;
+@AllArgsConstructor
+public class CourseDetailResponseDTO {
+    private String imagePath;
     private String title;
-    private String image;
+    private String courseIntroduction;
     private CourseCategory category;
+    private List<CurriculumListResponseDTO> curriculumList;
     private String tutorName;
+    private String tutorIntroduction;
 }
