@@ -14,5 +14,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAllByAffiliation_Department_Company_Id(Long id);
 
-    Boolean existsByUsername(String username);
+    boolean existsByUsername(String username);
 }
