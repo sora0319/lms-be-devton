@@ -18,6 +18,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.example.ahimmoyakbackend.auth.common.UserRole.NORMAL;
+
 @Service
 @RequiredArgsConstructor
 public class CompanyService {
@@ -59,11 +61,25 @@ public class CompanyService {
                 .id(affiliation.getId())
                 .isSupervisor(affiliation.getIsSupervisor())
                 .approval(false)
-                .department(null)
+                .department(affiliation.getDepartment())
                 .user(affiliation.getUser())
                 .build();
 
         affiliationRepository.save(updateAffiliation);
+
+        User updateUser = User.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .name(user.getName())
+                .password(user.getPassword())
+                .birth(user.getBirth())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .gender(user.getGender())
+                .role(NORMAL)
+                .build();
+
+        userRepository.save(updateUser);
 
         return CompanyDeleteUserResponseDto.builder()
                 .msg("사원 삭제가 완료되었습니다")
@@ -182,7 +198,7 @@ public class CompanyService {
         Affiliation affiliation = Affiliation.builder()
                 .user(user)
                 .department(department)
-                .approval(false)
+                .approval(true)
                 .isSupervisor(true)
                 .build();
 
