@@ -17,4 +17,6 @@ public interface CourseProvideRepository extends JpaRepository<CourseProvide, Lo
     List<CourseProvide> findAllByCompanyAndCourse_Institution(Company company, Institution institution);
 
     CourseProvide findByCompanyAndCourse_Institution(Company company, Institution institution);
+
+    List<CourseProvide> findAllByEnrollments_User(User user);
 }
