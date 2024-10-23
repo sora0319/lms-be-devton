@@ -209,9 +209,11 @@ public class CompanyService {
     }
 
     @Transactional
-    public Long getCompanyIdFromToken(User user) {
-        System.out.println(user.getAffiliation().getDepartment().getCompany().getId());
-        return user.getAffiliation().getDepartment().getCompany().getId();
+    public FindCompanyIdDto getCompanyIdFromToken(User user) {
+        Long companyId = user.getAffiliation().getDepartment().getCompany().getId();
+        return FindCompanyIdDto.builder()
+                .id(companyId)
+                .build();
     }
 
 }

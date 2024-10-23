@@ -24,7 +24,7 @@ public class CompanyController {
     private final UserService userService;
 
     // EmployeeList
-    @GetMapping("/v1/supervisor")
+    @GetMapping("/v1/supervisor/")
     public ResponseEntity<List<CompanyInquiryEmployeeListResponseDto>> getUserList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long companyId = userService.getAuth(userDetails).getId();
 
@@ -108,9 +108,9 @@ public class CompanyController {
     }
 
     @GetMapping("/v1/users/companyId")
-    public ResponseEntity<Long> getLoggedInUserCompanyId(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<FindCompanyIdDto> getLoggedInUserCompanyId(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        Long employeeCompanyId = companyService.getCompanyIdFromToken(userService.getAuth(userDetails));
+        FindCompanyIdDto employeeCompanyId = companyService.getCompanyIdFromToken(userService.getAuth(userDetails));
 
         if (employeeCompanyId != null) {
             return ResponseEntity.status(HttpStatus.OK).body(employeeCompanyId);
