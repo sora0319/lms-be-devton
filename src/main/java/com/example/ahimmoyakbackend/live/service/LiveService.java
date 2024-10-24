@@ -49,6 +49,13 @@ public class LiveService {
         return true;
     }
 
+    public LiveCourseResponseDTO getLive(Long liveId) {
+        Optional<LiveStreaming> optionalLiveStreaming = liveStreamingRepository.findById(liveId);
+        if(optionalLiveStreaming.isEmpty()) return null;
+        LiveStreaming liveStreaming = optionalLiveStreaming.get();
+        return LiveCourseResponseDTO.from(liveStreaming, liveStreaming.getCourseProvide());
+    }
+
     public List<LiveCourseResponseDTO> getLiveListByCourse(Long courseProvideId) {
         Optional<CourseProvide> optionalCourseProvide = courseProvideRepository.findById(courseProvideId);
         if(optionalCourseProvide.isEmpty()){
