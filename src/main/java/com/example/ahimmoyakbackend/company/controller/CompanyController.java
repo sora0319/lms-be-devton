@@ -1,13 +1,14 @@
 package com.example.ahimmoyakbackend.company.controller;
 
-import com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider;
+import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
+import com.example.ahimmoyakbackend.auth.service.UserService;
 import com.example.ahimmoyakbackend.company.dto.*;
 import com.example.ahimmoyakbackend.company.service.CompanyService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,23 +20,41 @@ import java.util.List;
 public class CompanyController {
 
     private final CompanyService companyService;
-    private final JwtTokenProvider JwtTokenProvider;
 
-    // User
-    @RequestMapping(value = "/v1/supervisor/", method = RequestMethod.GET)
-    public ResponseEntity<List<CompanyInquiryUserResponseDto>> getUserList(@RequestParam("companyId") Long companyId,
-                                                                           @RequestParam("departmentId") Long departmentId
-    ) {
-        List<CompanyInquiryUserResponseDto> userList = companyService.getUserbyCompany(companyId, departmentId);
+    private final UserService userService;
+
+    // EmployeeList
+    @GetMapping("/v1/supervisor")
+    public ResponseEntity<List<CompanyInquiryEmployeeListResponseDto>> getUserList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long companyId = userService.getAuth(userDetails).getId();
+
+        List<CompanyInquiryEmployeeListResponseDto> userList = companyService.getUserbyCompany(companyId);
         return ResponseEntity.status(HttpStatus.OK).body(userList);
+
     }
 
+    // EmployeeDetail
+    @RequestMapping(value = "/v1/supervisor/user", method = RequestMethod.GET)
+    public ResponseEntity<CompanyInquiryUserDetailResponseDto> getUserDetail(@RequestParam("userId") Long userId) {
+        CompanyInquiryUserDetailResponseDto detail = companyService.getUserDetail(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(detail);
+    }
+
+    @RequestMapping(value = "/v1/supervisor/user", method = RequestMethod.DELETE)
+    public ResponseEntity<CompanyDeleteUserResponseDto> deleteUser(@RequestParam("userId") Long userId) {
+        CompanyDeleteUserResponseDto deleted = companyService.deleteUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(deleted);
+    }
+
+
     // Department
-    @RequestMapping(value = "/v1/supervisor/department", method = RequestMethod.POST)
-    public ResponseEntity<CompanyEnrollDepartmentResponseDto> enrollDepartment(@RequestParam("companyId") Long companyId,
-                                                                               @RequestParam("affiliationId") Long affiliationId,
+    @PostMapping("/v1/supervisor/department")
+    public ResponseEntity<CompanyEnrollDepartmentResponseDto> enrollDepartment(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                                @RequestBody CompanyEnrollDepartmentRequestDto requestDto
     ) {
+        Long companyId = userService.getAuth(userDetails).getAffiliation().getDepartment().getCompany().getId();
+        Long affiliationId = userService.getAuth(userDetails).getAffiliation().getId();
+
         CompanyEnrollDepartmentResponseDto enrolled = companyService.enrollDepartment(companyId, affiliationId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(enrolled);
     }
@@ -50,7 +69,7 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).body(deleted);
     }
 
-    @RequestMapping(value = "v1/supervisor/department", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/v1/supervisor/department", method = RequestMethod.PATCH)
     public ResponseEntity<CompanyUpdateDepartmentResponseDto> updateDepartment(@RequestParam("companyId") Long companyId,
                                                                                @RequestParam("departmentId") Long departmentId,
                                                                                @RequestBody CompanyUpdateDepartmentRequestDto requestDto
@@ -60,26 +79,32 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
 
-    @RequestMapping(value = "v1/supervisor/department", method = RequestMethod.GET)
-    public ResponseEntity<List<CompanyInquiryDepartmentResponseDto>> inquiryDepartment(@RequestParam("companyId") Long companyId
-    ) {
+    @GetMapping("/v1/supervisor/department")
+    public ResponseEntity<List<CompanyInquiryDepartmentResponseDto>> inquiryDepartment(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long companyId = userService.getAuth(userDetails).getId();
+
         List<CompanyInquiryDepartmentResponseDto> departmentList = companyService.getDepartmentCompanyId(companyId);
         return ResponseEntity.status(HttpStatus.OK).body(departmentList);
     }
 
+
     // Company
-    @RequestMapping(value = "v1/supervisor/company", method = RequestMethod.POST)
-    public ResponseEntity<CompanyEnrollResponseDto> enrollCompany(@RequestParam("userId") Long userId,
+    @PostMapping("/v1/supervisor/company")
+    public ResponseEntity<CompanyEnrollResponseDto> enrollCompany(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                   @RequestBody CompanyEnrollRequestDto requestDto) {
+        Long userId = userService.getAuth(userDetails).getId();
+        System.out.println(userId);
         CompanyEnrollResponseDto enrolled = companyService.enrollCompany(userId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(enrolled);
     }
 
-    @RequestMapping(value = "v1/supervisor/company", method = RequestMethod.PATCH)
-    public ResponseEntity<CompanyUpdateResponseDto> updateCompany(@RequestParam("companyId") Long companyId,
+    @PatchMapping("/v1/supervisor/company")
+    public ResponseEntity<CompanyUpdateResponseDto> updateCompany(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                   @RequestBody CompanyUpdateRequestDto requestDto
 
     ) {
+        Long companyId = userService.getAuth(userDetails).getId();
+
         CompanyUpdateResponseDto updated = companyService.updateCompany(companyId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }
@@ -91,23 +116,16 @@ public class CompanyController {
     }
 
     @GetMapping("/v1/users/companyId")
-    public ResponseEntity<Long> getLoggedInUserCompanyId(HttpServletRequest request) {
+    public ResponseEntity<FindCompanyIdDto> getLoggedInUserCompanyId(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        String token = JwtTokenProvider.getTokenFromHeader(request, JwtTokenProvider.ACCESS_TOKEN);
+        FindCompanyIdDto employeeCompanyId = companyService.getCompanyIdFromToken(userService.getAuth(userDetails));
 
-        if(token != null && JwtTokenProvider.validateToken(token)) {
-            Long companyId = companyService.getCompanyIdFromToken(token);
-
-            if (companyId != null) {
-                return ResponseEntity.status(HttpStatus.OK).body(companyId);
-            } else { // 소속된 회사 없음
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
+        if (employeeCompanyId != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(employeeCompanyId);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        //유효하지 않은 토큰
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
-
 }
 
 
