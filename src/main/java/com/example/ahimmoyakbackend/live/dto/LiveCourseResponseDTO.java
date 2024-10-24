@@ -18,6 +18,7 @@ public class LiveCourseResponseDTO {
     private Long key;
     private String title;
     private String course;
+    private Long courseId;
     private String instructor;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
@@ -28,6 +29,7 @@ public class LiveCourseResponseDTO {
                 .key(liveStreaming.getId())
                 .title(liveStreaming.getTitle())
                 .course(courseProvide.getCourse().getTitle())
+                .courseId(courseProvide.getCourse().getId())
                 .instructor(courseProvide.getCourse().getTutor().getUser().getName())
                 .startTime(liveStreaming.getStartTime())
                 .endTime(liveStreaming.getEndTime())
