@@ -1,15 +1,14 @@
 package com.example.ahimmoyakbackend.company.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompanyUpdateRequestDto {
-    private String name;
-    private String ownerName;
-    private String email;
-    private String phone;
+public class FindCompanyIdDto {
+    private Long id;
 }

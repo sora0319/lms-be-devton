@@ -1,9 +1,6 @@
 package com.example.ahimmoyakbackend.company.service;
 
-import com.example.ahimmoyakbackend.auth.config.security.UserDetailsImpl;
-import com.example.ahimmoyakbackend.auth.config.security.UserDetailsServiceImpl;
 import com.example.ahimmoyakbackend.auth.entity.User;
-import com.example.ahimmoyakbackend.auth.jwt.JwtTokenProvider;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import com.example.ahimmoyakbackend.company.dto.*;
 import com.example.ahimmoyakbackend.company.entity.Affiliation;
@@ -13,7 +10,6 @@ import com.example.ahimmoyakbackend.company.repository.AffiliationRepository;
 import com.example.ahimmoyakbackend.company.repository.CompanyRepository;
 import com.example.ahimmoyakbackend.company.repository.DepartmentRepository;
 import com.example.ahimmoyakbackend.global.entity.Address;
-import com.example.ahimmoyakbackend.global.repository.AddressRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +18,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.example.ahimmoyakbackend.auth.common.UserRole.NORMAL;
+
 @Service
 @RequiredArgsConstructor
 public class CompanyService {
@@ -29,33 +27,63 @@ public class CompanyService {
     private final AffiliationRepository affiliationRepository;
     private final DepartmentRepository departmentRepository;
     private final CompanyRepository companyRepository;
-    private final AddressRepository addressRepository;
     private final UserRepository userRepository;
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
-    private final JwtTokenProvider JwtTokenProvider;
 
     @Transactional
-    public List<CompanyInquiryUserResponseDto> getUserbyCompany(Long companyId, Long departmentId) {
+    public List<CompanyInquiryEmployeeListResponseDto> getUserbyCompany(Long companyId) {
 
         Company company = companyRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("해당 companyId 가 없습니다"));
 
         List<Affiliation> affiliations;
-
-        if (departmentId != null) {
-            affiliations = affiliationRepository.findAllByDepartment_CompanyIdAndDepartmentId(companyId, departmentId);
-        } else {
-            affiliations = affiliationRepository.findAllByDepartment_Company_Id(companyId);
-        }
+        affiliations = affiliationRepository.findAllByDepartment_Company_IdAndApprovalTrue(companyId);
 
         return affiliations.stream()
-                .map( affiliation -> {
-                    User user = affiliation.getUser();
-                    List<Address> addresses = addressRepository.findByUser_Id(user.getId());
-                    return CompanyInquiryUserResponseDto.toDto(affiliation, addresses);
-                }
-                )
+                .map(CompanyInquiryEmployeeListResponseDto::toDto)
                 .collect(Collectors.toList());
 
+    }
+
+    @Transactional
+    public CompanyInquiryUserDetailResponseDto getUserDetail(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("userId 가 없습니다."));
+        Affiliation affiliation = user.getAffiliation();
+        List<Address> addresses = user.getAddresses();
+
+        return CompanyInquiryUserDetailResponseDto.toDto(affiliation, addresses);
+    }
+    
+    @Transactional
+    public CompanyDeleteUserResponseDto deleteUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("userId 가 없습니다."));
+        Affiliation affiliation = user.getAffiliation();
+
+        Affiliation updateAffiliation = Affiliation.builder()
+                .id(affiliation.getId())
+                .isSupervisor(affiliation.getIsSupervisor())
+                .approval(false)
+                .department(affiliation.getDepartment())
+                .user(affiliation.getUser())
+                .build();
+
+        affiliationRepository.save(updateAffiliation);
+
+        User updateUser = User.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .name(user.getName())
+                .password(user.getPassword())
+                .birth(user.getBirth())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .gender(user.getGender())
+                .role(NORMAL)
+                .build();
+
+        userRepository.save(updateUser);
+
+        return CompanyDeleteUserResponseDto.builder()
+                .msg("사원 삭제가 완료되었습니다")
+                .build();
     }
 
     @Transactional
@@ -76,7 +104,7 @@ public class CompanyService {
                 .user(affiliation.getUser())
                 .isSupervisor(affiliation.getIsSupervisor())
                 .approval(affiliation.getApproval())
-                .department(department)
+                .department(affiliation.getDepartment())
                 .build();
 
         affiliationRepository.save(updatedAffiliation);
@@ -212,19 +240,11 @@ public class CompanyService {
     }
 
     @Transactional
-    public Long getCompanyIdFromToken(String token) {
-
-        String username = JwtTokenProvider.getUserInfoFromToken(token);
-        UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsServiceImpl.loadUserByUsername(username);
-
-        User user = userDetails.getUser();
-        Affiliation affiliation = user.getAffiliation();
-
-        if(affiliation != null && affiliation.getDepartment() != null) {
-            return affiliation.getDepartment().getCompany().getId();
-        }
-
-        return null;
+    public FindCompanyIdDto getCompanyIdFromToken(User user) {
+        Long companyId = user.getAffiliation().getDepartment().getCompany().getId();
+        return FindCompanyIdDto.builder()
+                .id(companyId)
+                .build();
     }
-
+    
 }

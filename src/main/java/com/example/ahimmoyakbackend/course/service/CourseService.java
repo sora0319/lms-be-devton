@@ -185,7 +185,9 @@ public class CourseService {
                 .map(course -> CourseListResponseDTO.builder()
                         .id(course.getId())
                         .title(course.getTitle())
-                        .image(course.getImage().getPath())
+//                        .image(course.getImage().getPath())
+                        .category(course.getCategory())
+                        .tutorName(course.getTutor().getUser().getName())
                         .build())
                 .toList();
         return new PageImpl<>(list, coursePage.getPageable(), coursePage.getTotalElements());
@@ -332,5 +334,26 @@ public class CourseService {
                 .applicationDate(findCourseProvide.getCreatedAt().toLocalDate())
                 .learners(learners)
                 .build();
+    }
+
+    @Transactional
+    public List<UserCourseListResponseDTO> UserCourseList(User user, Long userId) {
+        User findUser = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
+        );
+//        if (!user.getAffiliation().getDepartment().getCompany()
+//                .equals(findUser.getAffiliation().getDepartment().getCompany())) {
+//            throw new IllegalArgumentException("접근 권한이 없습니다.");
+//        }
+        return courseProvideRepository.findAllByEnrollments_User(findUser)
+                .stream().map(cp -> UserCourseListResponseDTO.builder()
+                        .courseId(cp.getCourse().getId())
+                        .title(cp.getCourse().getTitle())
+                        .institutionName(cp.getInstitution().getName())
+                        .category(cp.getCourse().getCategory())
+                        .beginDate(cp.getBeginDate())
+                        .endDate(cp.getEndDate())
+                        .build()
+                ).toList();
     }
 }
