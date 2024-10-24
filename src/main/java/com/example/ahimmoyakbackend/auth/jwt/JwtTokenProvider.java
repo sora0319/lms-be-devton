@@ -3,10 +3,7 @@ package com.example.ahimmoyakbackend.auth.jwt;
 import com.example.ahimmoyakbackend.auth.common.UserRole;
 import com.example.ahimmoyakbackend.auth.config.security.UserDetailsServiceImpl;
 import com.example.ahimmoyakbackend.auth.dto.JwsDTO;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,7 +27,7 @@ import java.util.Date;
 public class JwtTokenProvider {
     private final UserDetailsServiceImpl userDetailsService;
     public static final String ACCESS_TOKEN = "Authorization";
-    public static final String REFRESH_TOKEN = "refresh";
+    public static final String REFRESH_TOKEN = "Refresh";
     private static final String BEARER_PREFIX = "[Bearer]";
     private static final long ACCESS_TIME = 60 * 60 * 1000L;
     private static final long REFRESH_TIME = 7 * 24 * 60 * 60 * 1000L;
@@ -111,14 +108,13 @@ public class JwtTokenProvider {
     }
 
     public String getUserInfoFromToken(String jws) {
-        return Jwts.parser().verifyWith(key).build().parseSignedClaims(jws).getPayload().getSubject();
+        try {
+            return Jwts.parser().verifyWith(key).build().parseSignedClaims(jws).getPayload().getSubject();
+        } catch (ExpiredJwtException e) {
+            log.info("Expired JWT token but Get username");
+            return e.getClaims().getSubject();
+        }
     }
-
-//    public boolean refreshTokenValid(String jws) {
-//        if (!validateToken(jws)) return false;
-//        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(getUserInfoFromToken(jws));
-//        return refreshToken.isPresent() && jws.equals(refreshToken.get().getRefreshToken().substring(8));
-//    }
 
     public void setHeaderAccessToken(HttpServletResponse response, String newAccessToken) {
         response.setHeader(ACCESS_TOKEN, newAccessToken);
