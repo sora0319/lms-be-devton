@@ -1,6 +1,6 @@
 package com.example.ahimmoyakbackend.live.dto;
 
-import com.example.ahimmoyakbackend.institution.entity.Tutor;
+import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.live.common.LiveState;
 import com.example.ahimmoyakbackend.live.entity.LiveStreaming;
 import lombok.AllArgsConstructor;
@@ -24,12 +24,12 @@ public class LiveTutorResponseDTO {
     private LiveState state;
     private String streamKey;
 
-    public static LiveTutorResponseDTO from(LiveStreaming liveStreaming, Tutor tutor) {
+    public static LiveTutorResponseDTO from(LiveStreaming liveStreaming, User tutor) {
         return LiveTutorResponseDTO.builder()
                 .key(liveStreaming.getId())
                 .title(liveStreaming.getTitle())
-                .course(liveStreaming.getCourseProvide().getCourse().getTitle())
-                .instructor(tutor.getUser().getName())
+                .course(liveStreaming.getCourse().getTitle())
+                .instructor(tutor.getName())
                 .startTime(liveStreaming.getStartTime())
                 .endTime(liveStreaming.getEndTime())
                 .state(liveStreaming.getState())

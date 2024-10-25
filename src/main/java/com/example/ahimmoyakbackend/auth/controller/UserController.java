@@ -26,11 +26,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(created);
     }
 
-    @PostMapping("/join/employee")
-    public ResponseEntity<EmployeeJoinResponseDTO> joinEmployee(@RequestBody EmployeeJoinRequestDTO requestDTO, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        EmployeeJoinResponseDTO responseDTO = userService.register(requestDTO, userDetails);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
-    }
 
     @PostMapping("/login")
     public ResponseEntity<UserLoginResponseDTO> login(@RequestBody UserLoginRequestDTO requestDto, HttpServletResponse response) {
@@ -38,11 +33,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
-    @PostMapping("/delete")
-    public ResponseEntity<UserDeleteResponseDTO> deleteUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        UserDeleteResponseDTO responseDto = userService.delete(userDetails);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
-    }
 
     @PostMapping("/reissue")
     public ResponseEntity<UserReissueResponseDTO> checkRefreshToken() {

@@ -2,8 +2,6 @@ package com.example.ahimmoyakbackend.board.entity;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.board.common.BoardType;
-import com.example.ahimmoyakbackend.board.dto.BoardUpdateRequestDto;
-import com.example.ahimmoyakbackend.board.dto.CourseBoardsResponseDto;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
@@ -13,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -46,31 +45,6 @@ public class CourseBoard extends Timestamped {
     @OneToMany(mappedBy = "courseBoard")
     private List<CourseComment> commits;
 
-    public void patch(BoardUpdateRequestDto requestDTO, Long courseBoardId, Long courseId) {
-        if(this.course.getId() != courseId || this.course.getId() != courseBoardId){
-            throw new IllegalArgumentException("잘못된 게시물 입니다.");
-        }
-        if(requestDTO.getTitle() != null){
-            this.title = requestDTO.getTitle();
-        }
-        if(requestDTO.getContent() != null){
-            this.content = requestDTO.getContent();
-        }
-        if(requestDTO.getType() != null){
-            this.type = requestDTO.getType();
-        }
-    }
-
-    public static CourseBoardsResponseDto toBoardResponseDto(CourseBoard courseBoard) {
-        return new CourseBoardsResponseDto(
-                courseBoard.getUser().getUsername(),
-                courseBoard.getTitle(),
-                courseBoard.getType(),
-                courseBoard.getId(),
-                courseBoard.getCreatedAt(),
-                courseBoard.getCommitCount()
-        );
-    }
     public int getCommitCount(){
         return commits != null ? commits.size() : 0;
     }

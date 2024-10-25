@@ -1,13 +1,9 @@
 package com.example.ahimmoyakbackend.live.service;
 
-import com.example.ahimmoyakbackend.company.entity.CourseProvide;
-import com.example.ahimmoyakbackend.company.repository.CourseProvideRepository;
+import com.example.ahimmoyakbackend.auth.entity.User;
+import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.course.repository.CourseRepository;
-import com.example.ahimmoyakbackend.institution.entity.Manager;
-import com.example.ahimmoyakbackend.institution.entity.Tutor;
-import com.example.ahimmoyakbackend.institution.repository.ManagerRepository;
-import com.example.ahimmoyakbackend.institution.repository.TutorRepository;
 import com.example.ahimmoyakbackend.live.common.LiveState;
 import com.example.ahimmoyakbackend.live.dto.LiveCourseResponseDTO;
 import com.example.ahimmoyakbackend.live.dto.LiveCreateRequestDTO;
@@ -28,24 +24,22 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LiveService {
     private final LiveStreamingRepository liveStreamingRepository;
-    private final ManagerRepository managerRepository;
-    private final TutorRepository tutorRepository;
     private final CourseRepository courseRepository;
-    private final CourseProvideRepository courseProvideRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public boolean createLive(LiveCreateRequestDTO requestDTO, Long courseProvideId, String username) {
-        Optional<Manager> optionalManager = managerRepository.findByUser_Username(username);
-        Optional<CourseProvide> optionalCourseProvide = courseProvideRepository.findById(courseProvideId);
-        if(optionalManager.isEmpty() || optionalCourseProvide.isEmpty()){
+    public boolean createLive(LiveCreateRequestDTO requestDTO, Long courseId, String username) {
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        Optional<Course> optionalCourse = courseRepository.findById(courseId);
+        if(optionalUser.isEmpty() || optionalCourse.isEmpty()){
             return false;
         }
-        Manager manager = optionalManager.get();
-        CourseProvide courseProvide = optionalCourseProvide.get();
-        if(!courseProvide.getInstitution().equals(manager.getInstitution())){
+        User user = optionalUser.get();
+        Course course = optionalCourse.get();
+        if(!course.getTutor().equals(user)){
             return false;
         }
-        liveStreamingRepository.save(requestDTO.toEntity(courseProvide));
+        liveStreamingRepository.save(requestDTO.toEntity(course));
         return true;
     }
 
@@ -53,28 +47,28 @@ public class LiveService {
         Optional<LiveStreaming> optionalLiveStreaming = liveStreamingRepository.findById(liveId);
         if(optionalLiveStreaming.isEmpty()) return null;
         LiveStreaming liveStreaming = optionalLiveStreaming.get();
-        return LiveCourseResponseDTO.from(liveStreaming, liveStreaming.getCourseProvide());
+        return LiveCourseResponseDTO.from(liveStreaming, liveStreaming.getCourse());
     }
 
-    public List<LiveCourseResponseDTO> getLiveListByCourse(Long courseProvideId) {
-        Optional<CourseProvide> optionalCourseProvide = courseProvideRepository.findById(courseProvideId);
-        if(optionalCourseProvide.isEmpty()){
+    public List<LiveCourseResponseDTO> getLiveListByCourse(Long courseId) {
+        Optional<Course> optionalCourse = courseRepository.findById(courseId);
+        if(optionalCourse.isEmpty()){
             return new ArrayList<>();
         }
-        CourseProvide courseProvide = optionalCourseProvide.get();
-        return liveStreamingRepository.findByCourseProvide(courseProvide).stream()
-                .map(entity -> LiveCourseResponseDTO.from(entity, courseProvide))
+        Course course = optionalCourse.get();
+        return liveStreamingRepository.findByCourse(course).stream()
+                .map(entity -> LiveCourseResponseDTO.from(entity, course))
                 .toList();
 
     }
 
     public List<LiveTutorResponseDTO> getLiveListByTutor(Long tutorId) {
-        Optional<Tutor> optionalTutor = tutorRepository.findById(tutorId);
+        Optional<User> optionalTutor = userRepository.findById(tutorId);
         if(optionalTutor.isEmpty()){
             return new ArrayList<>();
         }
-        Tutor tutor = optionalTutor.get();
-        return liveStreamingRepository.findByCourseProvide_Course_Tutor(tutor).stream()
+        User tutor = optionalTutor.get();
+        return liveStreamingRepository.findByCourse_Tutor(tutor).stream()
                 .map(entity -> LiveTutorResponseDTO.from(entity, tutor))
                 .toList();
     }
@@ -85,9 +79,9 @@ public class LiveService {
         Long liveId = Long.parseLong(keyAndTutor[0]);
         Long tutorId = Long.parseLong(keyAndTutor[1]);
         LiveStreaming liveStreaming = liveStreamingRepository.findById(liveId).orElse(null);
-        Tutor tutor = tutorRepository.findById(tutorId).orElse(null);
+        User tutor = userRepository.findById(tutorId).orElse(null);
         if(liveStreaming != null && tutor != null){
-            if(liveStreaming.getCourseProvide().getCourse().getTutor().equals(tutor)){
+            if(liveStreaming.getCourse().getTutor().equals(tutor)){
                 liveStreaming.setState(LiveState.ON);
                 log.info("Publish live streaming success. stream_key: {}, tutor_id: {}", liveId, tutorId);
                 return true;

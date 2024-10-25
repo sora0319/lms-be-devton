@@ -1,7 +1,6 @@
 package com.example.ahimmoyakbackend.course.entity;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
-import com.example.ahimmoyakbackend.company.entity.CourseProvide;
 import com.example.ahimmoyakbackend.course.common.EnrollmentState;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
@@ -36,19 +35,9 @@ public class Enrollment extends Timestamped {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "course_Provide_id")
-    private CourseProvide courseProvide;
+    @JoinColumn(name = "course_id")
+    private Course course;
 
-    public void assignCourseProvide(CourseProvide courseProvide) {
-        if (this.courseProvide != null) {
-            throw new RuntimeException("계약 아이디가 없습니다.");
-        }
-        this.courseProvide = courseProvide;
-    }
-    public void cancelCourseProvide() {
-
-        this.courseProvide = null;
-    }
 
 
 
