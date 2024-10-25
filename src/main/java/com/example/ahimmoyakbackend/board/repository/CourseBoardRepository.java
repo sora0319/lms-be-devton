@@ -9,8 +9,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CourseBoardRepository extends JpaRepository<CourseBoard, Long> {
-    CourseBoard findByCourseAndIdAndUser(Course course,Long courseBoardId,User user);
-    CourseBoard findByCourseAndId(Course course,Long courseBoardId);
-    Page<CourseBoard> findAllByCourseAndTypeOrderByCreatedAtDesc(Course course, BoardType type, Pageable pageable);
-    Page<CourseBoard> findAllByUserAndCourseOrderByCreatedAtDesc(User user, Course course, Pageable pageable);
+
 }

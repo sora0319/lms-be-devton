@@ -10,7 +10,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ContentsHistoryRepository extends JpaRepository<ContentsHistory, Long> {
-    List<ContentsHistory> findByEnrollment_UserAndContents_Curriculum_Course(User user, Course course);
 
-    Optional<ContentsHistory> findByContentsAndEnrollment_User(Contents contents, User user);
 }

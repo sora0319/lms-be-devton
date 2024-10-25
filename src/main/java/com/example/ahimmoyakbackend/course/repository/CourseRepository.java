@@ -1,8 +1,8 @@
 package com.example.ahimmoyakbackend.course.repository;
 
+import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.course.common.CourseCategory;
 import com.example.ahimmoyakbackend.course.entity.Course;
-import com.example.ahimmoyakbackend.institution.entity.Tutor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,10 +14,6 @@ import java.util.List;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
-    Page<Course> findAllByCategory(CourseCategory category, Pageable pageable);
 
-    List<Course> findByTutor(Tutor tutor);
-
-    @Query(value = "SELECT * FROM Course WHERE category = :category ORDER BY RAND() LIMIT :size", nativeQuery = true)
-    List<Course> findRandomCoursesBySize(@Param("category") CourseCategory category, @Param("size") int size);
+    List<Course> findByEnrollments_User(User user);
 }
