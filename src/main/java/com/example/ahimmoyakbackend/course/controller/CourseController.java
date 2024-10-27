@@ -25,17 +25,27 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createCourse(@AuthenticationPrincipal UserDetails userDetails, CourseCreateRequestDto requestDto) {
+    public ResponseEntity<String> createCourse(
+            @AuthenticationPrincipal UserDetails userDetails,
+            CourseCreateRequestDto requestDto
+    ) {
         return courseService.create(userDetails, requestDto) ? ResponseEntity.ok("코스 생성 완료") : ResponseEntity.badRequest().body("코스 생성 실패");
     }
 
     @PatchMapping("/{courseId}")
-    public ResponseEntity<String> updateCourse(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long courseId, CourseCreateRequestDto requestDto) {
+    public ResponseEntity<String> updateCourse(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long courseId,
+            CourseCreateRequestDto requestDto
+    ) {
         return courseService.update(userDetails, courseId, requestDto) ? ResponseEntity.ok("코스 수정 성공") : ResponseEntity.badRequest().body("코스 수정 실패");
     }
-
+ 
     @DeleteMapping("/{courseId}")
-    public ResponseEntity<String> deleteCourse(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long courseId) {
+    public ResponseEntity<String> deleteCourse(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long courseId
+    ) {
         return courseService.delete(userDetails, courseId) ? ResponseEntity.ok("코스 삭제 성고") : ResponseEntity.badRequest().body("코스 삭제 실패");
     }
 

@@ -2,6 +2,7 @@ package com.example.ahimmoyakbackend.course.entity;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.course.common.CourseState;
+import com.example.ahimmoyakbackend.course.dto.CourseCreateRequestDto;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.*;
@@ -51,4 +52,16 @@ public class Course extends Timestamped {
     @OneToMany(mappedBy = "course")
     private List<Enrollment> enrollments = new ArrayList<>();
 
+    public Course patch(CourseCreateRequestDto requestDto) {
+        this.title = requestDto.title();
+        this.introduction = requestDto.introduction();
+        this.beginDate = requestDto.beginDate();
+        this.endDate = requestDto.endDate();
+        return this;
+    }
+
+    public Course setState(CourseState state) {
+        this.state = state;
+        return this;
+    }
 }
