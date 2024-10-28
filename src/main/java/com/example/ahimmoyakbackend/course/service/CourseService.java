@@ -18,4 +18,5 @@ public interface CourseService {
     public List<CourseListResponseDto> getList(UserDetails userDetails);
     public List<CourseListResponseDto> getAllList();
     public Page<CourseListResponseDto> getAllList(Pageable pageable);
+
 }
