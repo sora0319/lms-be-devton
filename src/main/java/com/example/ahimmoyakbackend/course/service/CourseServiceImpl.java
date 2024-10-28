@@ -2,6 +2,7 @@ package com.example.ahimmoyakbackend.course.service;
 
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import com.example.ahimmoyakbackend.auth.service.UserService;
+import com.example.ahimmoyakbackend.course.common.CourseState;
 import com.example.ahimmoyakbackend.course.dto.*;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.course.repository.ContentsRepository;
@@ -22,8 +23,6 @@ public class CourseServiceImpl implements CourseService {
 
     private final UserService userService;
     private final CourseRepository courseRepository;
-    private final CurriculumRepository curriculumRepository;
-    private final ContentsRepository contentsRepository;
 
     @Override
     public CourseDetailResponseDto getDetail(long id) {
@@ -40,19 +39,30 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public boolean create(UserDetails userDetails, CourseCreateRequestDto requestDto) {
-        return false;
+        courseRepository.save(requestDto.toEntity(userService.getAuth(userDetails)));
+        return true;
     }
 
     @Override
     @Transactional
     public boolean update(UserDetails userDetails, long id, CourseCreateRequestDto requestDto) {
-        return false;
+        Course course = courseRepository.findById(id).orElse(null);
+        if (course == null || course.getTutor().equals(userService.getAuth(userDetails))) {
+            return false;
+        }
+        courseRepository.save(course.patch(requestDto));
+        return true;
     }
 
     @Override
     @Transactional
     public boolean delete(UserDetails userDetails, long id) {
-        return false;
+        Course course = courseRepository.findById(id).orElse(null);
+        if (course == null || course.getTutor().equals(userService.getAuth(userDetails))) {
+            return false;
+        }
+        courseRepository.save(course.setState(CourseState.REMOVED));
+        return true;
     }
 
     @Override
