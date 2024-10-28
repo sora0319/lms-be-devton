@@ -9,6 +9,8 @@ import com.example.ahimmoyakbackend.course.repository.ContentsRepository;
 import com.example.ahimmoyakbackend.course.repository.CourseRepository;
 import com.example.ahimmoyakbackend.course.repository.CurriculumRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,5 +79,11 @@ public class CourseServiceImpl implements CourseService {
         return courseRepository.findAll().stream()
                 .map(CourseListResponseDto::from)
                 .toList();
+    }
+
+    @Override
+    public Page<CourseListResponseDto> getAllList(Pageable pageable) {
+        return courseRepository.findAll(pageable)
+                .map(CourseListResponseDto::from);
     }
 }

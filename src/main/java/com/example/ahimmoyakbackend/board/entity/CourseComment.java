@@ -1,6 +1,7 @@
 package com.example.ahimmoyakbackend.board.entity;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
+import com.example.ahimmoyakbackend.board.dto.CommentWriteRequestDto;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,4 +31,8 @@ public class CourseComment extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public CourseComment patch(CommentWriteRequestDto requestDto) {
+        this.content = requestDto.comment();
+        return this;
+    }
 }

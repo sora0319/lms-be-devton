@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface CourseCommentRepository extends JpaRepository<CourseComment, Long> {
 
+    long countByCourseBoard(CourseBoard courseBoard);
 }

@@ -2,6 +2,7 @@ package com.example.ahimmoyakbackend.board.entity;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.board.common.BoardType;
+import com.example.ahimmoyakbackend.board.dto.BoardCreateRequestDto;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
 import jakarta.persistence.*;
@@ -11,7 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Getter
@@ -42,10 +42,12 @@ public class CourseBoard extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "courseBoard")
-    private List<CourseComment> commits;
+    @OneToMany(mappedBy = "courseBoard", cascade = CascadeType.REMOVE)
+    private List<CourseComment> comments;
 
-    public int getCommitCount(){
-        return commits != null ? commits.size() : 0;
+    public CourseBoard patch(BoardCreateRequestDto requestDto) {
+        this.title = requestDto.title();
+        this.content = requestDto.content();
+        return this;
     }
 }
