@@ -13,6 +13,7 @@ import com.example.ahimmoyakbackend.course.repository.ContentsVideoRepository;
 import com.example.ahimmoyakbackend.course.repository.CurriculumRepository;
 import com.example.ahimmoyakbackend.global.exception.ApiException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jcodec.api.FrameGrab;
 import org.jcodec.api.JCodecException;
 import org.jcodec.common.io.NIOUtils;
@@ -31,6 +32,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ContentsServiceImpl implements ContentsService {
@@ -46,8 +48,11 @@ public class ContentsServiceImpl implements ContentsService {
     @Transactional
     public boolean addVideo(UserDetails userDetails, long curriculumId, ContentsCreateRequestDto requestDto) {
         Curriculum curriculum = curriculumRepository.findById(curriculumId).orElse(null);
-        if(curriculum == null || curriculum.getCourse().getTutor().equals(userService.getAuth(userDetails))) {
-            return false;
+        if (curriculum == null) {
+            throw new ApiException(HttpStatus.NOT_FOUND, "존재하지 않는 커리큘럼입니다.");
+        }
+        if(!curriculum.getCourse().getTutor().equals(userService.getAuth(userDetails))) {
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "해당 코스의 튜터만 접근가능합니다.");
         }
         long count = contentsRepository.countByCurriculum(curriculum);
         FileInfoDto fileInfo = saveFile(requestDto.getFile(), requestDto.getType());
@@ -60,7 +65,7 @@ public class ContentsServiceImpl implements ContentsService {
                 .timeAmount((long) fileInfo.duration().doubleValue())
                 .build()
         );
-        return false;
+        return true;
     }
 
     private FileInfoDto saveFile(MultipartFile file, ContentType contentType) {

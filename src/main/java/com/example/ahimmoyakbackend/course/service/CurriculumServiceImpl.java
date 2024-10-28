@@ -22,7 +22,7 @@ public class CurriculumServiceImpl implements CurriculumService {
     @Transactional
     public boolean add(UserDetails userDetails, long courseId, String curriculumTitle) {
         Course course = courseRepository.findById(courseId).orElse(null);
-        if (course == null || course.getTutor().equals(userService.getAuth(userDetails))) {
+        if (course == null || !course.getTutor().equals(userService.getAuth(userDetails))) {
             return false;
         }
         long count = curriculumRepository.countByCourse(course);
