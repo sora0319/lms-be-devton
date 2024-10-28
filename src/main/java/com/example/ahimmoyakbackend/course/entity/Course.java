@@ -49,6 +49,7 @@ public class Course extends Timestamped {
     private User tutor;
 
     @Setter
+    @Builder.Default
     @OneToMany(mappedBy = "course")
     private List<Enrollment> enrollments = new ArrayList<>();
 
