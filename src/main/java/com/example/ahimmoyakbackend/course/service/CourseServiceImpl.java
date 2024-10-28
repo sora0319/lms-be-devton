@@ -47,7 +47,7 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public boolean update(UserDetails userDetails, long id, CourseCreateRequestDto requestDto) {
         Course course = courseRepository.findById(id).orElse(null);
-        if (course == null || course.getTutor().equals(userService.getAuth(userDetails))) {
+        if (course == null || !course.getTutor().equals(userService.getAuth(userDetails))) {
             return false;
         }
         courseRepository.save(course.patch(requestDto));
@@ -58,7 +58,7 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public boolean delete(UserDetails userDetails, long id) {
         Course course = courseRepository.findById(id).orElse(null);
-        if (course == null || course.getTutor().equals(userService.getAuth(userDetails))) {
+        if (course == null || !course.getTutor().equals(userService.getAuth(userDetails))) {
             return false;
         }
         courseRepository.save(course.setState(CourseState.REMOVED));
