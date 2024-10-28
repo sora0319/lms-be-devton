@@ -54,4 +54,9 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getList(userDetails));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<CourseListResponseDto>> getAllCoursesList() {
+        return ResponseEntity.ok(courseService.getAllList());
+    }
+
 }

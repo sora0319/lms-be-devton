@@ -71,4 +71,11 @@ public class CourseServiceImpl implements CourseService {
                 .map(CourseListResponseDto::from)
                 .toList();
     }
+
+    @Override
+    public List<CourseListResponseDto> getAllList() {
+        return courseRepository.findAll().stream()
+                .map(CourseListResponseDto::from)
+                .toList();
+    }
 }
