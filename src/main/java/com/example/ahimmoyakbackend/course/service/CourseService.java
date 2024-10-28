@@ -14,4 +14,5 @@ public interface CourseService {
     public boolean update(UserDetails userDetails, long id, CourseCreateRequestDto requestDto);
     public boolean delete(UserDetails userDetails, long id);
     public List<CourseListResponseDto> getList(UserDetails userDetails);
+    public List<CourseListResponseDto> getAllList();
 }
