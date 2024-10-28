@@ -1,19 +1,18 @@
 package com.example.ahimmoyakbackend.course.controller;
 
-import com.example.ahimmoyakbackend.course.dto.CourseDetailResponseDto;
 import com.example.ahimmoyakbackend.course.dto.CourseCreateRequestDto;
+import com.example.ahimmoyakbackend.course.dto.CourseDetailResponseDto;
 import com.example.ahimmoyakbackend.course.dto.CourseListResponseDto;
 import com.example.ahimmoyakbackend.course.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/course")
 public class CourseController {
