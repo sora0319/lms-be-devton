@@ -50,7 +50,7 @@ public class ContentsServiceImpl implements ContentsService {
             return false;
         }
         long count = contentsRepository.countByCurriculum(curriculum);
-        FileInfoDto fileInfo = saveFile(requestDto.file(), requestDto.type());
+        FileInfoDto fileInfo = saveFile(requestDto.getFile(), requestDto.getType());
         Contents contents = contentsRepository.save(requestDto.toDto(curriculum, (int) count++));
         contentsVideoRepository.save(ContentsVideo.builder()
                 .path(fileInfo.path())
