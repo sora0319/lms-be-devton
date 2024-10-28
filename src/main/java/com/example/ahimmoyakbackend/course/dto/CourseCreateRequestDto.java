@@ -1,6 +1,7 @@
 package com.example.ahimmoyakbackend.course.dto;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
+import com.example.ahimmoyakbackend.course.common.CourseState;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import lombok.Builder;
 
@@ -19,6 +20,7 @@ public record CourseCreateRequestDto(
                 .introduction(this.introduction)
                 .beginDate(this.beginDate)
                 .endDate(this.endDate)
+                .state(CourseState.NOT_STARTED)
                 .tutor(tutor)
                 .build();
     }
