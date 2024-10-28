@@ -10,6 +10,7 @@ import org.jcodec.api.JCodecException;
 import org.jcodec.common.io.NIOUtils;
 import org.jcodec.common.model.Picture;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.*;
@@ -97,7 +98,19 @@ public class FileService {
                     .header(HttpHeaders.ACCEPT_RANGES, "bytes")
                     .body(resourceRegion);
         } catch (IOException e) {
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<Resource> downloadMaterial(String fileInfo) {
+        Path path = Paths.get("storage", "material", fileInfo);
+        try{
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentDisposition(ContentDisposition.builder("attachment").filename(path.toFile().getName()).build());
+            Resource resource = new InputStreamResource(Files.newInputStream(path)); // save file resource
+            return new ResponseEntity<>(resource, httpHeaders, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
