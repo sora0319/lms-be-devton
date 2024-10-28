@@ -56,7 +56,7 @@ public class ContentsServiceImpl implements ContentsService {
         }
         long count = contentsRepository.countByCurriculum(curriculum);
         FileInfoDto fileInfo = saveFile(requestDto.getFile(), requestDto.getType());
-        Contents contents = contentsRepository.save(requestDto.toDto(curriculum, (int) count++));
+        Contents contents = contentsRepository.save(requestDto.toDto(curriculum, (int) count+1));
         contentsVideoRepository.save(ContentsVideo.builder()
                 .path(fileInfo.path())
                 .originName(fileInfo.originName())
@@ -71,12 +71,12 @@ public class ContentsServiceImpl implements ContentsService {
     private FileInfoDto saveFile(MultipartFile file, ContentType contentType) {
         if(file.getSize() > MAX_FILE_SIZE) throw new ApiException(HttpStatus.PAYLOAD_TOO_LARGE, "파일용량이 너무 큼");
         String postfix = getPostfix(file.getOriginalFilename());
-        String savedName = UUID.randomUUID() + postfix;
+        String savedName = String.valueOf(UUID.randomUUID());
         Path filePath;
         if(contentType.equals(ContentType.VIDEO)){
-             filePath = Paths.get(getPath("/video"), savedName);
+             filePath = Paths.get(getPath("/video"), savedName + postfix);
         }else {
-            filePath = Paths.get(getPath("/material"), savedName);
+            filePath = Paths.get(getPath("/material"), savedName + postfix);
         }
         try (OutputStream os = Files.newOutputStream(filePath)) {
             os.write(file.getBytes());
@@ -86,7 +86,7 @@ public class ContentsServiceImpl implements ContentsService {
         if(contentType.equals(ContentType.VIDEO)){
             double duration = getVideoDuration(filePath.toFile());
             return FileInfoDto.builder()
-                    .path(filePath.toString())
+                    .path(Paths.get("storage", "video").toString())
                     .originName(subPostfix(file.getOriginalFilename()))
                     .savedName(savedName)
                     .postfix(postfix)
@@ -94,7 +94,7 @@ public class ContentsServiceImpl implements ContentsService {
                     .build();
         }
         return FileInfoDto.builder()
-                .path(filePath.toString())
+                .path(Paths.get("storage", "material").toString())
                 .originName(subPostfix(file.getOriginalFilename()))
                 .savedName(savedName)
                 .postfix(postfix)
@@ -125,6 +125,8 @@ public class ContentsServiceImpl implements ContentsService {
     }
 
     private double getVideoDuration(File videoFile) {
+        log.info("Video file path: {}", videoFile.getAbsolutePath());
+        log.info("File exists: {}", videoFile.exists());
         try {
             // FrameGrab을 사용해 동영상 메타데이터에서 총 프레임 수와 FPS를 얻음
             FrameGrab grab = FrameGrab.createFrameGrab(NIOUtils.readableChannel(videoFile));
@@ -142,6 +144,8 @@ public class ContentsServiceImpl implements ContentsService {
 
             return totalFrames / fps;
         } catch (IOException | JCodecException e) {
+            return -1;
+        } catch (Exception e){
             return -1;
         }
     }
