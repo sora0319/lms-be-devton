@@ -30,7 +30,7 @@ public class CourseBoardController {
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("courseId") long courseId,
             @PathVariable("boardType") String boardType,
-            BoardCreateRequestDto requestDto
+            @RequestBody BoardCreateRequestDto requestDto
     ) {
         return courseBoardService.create(userDetails, courseId, BoardType.valueOf(boardType.toUpperCase()), requestDto)
                 ? ResponseEntity.ok("게시글 등록 완료")
@@ -41,7 +41,7 @@ public class CourseBoardController {
     public ResponseEntity<String> updateBoard(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("boardId") long boardId,
-            BoardCreateRequestDto requestDto
+            @RequestBody BoardCreateRequestDto requestDto
     ) {
         return courseBoardService.update(userDetails, boardId, requestDto)
                 ? ResponseEntity.ok("게시글 수정 완료")
@@ -84,7 +84,7 @@ public class CourseBoardController {
     public ResponseEntity<String> writeComment(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("boardId") long boardId,
-            CommentWriteRequestDto requestDto
+            @RequestBody CommentWriteRequestDto requestDto
     ) {
         return courseCommentService.write(userDetails, boardId, requestDto)
                 ? ResponseEntity.ok("댓글 작성 완료")
@@ -95,7 +95,7 @@ public class CourseBoardController {
     public ResponseEntity<String> editComment(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("commentId") long commentId,
-            CommentWriteRequestDto requestDto
+            @RequestBody CommentWriteRequestDto requestDto
     ) {
         return courseCommentService.edit(userDetails, commentId, requestDto)
                 ? ResponseEntity.ok("댓글 수정 완료")
