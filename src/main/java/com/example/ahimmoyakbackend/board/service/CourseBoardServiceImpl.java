@@ -110,4 +110,21 @@ public class CourseBoardServiceImpl implements CourseBoardService {
                 .from(courseBoard, courseBoard.getComments().stream()
                         .map(CommentListResponseDto::from).toList());
     }
+
+    @Override
+    public List<BoardListResponseDto> getListByUser(UserDetails userDetails, BoardType boardType) {
+        User user = userService.getAuth(userDetails);
+        return courseBoardRepository.findByUserAndType(user, boardType).stream()
+                .map(board -> BoardListResponseDto
+                        .from(board, courseCommentRepository.countByCourseBoard(board)))
+                .toList();
+    }
+
+    @Override
+    public Page<BoardListResponseDto> getListByUser(UserDetails userDetails, BoardType boardType, Pageable pageable) {
+        User user = userService.getAuth(userDetails);
+        return courseBoardRepository.findByUserAndType(user, boardType, pageable)
+                .map(board -> BoardListResponseDto
+                        .from(board, courseCommentRepository.countByCourseBoard(board)));
+    }
 }

@@ -17,4 +17,6 @@ public interface CourseBoardService {
     public List<BoardListResponseDto> getList(long courseId, BoardType boardType);
     public Page<BoardListResponseDto> getList(long courseId, BoardType boardType, Pageable pageable);
     public BoardPageResponseDto getBoard(long boardId);
+    public List<BoardListResponseDto> getListByUser(UserDetails userDetails, BoardType boardType);
+    public Page<BoardListResponseDto> getListByUser(UserDetails userDetails, BoardType boardType, Pageable pageable);
 }
