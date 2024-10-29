@@ -16,4 +16,6 @@ import java.util.List;
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
     List<Course> findByEnrollments_User(User user);
+
+    List<Course> findByTutor(User tutor);
 }

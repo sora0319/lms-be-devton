@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.course.service;
 
+import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.auth.repository.UserRepository;
 import com.example.ahimmoyakbackend.auth.service.UserService;
 import com.example.ahimmoyakbackend.course.common.CourseState;
@@ -69,7 +70,14 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CourseListResponseDto> getList(UserDetails userDetails) {
-        return courseRepository.findByEnrollments_User(userService.getAuth(userDetails)).stream()
+        User user = userService.getAuth(userDetails);
+        List<Course> courseList;
+        if (user.isTutorState()){
+            courseList = courseRepository.findByTutor(user);
+        }else {
+            courseList = courseRepository.findByEnrollments_User(user);
+        }
+        return courseList.stream()
                 .map(CourseListResponseDto::from)
                 .toList();
     }
