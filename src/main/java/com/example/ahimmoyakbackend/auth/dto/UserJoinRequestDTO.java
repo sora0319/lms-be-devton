@@ -37,4 +37,6 @@ public class UserJoinRequestDTO {
 
     @ValidEnum(enumClass = Gender.class)
     private Gender gender;
+
+    private boolean tutorState;
 }

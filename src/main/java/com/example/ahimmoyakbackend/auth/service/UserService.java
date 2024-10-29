@@ -33,6 +33,7 @@ public class UserService {
                 .birth(requestDto.getBirth())
                 .email(requestDto.getEmail())
                 .gender(requestDto.getGender())
+                .tutorState(requestDto.isTutorState())
                 .build();
 
         userRepository.save(user);
