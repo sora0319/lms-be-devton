@@ -11,7 +11,7 @@ public record CommentListResponseDto(
     public static CommentListResponseDto from(CourseComment comment) {
         return CommentListResponseDto.builder()
                 .content(comment.getContent())
-                .user(comment.getUser().getName())
+                .user(comment.getUser().getUsername())
                 .build();
     }
 }

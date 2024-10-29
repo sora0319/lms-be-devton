@@ -18,7 +18,7 @@ public record BoardPageResponseDto(
         return BoardPageResponseDto.builder()
                 .title(board.getTitle())
                 .content(board.getContent())
-                .user(board.getUser().getName())
+                .user(board.getUser().getUsername())
                 .comments(comments)
                 .createdAt(board.getCreatedAt())
                 .build();
