@@ -28,7 +28,7 @@ public class CourseController {
     @PostMapping
     public ResponseEntity<String> createCourse(
             @AuthenticationPrincipal UserDetails userDetails,
-            CourseCreateRequestDto requestDto
+            @RequestBody CourseCreateRequestDto requestDto
     ) {
         return courseService.create(userDetails, requestDto) ? ResponseEntity.ok("코스 생성 완료") : ResponseEntity.badRequest().body("코스 생성 실패");
     }
@@ -37,7 +37,7 @@ public class CourseController {
     public ResponseEntity<String> updateCourse(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long courseId,
-            CourseCreateRequestDto requestDto
+            @RequestBody CourseCreateRequestDto requestDto
     ) {
         return courseService.update(userDetails, courseId, requestDto) ? ResponseEntity.ok("코스 수정 성공") : ResponseEntity.badRequest().body("코스 수정 실패");
     }

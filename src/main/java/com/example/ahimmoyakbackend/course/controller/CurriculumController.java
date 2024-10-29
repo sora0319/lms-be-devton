@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.course.controller;
 
+import com.example.ahimmoyakbackend.course.dto.CurriculumCreateRequestDto;
 import com.example.ahimmoyakbackend.course.service.CurriculumService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,18 +19,18 @@ public class CurriculumController {
     public ResponseEntity<String> addCurriculum(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("courseId") long courseId,
-            String curriculumTitle
-    ) {
-        return curriculumService.add(userDetails, courseId, curriculumTitle) ? ResponseEntity.ok("커리큘럼 등록 성공") : ResponseEntity.badRequest().body("커리큘럼 등록 실패");
+            @RequestBody CurriculumCreateRequestDto requestDto
+            ) {
+        return curriculumService.add(userDetails, courseId, requestDto.title()) ? ResponseEntity.ok("커리큘럼 등록 성공") : ResponseEntity.badRequest().body("커리큘럼 등록 실패");
     }
 
     @PatchMapping("/curriculum/{curriculumId}")
     public ResponseEntity<String> updateCurriculum(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("curriculumId") long curriculumId,
-            String curriculumTitle
-    ) {
-        return curriculumService.update(userDetails, curriculumId, curriculumTitle) ? ResponseEntity.ok("커리큘럼 수정 성공") : ResponseEntity.badRequest().body("커리큘럼 수정 실패");
+            @RequestBody CurriculumCreateRequestDto requestDto
+            ) {
+        return curriculumService.update(userDetails, curriculumId, requestDto.title()) ? ResponseEntity.ok("커리큘럼 수정 성공") : ResponseEntity.badRequest().body("커리큘럼 수정 실패");
     }
 
     @DeleteMapping("/curriculum/{curriculumId}")
