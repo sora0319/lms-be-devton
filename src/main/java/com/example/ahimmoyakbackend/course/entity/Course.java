@@ -1,6 +1,7 @@
 package com.example.ahimmoyakbackend.course.entity;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
+import com.example.ahimmoyakbackend.course.common.CourseCategory;
 import com.example.ahimmoyakbackend.course.common.CourseState;
 import com.example.ahimmoyakbackend.course.dto.CourseCreateRequestDto;
 import com.example.ahimmoyakbackend.global.entity.Timestamped;
@@ -39,6 +40,10 @@ public class Course extends Timestamped {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private CourseState state;
+
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private CourseCategory category;
 
     @OneToMany(mappedBy = "course")
     private List<Curriculum> curriculumList;
