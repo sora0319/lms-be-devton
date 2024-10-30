@@ -1,6 +1,7 @@
 package com.example.ahimmoyakbackend.course.dto;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
+import com.example.ahimmoyakbackend.course.common.CourseCategory;
 import com.example.ahimmoyakbackend.course.common.CourseState;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import lombok.Builder;
@@ -12,7 +13,8 @@ public record CourseCreateRequestDto(
    String title,
    String introduction,
    LocalDate beginDate,
-   LocalDate endDate
+   LocalDate endDate,
+   CourseCategory category
 ) {
     public Course toEntity(User tutor) {
         return Course.builder()
@@ -20,6 +22,7 @@ public record CourseCreateRequestDto(
                 .introduction(this.introduction)
                 .beginDate(this.beginDate)
                 .endDate(this.endDate)
+                .category(this.category)
                 .state(CourseState.NOT_STARTED)
                 .tutor(tutor)
                 .build();
