@@ -9,6 +9,10 @@ import com.example.ahimmoyakbackend.board.entity.CourseComment;
 import com.example.ahimmoyakbackend.board.repository.CourseBoardRepository;
 import com.example.ahimmoyakbackend.board.repository.CourseCommentRepository;
 import com.example.ahimmoyakbackend.course.common.ContentType;
+<<<<<<< HEAD
+=======
+import com.example.ahimmoyakbackend.course.common.CourseCategory;
+>>>>>>> develop
 import com.example.ahimmoyakbackend.course.common.CourseState;
 import com.example.ahimmoyakbackend.course.common.EnrollmentState;
 import com.example.ahimmoyakbackend.course.entity.Contents;
@@ -290,6 +294,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 12, 1))
                 .endDate(LocalDate.of(2025, 2, 28))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.AGRICULTURE_FORESTRY_FISHERIES)
+>>>>>>> develop
                 .build();
         courseRepository.save(course1);
 
@@ -300,6 +308,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 10, 1))
                 .endDate(LocalDate.of(2024, 12, 31))
                 .state(CourseState.ONGOING)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.BUSINESS_MANAGEMENT)
+>>>>>>> develop
                 .build();
         courseRepository.save(course2);
 
@@ -310,6 +322,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 8, 1))
                 .endDate(LocalDate.of(2024, 10, 31))
                 .state(CourseState.FINISHED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.CHEMICAL_BIO)
+>>>>>>> develop
                 .build();
         courseRepository.save(course3);
 
@@ -320,6 +336,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 11, 1))
                 .endDate(LocalDate.of(2025, 1, 31))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.CONSTRUCTION)
+>>>>>>> develop
                 .build();
         courseRepository.save(course4);
 
@@ -330,6 +350,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 9, 1))
                 .endDate(LocalDate.of(2024, 12, 1))
                 .state(CourseState.ONGOING)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.BUSINESS_SALES)
+>>>>>>> develop
                 .build();
         courseRepository.save(course5);
 
@@ -341,6 +365,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 11, 15))
                 .endDate(LocalDate.of(2025, 2, 15))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.BUSINESS_MANAGEMENT)
+>>>>>>> develop
                 .build();
         courseRepository.save(course6);
 
@@ -351,6 +379,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 9, 1))
                 .endDate(LocalDate.of(2024, 12, 31))
                 .state(CourseState.ONGOING)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.CULTURE_ART_DESIGN_BROADCASTING)
+>>>>>>> develop
                 .build();
         courseRepository.save(course7);
 
@@ -361,6 +393,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 7, 1))
                 .endDate(LocalDate.of(2024, 9, 30))
                 .state(CourseState.FINISHED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.DRIVING_TRANSPORTATION)
+>>>>>>> develop
                 .build();
         courseRepository.save(course8);
 
@@ -371,6 +407,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 10, 10))
                 .endDate(LocalDate.of(2024, 12, 10))
                 .state(CourseState.ONGOING)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.EDUCATION_NATURE_EDUCATION_NATURE_SOCIAL_SCIENCE)
+>>>>>>> develop
                 .build();
         courseRepository.save(course9);
 
@@ -381,6 +421,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 12, 1))
                 .endDate(LocalDate.of(2025, 2, 1))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.ELECTRICAL_ELECTRONIC)
+>>>>>>> develop
                 .build();
         courseRepository.save(course10);
 
@@ -392,6 +436,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 10, 1))
                 .endDate(LocalDate.of(2025, 1, 1))
                 .state(CourseState.ONGOING)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.ENVIRONMENTAL_ENERGY_SAFETY)
+>>>>>>> develop
                 .build();
         courseRepository.save(course11);
 
@@ -402,6 +450,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 11, 5))
                 .endDate(LocalDate.of(2025, 2, 5))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.FINANCE_INSURANCE)
+>>>>>>> develop
                 .build();
         courseRepository.save(course12);
 
@@ -412,6 +464,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 8, 1))
                 .endDate(LocalDate.of(2024, 10, 1))
                 .state(CourseState.FINISHED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.FOOD_PROCESSING)
+>>>>>>> develop
                 .build();
         courseRepository.save(course13);
 
@@ -422,6 +478,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 9, 1))
                 .endDate(LocalDate.of(2024, 12, 1))
                 .state(CourseState.ONGOING)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.FOOD_SERVICE)
+>>>>>>> develop
                 .build();
         courseRepository.save(course14);
 
@@ -432,6 +492,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2025, 1, 1))
                 .endDate(LocalDate.of(2025, 3, 1))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.HEALTH_MEDICAL_CARE)
+>>>>>>> develop
                 .build();
         courseRepository.save(course15);
 
@@ -443,6 +507,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2025, 1, 1))
                 .endDate(LocalDate.of(2025, 3, 1))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.INFORMATION_COMMUNICATION)
+>>>>>>> develop
                 .build();
         courseRepository.save(course16);
 
@@ -453,6 +521,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 10, 1))
                 .endDate(LocalDate.of(2024, 12, 31))
                 .state(CourseState.ONGOING)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.LAW_POLICE_FIRE_RELIGION_DEFENSE)
+>>>>>>> develop
                 .build();
         courseRepository.save(course17);
 
@@ -463,6 +535,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 8, 1))
                 .endDate(LocalDate.of(2024, 10, 1))
                 .state(CourseState.FINISHED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.MACHINERY)
+>>>>>>> develop
                 .build();
         courseRepository.save(course18);
 
@@ -473,6 +549,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 11, 10))
                 .endDate(LocalDate.of(2025, 2, 10))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.MATERIALS)
+>>>>>>> develop
                 .build();
         courseRepository.save(course19);
 
@@ -483,6 +563,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 9, 1))
                 .endDate(LocalDate.of(2024, 12, 1))
                 .state(CourseState.ONGOING)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.TEXTILE_CLOTHING)
+>>>>>>> develop
                 .build();
         courseRepository.save(course20);
 
@@ -494,6 +578,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 10, 5))
                 .endDate(LocalDate.of(2024, 12, 5))
                 .state(CourseState.ONGOING)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.UTILIZING_ACCOMMODATION_TRAVEL_ENTERTAINMENT_SPORTS)
+>>>>>>> develop
                 .build();
         courseRepository.save(course21);
 
@@ -504,6 +592,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 9, 1))
                 .endDate(LocalDate.of(2024, 11, 1))
                 .state(CourseState.FINISHED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.SECURITY_CLEANING)
+>>>>>>> develop
                 .build();
         courseRepository.save(course22);
 
@@ -514,6 +606,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2025, 1, 1))
                 .endDate(LocalDate.of(2025, 3, 1))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.BUSINESS_SALES)
+>>>>>>> develop
                 .build();
         courseRepository.save(course23);
 
@@ -524,6 +620,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 11, 10))
                 .endDate(LocalDate.of(2025, 2, 10))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.PRINTED_WOOD_FURNITURE_CRAFTS)
+>>>>>>> develop
                 .build();
         courseRepository.save(course24);
 
@@ -534,6 +634,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 8, 1))
                 .endDate(LocalDate.of(2024, 10, 1))
                 .state(CourseState.FINISHED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.CULTURE_ART_DESIGN_BROADCASTING)
+>>>>>>> develop
                 .build();
         courseRepository.save(course25);
 
@@ -545,6 +649,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2025, 1, 1))
                 .endDate(LocalDate.of(2025, 3, 1))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.DRIVING_TRANSPORTATION)
+>>>>>>> develop
                 .build();
         courseRepository.save(course26);
 
@@ -555,6 +663,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 10, 1))
                 .endDate(LocalDate.of(2024, 12, 1))
                 .state(CourseState.ONGOING)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.SOCIAL_WELFARE_RELIGION)
+>>>>>>> develop
                 .build();
         courseRepository.save(course27);
 
@@ -565,6 +677,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 8, 1))
                 .endDate(LocalDate.of(2024, 10, 1))
                 .state(CourseState.FINISHED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.MANAGEMENT_ACCOUNTING_ADMINISTRATIVE_AFFAIRS)
+>>>>>>> develop
                 .build();
         courseRepository.save(course28);
 
@@ -575,6 +691,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2025, 2, 1))
                 .endDate(LocalDate.of(2025, 4, 1))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.HEALTH_MEDICAL_CARE)
+>>>>>>> develop
                 .build();
         courseRepository.save(course29);
 
@@ -585,6 +705,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 11, 1))
                 .endDate(LocalDate.of(2025, 1, 1))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.CONSTRUCTION)
+>>>>>>> develop
                 .build();
         courseRepository.save(course30);
 
@@ -596,6 +720,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 9, 1))
                 .endDate(LocalDate.of(2024, 12, 1))
                 .state(CourseState.ONGOING)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.LAW_POLICE_FIRE_RELIGION_DEFENSE)
+>>>>>>> develop
                 .build();
         courseRepository.save(course31);
 
@@ -606,6 +734,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 10, 1))
                 .endDate(LocalDate.of(2025, 1, 1))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.FOOD_PROCESSING)
+>>>>>>> develop
                 .build();
         courseRepository.save(course32);
 
@@ -616,6 +748,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 8, 1))
                 .endDate(LocalDate.of(2024, 10, 1))
                 .state(CourseState.FINISHED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.UTILIZING_ACCOMMODATION_TRAVEL_ENTERTAINMENT_SPORTS)
+>>>>>>> develop
                 .build();
         courseRepository.save(course33);
 
@@ -626,6 +762,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 11, 1))
                 .endDate(LocalDate.of(2025, 2, 1))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.TEXTILE_CLOTHING)
+>>>>>>> develop
                 .build();
         courseRepository.save(course34);
 
@@ -636,6 +776,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 9, 1))
                 .endDate(LocalDate.of(2024, 11, 1))
                 .state(CourseState.FINISHED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.FOOD_SERVICE)
+>>>>>>> develop
                 .build();
         courseRepository.save(course35);
 
@@ -647,6 +791,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 9, 15))
                 .endDate(LocalDate.of(2024, 12, 15))
                 .state(CourseState.ONGOING)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.ENVIRONMENTAL_ENERGY_SAFETY)
+>>>>>>> develop
                 .build();
         courseRepository.save(course36);
 
@@ -657,6 +805,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 10, 1))
                 .endDate(LocalDate.of(2024, 12, 31))
                 .state(CourseState.ONGOING)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.INFORMATION_COMMUNICATION)
+>>>>>>> develop
                 .build();
         courseRepository.save(course37);
 
@@ -667,6 +819,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2025, 1, 1))
                 .endDate(LocalDate.of(2025, 3, 31))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.FINANCE_INSURANCE)
+>>>>>>> develop
                 .build();
         courseRepository.save(course38);
 
@@ -677,6 +833,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 8, 1))
                 .endDate(LocalDate.of(2024, 10, 1))
                 .state(CourseState.FINISHED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.CULTURE_ART_DESIGN_BROADCASTING)
+>>>>>>> develop
                 .build();
         courseRepository.save(course39);
 
@@ -687,6 +847,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2025, 2, 1))
                 .endDate(LocalDate.of(2025, 4, 1))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.MATERIALS)
+>>>>>>> develop
                 .build();
         courseRepository.save(course40);
 
@@ -698,6 +862,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2025, 1, 1))
                 .endDate(LocalDate.of(2025, 3, 1))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.LAW_POLICE_FIRE_RELIGION_DEFENSE)
+>>>>>>> develop
                 .build();
         courseRepository.save(course41);
 
@@ -708,6 +876,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 9, 1))
                 .endDate(LocalDate.of(2024, 12, 1))
                 .state(CourseState.ONGOING)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.HEALTH_MEDICAL_CARE)
+>>>>>>> develop
                 .build();
         courseRepository.save(course42);
 
@@ -718,6 +890,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 7, 1))
                 .endDate(LocalDate.of(2024, 9, 1))
                 .state(CourseState.FINISHED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.PRINTED_WOOD_FURNITURE_CRAFTS)
+>>>>>>> develop
                 .build();
         courseRepository.save(course43);
 
@@ -728,6 +904,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2024, 10, 1))
                 .endDate(LocalDate.of(2024, 12, 31))
                 .state(CourseState.ONGOING)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.SOCIAL_WELFARE_RELIGION)
+>>>>>>> develop
                 .build();
         courseRepository.save(course44);
 
@@ -738,6 +918,10 @@ public class DataGenerate {
                 .beginDate(LocalDate.of(2025, 2, 1))
                 .endDate(LocalDate.of(2025, 4, 1))
                 .state(CourseState.NOT_STARTED)
+<<<<<<< HEAD
+=======
+                .category(CourseCategory.DRIVING_TRANSPORTATION)
+>>>>>>> develop
                 .build();
         courseRepository.save(course45);
 
@@ -1087,7 +1271,11 @@ public class DataGenerate {
                 }
             }
         }
+<<<<<<< HEAD
         List<Course> user1Course = courseRepository.findByEnrollments_User(user1);
+=======
+        List<Course> user1Course = courseRepository.findAllByEnrollments_User(user1);
+>>>>>>> develop
         LiveState[] liveStates = LiveState.values();
 
         User[] instructors = {user7, user8, user9};
