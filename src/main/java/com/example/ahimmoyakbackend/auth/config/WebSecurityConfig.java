@@ -52,11 +52,7 @@ public class WebSecurityConfig {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration config = new CorsConfiguration();
-//                        config.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
-                        List<String> allowedOrigins = new ArrayList<>();
-                        allowedOrigins.add("http://localhost:5173");
-                        allowedOrigins.add("http://172.16.11.71:5173");
-                        config.setAllowedOrigins(allowedOrigins);
+                        config.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
                         config.setAllowedMethods(Collections.singletonList("*"));
                         config.setAllowCredentials(true);
                         config.setAllowedHeaders(Collections.singletonList("*"));
