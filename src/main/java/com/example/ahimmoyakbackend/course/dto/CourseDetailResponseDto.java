@@ -1,6 +1,7 @@
 package com.example.ahimmoyakbackend.course.dto;
 
 
+import com.example.ahimmoyakbackend.course.common.CourseCategory;
 import com.example.ahimmoyakbackend.course.entity.Course;
 import lombok.Builder;
 
@@ -14,6 +15,7 @@ public record CourseDetailResponseDto(
         String tutor,
         LocalDate beginDate,
         LocalDate endDate,
+        CourseCategory category,
         List<CurriculumListResponseDto> curriculumList
 ){
     public static CourseDetailResponseDto from(Course course, List<CurriculumListResponseDto> curriculumList) {
@@ -23,6 +25,7 @@ public record CourseDetailResponseDto(
                 .tutor(course.getTutor().getName())
                 .beginDate(course.getBeginDate())
                 .endDate(course.getEndDate())
+                .category(course.getCategory())
                 .curriculumList(curriculumList)
                 .build();
     }

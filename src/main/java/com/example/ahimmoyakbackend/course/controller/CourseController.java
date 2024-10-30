@@ -1,5 +1,6 @@
 package com.example.ahimmoyakbackend.course.controller;
 
+import com.example.ahimmoyakbackend.course.common.CourseCategory;
 import com.example.ahimmoyakbackend.course.dto.CourseCreateRequestDto;
 import com.example.ahimmoyakbackend.course.dto.CourseDetailResponseDto;
 import com.example.ahimmoyakbackend.course.dto.CourseListResponseDto;
@@ -26,11 +27,11 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createCourse(
+    public ResponseEntity<Long> createCourse(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody CourseCreateRequestDto requestDto
     ) {
-        return courseService.create(userDetails, requestDto) ? ResponseEntity.ok("코스 생성 완료") : ResponseEntity.badRequest().body("코스 생성 실패");
+        return ResponseEntity.ok(courseService.create(userDetails, requestDto));
     }
 
     @PatchMapping("/{courseId}")
@@ -63,6 +64,16 @@ public class CourseController {
     @GetMapping(value = "/all", params = "page")
     public ResponseEntity<Page<CourseListResponseDto>> getAllCoursesList(Pageable page) {
         return ResponseEntity.ok(courseService.getAllList(page));
+    }
+
+    @GetMapping(value = "/all", params = "category")
+    public ResponseEntity<List<CourseListResponseDto>> getAllCoursesList(CourseCategory category) {
+        return ResponseEntity.ok(courseService.getAllList(category));
+    }
+
+    @GetMapping(value = "/all", params = {"page", "category"})
+    public ResponseEntity<Page<CourseListResponseDto>> getAllCoursesList(Pageable page, CourseCategory category) {
+        return ResponseEntity.ok(courseService.getAllList(page, category));
     }
 
 }

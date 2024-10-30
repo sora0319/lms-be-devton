@@ -14,4 +14,8 @@ public interface CourseBoardRepository extends JpaRepository<CourseBoard, Long> 
 
     List<CourseBoard> findByCourseAndType(Course course, BoardType type);
     Page<CourseBoard> findByCourseAndType(Course course, BoardType type, Pageable pageable);
+
+    List<CourseBoard> findByUserAndType(User user, BoardType type);
+    Page<CourseBoard> findByUserAndType(User user, BoardType type, Pageable pageable);
+
 }

@@ -1,13 +1,12 @@
 package com.example.ahimmoyakbackend.course.service;
 
-import com.example.ahimmoyakbackend.auth.repository.UserRepository;
+import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.auth.service.UserService;
+import com.example.ahimmoyakbackend.course.common.CourseCategory;
 import com.example.ahimmoyakbackend.course.common.CourseState;
 import com.example.ahimmoyakbackend.course.dto.*;
 import com.example.ahimmoyakbackend.course.entity.Course;
-import com.example.ahimmoyakbackend.course.repository.ContentsRepository;
 import com.example.ahimmoyakbackend.course.repository.CourseRepository;
-import com.example.ahimmoyakbackend.course.repository.CurriculumRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,9 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,9 +37,8 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public boolean create(UserDetails userDetails, CourseCreateRequestDto requestDto) {
-        courseRepository.save(requestDto.toEntity(userService.getAuth(userDetails)));
-        return true;
+    public Long create(UserDetails userDetails, CourseCreateRequestDto requestDto) {
+        return courseRepository.save(requestDto.toEntity(userService.getAuth(userDetails))).getId();
     }
 
     @Override
@@ -69,7 +65,14 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CourseListResponseDto> getList(UserDetails userDetails) {
-        return courseRepository.findByEnrollments_User(userService.getAuth(userDetails)).stream()
+        User user = userService.getAuth(userDetails);
+        List<Course> courseList;
+        if (user.isTutorState()){
+            courseList = courseRepository.findAllByTutor(user);
+        }else {
+            courseList = courseRepository.findAllByEnrollments_User(user);
+        }
+        return courseList.stream()
                 .map(CourseListResponseDto::from)
                 .toList();
     }
@@ -84,6 +87,19 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Page<CourseListResponseDto> getAllList(Pageable pageable) {
         return courseRepository.findAll(pageable)
+                .map(CourseListResponseDto::from);
+    }
+
+    @Override
+    public List<CourseListResponseDto> getAllList(CourseCategory category) {
+        return courseRepository.findAllByCategory(category).stream()
+                .map(CourseListResponseDto::from)
+                .toList();
+    }
+
+    @Override
+    public Page<CourseListResponseDto> getAllList(Pageable pageable, CourseCategory category) {
+        return courseRepository.findAllByCategory(category, pageable)
                 .map(CourseListResponseDto::from);
     }
 }
