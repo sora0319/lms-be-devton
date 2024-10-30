@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -23,5 +25,11 @@ public class ChatService {
         }
         ChatMessage chatMessage = chatMessageRepository.save(dto.to(liveId));
         return ChatMessageSubDto.from(chatMessage);
+    }
+
+    public List<ChatMessageSubDto> getAll(long liveId) {
+        return chatMessageRepository.findAllByLiveId(liveId).stream()
+                .map(ChatMessageSubDto::from)
+                .toList();
     }
 }
