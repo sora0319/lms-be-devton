@@ -41,9 +41,8 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public boolean create(UserDetails userDetails, CourseCreateRequestDto requestDto) {
-        courseRepository.save(requestDto.toEntity(userService.getAuth(userDetails)));
-        return true;
+    public Long create(UserDetails userDetails, CourseCreateRequestDto requestDto) {
+        return courseRepository.save(requestDto.toEntity(userService.getAuth(userDetails))).getId();
     }
 
     @Override

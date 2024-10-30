@@ -26,11 +26,11 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createCourse(
+    public ResponseEntity<Long> createCourse(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody CourseCreateRequestDto requestDto
     ) {
-        return courseService.create(userDetails, requestDto) ? ResponseEntity.ok("코스 생성 완료") : ResponseEntity.badRequest().body("코스 생성 실패");
+        return ResponseEntity.ok(courseService.create(userDetails, requestDto));
     }
 
     @PatchMapping("/{courseId}")

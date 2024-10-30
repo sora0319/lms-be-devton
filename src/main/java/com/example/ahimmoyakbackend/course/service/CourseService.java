@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface CourseService {
     public CourseDetailResponseDto getDetail(long id);
-    public boolean create(UserDetails userDetails, CourseCreateRequestDto requestDto);
+    public Long create(UserDetails userDetails, CourseCreateRequestDto requestDto);
     public boolean update(UserDetails userDetails, long id, CourseCreateRequestDto requestDto);
     public boolean delete(UserDetails userDetails, long id);
     public List<CourseListResponseDto> getList(UserDetails userDetails);
