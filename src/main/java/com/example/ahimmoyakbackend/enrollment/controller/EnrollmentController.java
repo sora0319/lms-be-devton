@@ -1,7 +1,9 @@
 package com.example.ahimmoyakbackend.enrollment.controller;
 
+import com.example.ahimmoyakbackend.enrollment.dto.EnrollmentIdResponseDto;
 import com.example.ahimmoyakbackend.enrollment.service.EnrollmentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -50,4 +52,12 @@ public class EnrollmentController {
                 : ResponseEntity.badRequest().body("수강신청 취소 실패");
     }
 
+    @GetMapping("/{courseId}/enrollId")
+    public ResponseEntity<EnrollmentIdResponseDto> getEnrollment(@AuthenticationPrincipal UserDetails userDetails,
+                                                                 @PathVariable("courseId") long courseId
+    ) {
+
+        EnrollmentIdResponseDto getEnrolled = enrollmentService.getEnrollId(userDetails, courseId);
+        return ResponseEntity.status(HttpStatus.OK).body(getEnrolled);
+    }
 }

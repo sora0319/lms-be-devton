@@ -21,8 +21,8 @@ public class LiveController {
     private final LiveService liveService;
 
     @PostMapping
-    public ResponseEntity<Void> createLive(@AuthenticationPrincipal UserDetails userDetails, @RequestParam Long courseProvideId, @RequestBody LiveCreateRequestDTO requestDTO) {
-        boolean result = liveService.createLive(requestDTO, courseProvideId, userDetails);
+    public ResponseEntity<Void> createLive(@AuthenticationPrincipal UserDetails userDetails, @RequestParam Long courseId, @RequestBody LiveCreateRequestDTO requestDTO) {
+        boolean result = liveService.createLive(requestDTO, courseId, userDetails);
         return result ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
     }
 
