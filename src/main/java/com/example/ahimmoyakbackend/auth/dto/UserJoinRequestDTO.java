@@ -1,7 +1,7 @@
 package com.example.ahimmoyakbackend.auth.dto;
 
+import com.example.ahimmoyakbackend.auth.common.Gender;
 import com.example.ahimmoyakbackend.auth.dto.validation.ValidEnum;
-import com.example.ahimmoyakbackend.auth.entity.common.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
@@ -37,4 +37,6 @@ public class UserJoinRequestDTO {
 
     @ValidEnum(enumClass = Gender.class)
     private Gender gender;
+
+    private boolean tutorState;
 }

@@ -1,13 +1,9 @@
 package com.example.ahimmoyakbackend.auth.jwt;
 
+import com.example.ahimmoyakbackend.auth.common.UserRole;
 import com.example.ahimmoyakbackend.auth.config.security.UserDetailsServiceImpl;
 import com.example.ahimmoyakbackend.auth.dto.JwsDTO;
-import com.example.ahimmoyakbackend.auth.entity.RefreshToken;
-import com.example.ahimmoyakbackend.auth.repository.RefreshTokenRepository;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,16 +20,14 @@ import org.springframework.util.StringUtils;
 import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Optional;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtUtil {
+public class JwtTokenProvider {
     private final UserDetailsServiceImpl userDetailsService;
-    private final RefreshTokenRepository refreshTokenRepository;
     public static final String ACCESS_TOKEN = "Authorization";
-    public static final String REFRESH_TOKEN = "refresh";
+    public static final String REFRESH_TOKEN = "Refresh";
     private static final String BEARER_PREFIX = "[Bearer]";
     private static final long ACCESS_TIME = 60 * 60 * 1000L;
     private static final long REFRESH_TIME = 7 * 24 * 60 * 60 * 1000L;
@@ -57,12 +51,13 @@ public class JwtUtil {
         return null;
     }
 
-    public String createToken(String username, String email, String jwsType) {
+    public String createAccessToken(String username, String email, boolean isTutor) {
         Date date = new Date();
-        long time = jwsType.equals(ACCESS_TOKEN) ? ACCESS_TIME : REFRESH_TIME;
+        long time = ACCESS_TIME;
         return BEARER_PREFIX + Jwts.builder()
                 .subject(username)
                 .claim("email", email)
+                .claim("tutor", isTutor)
                 .issuer("Ahimmoyak")
                 .issuedAt(date)
                 .expiration(new Date(date.getTime() + time))
@@ -70,10 +65,24 @@ public class JwtUtil {
                 .compact();
     }
 
-    public JwsDTO createAllToken(String userId, String email) {
+    public String createRefreshToken(String username) {
+        Date date = new Date();
+        long time = REFRESH_TIME;
+        return BEARER_PREFIX + Jwts.builder()
+                .subject(username)
+                .issuer("Ahimmoyak")
+                .issuedAt(date)
+                .expiration(new Date(date.getTime() + time))
+                .signWith(key)
+                .compact();
+    }
+
+
+
+    public JwsDTO createAllToken(String userId, String email, boolean isTutor) {
         return JwsDTO.builder()
-                .accessToken(createToken(userId, email, ACCESS_TOKEN))
-                .refreshToken(createToken(userId, email, REFRESH_TOKEN))
+                .accessToken(createAccessToken(userId, email, isTutor))
+                .refreshToken(createRefreshToken(userId))
                 .build();
     }
 
@@ -93,19 +102,18 @@ public class JwtUtil {
         return false;
     }
 
-    public Authentication createAuthentication(String username) {
+    public Authentication getAuthentication(String username) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        return new UsernamePasswordAuthenticationToken(userDetails, null, null);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     public String getUserInfoFromToken(String jws) {
-        return Jwts.parser().verifyWith(key).build().parseSignedClaims(jws).getPayload().getSubject();
-    }
-
-    public boolean refreshTokenValid(String jws) {
-        if (!validateToken(jws)) return false;
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(getUserInfoFromToken(jws));
-        return refreshToken.isPresent() && jws.equals(refreshToken.get().getRefreshToken().substring(8));
+        try {
+            return Jwts.parser().verifyWith(key).build().parseSignedClaims(jws).getPayload().getSubject();
+        } catch (ExpiredJwtException e) {
+            log.info("Expired JWT token but Get username");
+            return e.getClaims().getSubject();
+        }
     }
 
     public void setHeaderAccessToken(HttpServletResponse response, String newAccessToken) {
