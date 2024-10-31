@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ChatMessageRepository extends CrudRepository<ChatMessage, Long> {
-    List<ChatMessage> findAllByLiveId(Long roomId);
+    List<ChatMessage> findAllByLiveIdOrderByTimeAsc(Long roomId);
+    void deleteAllByLiveId(Long liveId);
 }

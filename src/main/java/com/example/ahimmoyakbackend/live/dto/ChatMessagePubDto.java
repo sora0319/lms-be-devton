@@ -3,6 +3,8 @@ package com.example.ahimmoyakbackend.live.dto;
 import com.example.ahimmoyakbackend.live.entity.ChatMessage;
 import lombok.Builder;
 
+import java.time.LocalDateTime;
+
 @Builder
 public record ChatMessagePubDto(
         String username,
@@ -13,6 +15,7 @@ public record ChatMessagePubDto(
                 .liveId(roomId)
                 .username(this.username)
                 .message(this.message)
+                .time(LocalDateTime.now())
                 .build();
     }
 }

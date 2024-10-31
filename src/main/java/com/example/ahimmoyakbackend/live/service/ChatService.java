@@ -28,7 +28,7 @@ public class ChatService {
     }
 
     public List<ChatMessageSubDto> getAll(long liveId) {
-        return chatMessageRepository.findAllByLiveId(liveId).stream()
+        return chatMessageRepository.findAllByLiveIdOrderByTimeAsc(liveId).stream()
                 .map(ChatMessageSubDto::from)
                 .toList();
     }
