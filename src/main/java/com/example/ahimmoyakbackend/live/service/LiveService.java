@@ -33,6 +33,7 @@ public class LiveService {
     private final UserService userService;
     private final UserRepository userRepository;
     private final LiveStatusRepository liveStatusRepository;
+    private final ChatService chatService;
 
     @Transactional
     public boolean createLive(LiveCreateRequestDTO requestDTO, Long courseId, UserDetails userDetails) {
@@ -96,6 +97,7 @@ public class LiveService {
         Long liveId = Long.parseLong(keyAndTutor[0]);
         liveStreamingRepository.findById(liveId).ifPresent(liveStreaming -> liveStreaming.setState(LiveState.END));
         liveStatusRepository.deleteById(liveId);
+        chatService.deleteAll(liveId);
         log.info("Close live streaming. stream_key: {}, tutor_id: {}", liveId, keyAndTutor[1]);
     }
 }

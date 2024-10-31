@@ -32,4 +32,9 @@ public class ChatService {
                 .map(ChatMessageSubDto::from)
                 .toList();
     }
+
+    public void deleteAll(long liveId) {
+        List<ChatMessage> messages = chatMessageRepository.findAllByLiveIdOrderByTimeAsc(liveId);
+        chatMessageRepository.deleteAll(messages);
+    }
 }
