@@ -2,12 +2,10 @@ package com.example.ahimmoyakbackend.live.service;
 
 import com.example.ahimmoyakbackend.auth.entity.User;
 import com.example.ahimmoyakbackend.auth.service.UserService;
+import com.example.ahimmoyakbackend.course.repository.AttendHistoryRepository;
 import com.example.ahimmoyakbackend.global.exception.ApiException;
 import com.example.ahimmoyakbackend.live.dto.*;
-import com.example.ahimmoyakbackend.live.entity.LiveQuiz;
-import com.example.ahimmoyakbackend.live.entity.LiveStreaming;
-import com.example.ahimmoyakbackend.live.entity.QuizAnswer;
-import com.example.ahimmoyakbackend.live.entity.QuizStatus;
+import com.example.ahimmoyakbackend.live.entity.*;
 import com.example.ahimmoyakbackend.live.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +26,8 @@ public class LiveQuizServiceImpl implements LiveQuizService {
     private final LiveQuizOptionRepository liveQuizOptionRepository;
     private final QuizStatusRepository quizStatusRepository;
     private final QuizAnswerRepository quizAnswerRepository;
+    private final AttendHistoryRepository attendHistoryRepository;
+    private final LiveQuizAnswerRepository liveQuizAnswerRepository;
 
     @Override
     @Transactional
@@ -85,8 +85,30 @@ public class LiveQuizServiceImpl implements LiveQuizService {
                 .quizId(pubDto.quizId())
                 .liveId(liveId)
                 .answer(pubDto.answer())
+                .username(pubDto.username())
                 .build());
         return null;
     }
 
+    @Override
+    @Transactional
+    public boolean saveDataToDb(long liveId) {
+        List<QuizAnswer> quizAnswers = quizAnswerRepository.findAllByLiveId(liveId);
+        List<QuizStatus> quizStatuses = quizStatusRepository.findAllByLiveId(liveId);
+        boolean result = true;
+        try {
+            liveQuizAnswerRepository.saveAll(quizAnswers.stream()
+                    .map(answer -> LiveQuizAnswer.builder()
+                            .answer(answer.getAnswer())
+                            .liveQuiz(liveQuizRepository.findById(answer.getQuizId()).orElseThrow())
+                            .attendHistory(attendHistoryRepository.findByLiveStreaming_IdAndEnrollment_User_Username(liveId, answer.getUsername()))
+                            .build()).toList());
+        } catch (Exception e) {
+            result = false;
+        }finally {
+            quizAnswerRepository.deleteAll(quizAnswers);
+            quizStatusRepository.deleteAll(quizStatuses);
+        }
+        return result;
+    }
 }
