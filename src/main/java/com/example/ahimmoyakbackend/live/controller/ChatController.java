@@ -2,6 +2,7 @@ package com.example.ahimmoyakbackend.live.controller;
 
 import com.example.ahimmoyakbackend.live.dto.ChatMessagePubDto;
 import com.example.ahimmoyakbackend.live.dto.ChatMessageSubDto;
+import com.example.ahimmoyakbackend.live.dto.LiveJoinDto;
 import com.example.ahimmoyakbackend.live.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,5 +37,10 @@ public class ChatController {
     @GetMapping("/api/v1/live/{liveId}/chat")
     public ResponseEntity<List<ChatMessageSubDto>> getAllMessage(@PathVariable long liveId) {
         return ResponseEntity.ok(chatService.getAll(liveId));
+    }
+
+    @MessageMapping("/join/{liveId}")
+    public void attendChat(@DestinationVariable long liveId, LiveJoinDto dto) {
+        chatService.attend(liveId, dto);
     }
 }

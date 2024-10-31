@@ -6,20 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
-import org.springframework.data.redis.core.index.Indexed;
+
+import java.util.Set;
 
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash(value = "answer")
-public class QuizAnswer {
+@RedisHash(value = "attend")
+public class ChatAttend {
     @Id
-    private long id;
-    @Indexed
-    private long quizId;
-    @Indexed
     private long liveId;
-    private int answer;
-    private String username;
+    private Set<String> users;
 }
