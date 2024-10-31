@@ -114,6 +114,11 @@ public class CourseBoardServiceImpl implements CourseBoardService {
     @Override
     public List<BoardListResponseDto> getListByUser(UserDetails userDetails, BoardType boardType) {
         User user = userService.getAuth(userDetails);
+        if(user.isTutorState()){
+            return courseBoardRepository.findByCourse_Tutor(user).stream()
+                    .map(board -> BoardListResponseDto.from(board, courseCommentRepository.countByCourseBoard(board)))
+                    .toList();
+        }
         return courseBoardRepository.findByUserAndType(user, boardType).stream()
                 .map(board -> BoardListResponseDto
                         .from(board, courseCommentRepository.countByCourseBoard(board)))
