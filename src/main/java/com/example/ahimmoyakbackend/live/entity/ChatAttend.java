@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import java.util.Set;
 
@@ -16,6 +17,9 @@ import java.util.Set;
 @RedisHash(value = "attend")
 public class ChatAttend {
     @Id
+    private String id;
+    @Indexed
     private long liveId;
-    private Set<String> users;
+    @Indexed
+    private String username;
 }

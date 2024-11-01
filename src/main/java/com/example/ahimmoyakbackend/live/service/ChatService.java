@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -57,25 +58,28 @@ public class ChatService {
 
     @Transactional
     public void attend(long liveId, LiveJoinDto dto) {
-        ChatAttend chatAttend = chatAttendRepository.findById(liveId).orElse(null);
-        if(chatAttend == null) {return;}
-        chatAttend.getUsers().add(dto.username());
-        chatAttendRepository.save(chatAttend);
+        if(!liveStatusRepository.existsById(liveId)){return;}
+        ChatAttend chatAttend = chatAttendRepository.findByLiveIdAndUsername(liveId, dto.username());
+        if(chatAttend != null) {return;}
+        chatAttendRepository.save(ChatAttend.builder()
+                .id(String.valueOf(UUID.randomUUID()))
+                .liveId(liveId)
+                .username(dto.username())
+                .build());
     }
 
     @Transactional
     public void saveAttendHistory(long liveId) {
-        ChatAttend chatAttend = chatAttendRepository.findById(liveId).orElse(null);
-        if(chatAttend == null) {return;}
+        List<ChatAttend> chatAttends = chatAttendRepository.findAllByLiveId(liveId);
         LiveStreaming live = liveStreamingRepository.findById(liveId).orElse(null);
         if(live == null) {return;}
         Course course = live.getCourse();
-        attendHistoryRepository.saveAll(course.getEnrollments().stream()
-                .map(enrollment -> AttendHistory.builder()
-                        .enrollment(enrollment)
+        attendHistoryRepository.saveAll(chatAttends.stream()
+                .map(attend -> AttendHistory.builder()
+                        .enrollment(enrollmentRepository.findByUser_UsernameAndCourse(attend.getUsername(), course))
                         .liveStreaming(live)
-                        .attendance(chatAttend.getUsers().contains(enrollment.getUser().getUsername()))
+                        .attendance(true)
                         .build()).toList());
-        chatAttendRepository.delete(chatAttend);
+        chatAttendRepository.deleteAll(chatAttends);
     }
 }

@@ -13,7 +13,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,20 +76,32 @@ public class LiveQuizServiceImpl implements LiveQuizService {
 
     @Override
     @Transactional
-    public QuizStatusSubDto answer(long liveId, QuizAnswerMsgDto pubDto) {
+    public List<QuizStatusSubDto> answer(long liveId, QuizAnswerMsgDto pubDto) {
         QuizStatus quizStatus = quizStatusRepository.findById(pubDto.quizId()).orElse(null);
         if(quizStatus == null) {
             return null;
         }
-        quizStatus.getOptions().put(pubDto.answer(), quizStatus.getOptions().get(pubDto.answer()) + 1);
+        quizStatus.getOptions().merge(pubDto.answer(), 1, Integer::sum);
+
         quizStatusRepository.save(quizStatus);
+
         quizAnswerRepository.save(QuizAnswer.builder()
+                .id(String.valueOf(UUID.randomUUID()))
                 .quizId(pubDto.quizId())
                 .liveId(liveId)
                 .answer(pubDto.answer())
                 .username(pubDto.username())
                 .build());
-        return null;
+        return quizStatusRepository.findAllByLiveId(liveId).stream()
+                .map(status -> {
+                    List<QuizStatusOptionSubDto> optionSubDtoList = new ArrayList<>();
+                    status.getOptions().forEach((k, v) -> optionSubDtoList.add(new QuizStatusOptionSubDto(k, v)));
+                    return QuizStatusSubDto.builder()
+                            .quizId(status.getId())
+                            .options(optionSubDtoList)
+                            .build();
+                }).toList();
+
     }
 
     @Override

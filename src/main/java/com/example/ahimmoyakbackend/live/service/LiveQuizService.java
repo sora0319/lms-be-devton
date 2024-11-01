@@ -13,6 +13,6 @@ public interface LiveQuizService {
     public boolean create(UserDetails userDetails, long liveId, LiveQuizCreateRequestDto requestDto);
     public List<LiveQuizResponseDto> getList(long liveId);
     public LiveQuizResponseDto send(long liveId, long quizId);
-    public QuizStatusSubDto answer(long liveId, QuizAnswerMsgDto pubDto);
+    public List<QuizStatusSubDto> answer(long liveId, QuizAnswerMsgDto pubDto);
     public boolean saveDataToDb(long liveId);
 }

@@ -1,11 +1,10 @@
 package com.example.ahimmoyakbackend.live.controller;
 
-import com.example.ahimmoyakbackend.live.dto.LiveQuizCreateRequestDto;
-import com.example.ahimmoyakbackend.live.dto.LiveQuizResponseDto;
-import com.example.ahimmoyakbackend.live.dto.QuizAnswerMsgDto;
-import com.example.ahimmoyakbackend.live.dto.QuizStatusSubDto;
+import com.example.ahimmoyakbackend.live.dto.*;
 import com.example.ahimmoyakbackend.live.service.LiveQuizService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.Id;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -23,6 +22,7 @@ import java.util.List;
 @RequestMapping("/api/v1/live/{liveId}/quiz")
 public class LiveQuizController {
 
+    private static final Logger log = LoggerFactory.getLogger(LiveQuizController.class);
     private final SimpMessageSendingOperations messagingTemplate;
     private final LiveQuizService liveQuizService;
 
@@ -43,8 +43,8 @@ public class LiveQuizController {
     }
 
     @MessageMapping("/quiz/{liveId}")
-    public ResponseEntity<LiveQuizResponseDto> sendQuiz(@DestinationVariable long liveId, long quizId) {
-        LiveQuizResponseDto subDto = liveQuizService.send(liveId, quizId);
+    public ResponseEntity<LiveQuizResponseDto> sendQuiz(@DestinationVariable long liveId, QuizIdProxyDto dto) {
+        LiveQuizResponseDto subDto = liveQuizService.send(liveId, dto.quizId());
         if (subDto == null) {
             return ResponseEntity.notFound().build();
         }
@@ -53,8 +53,8 @@ public class LiveQuizController {
     }
 
     @MessageMapping("/quiz/{liveId}/answer")
-    public ResponseEntity<QuizStatusSubDto> answerQuiz(@DestinationVariable long liveId, QuizAnswerMsgDto pubDto) {
-        QuizStatusSubDto subDto = liveQuizService.answer(liveId, pubDto);
+    public ResponseEntity<List<QuizStatusSubDto>> answerQuiz(@DestinationVariable long liveId, QuizAnswerMsgDto pubDto) {
+        List<QuizStatusSubDto> subDto = liveQuizService.answer(liveId, pubDto);
         if (subDto == null) {
             return ResponseEntity.notFound().build();
         }
