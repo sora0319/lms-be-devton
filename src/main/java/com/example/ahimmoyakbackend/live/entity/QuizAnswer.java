@@ -15,7 +15,7 @@ import org.springframework.data.redis.core.index.Indexed;
 @RedisHash(value = "answer")
 public class QuizAnswer {
     @Id
-    private long id;
+    private String id;
     @Indexed
     private long quizId;
     @Indexed

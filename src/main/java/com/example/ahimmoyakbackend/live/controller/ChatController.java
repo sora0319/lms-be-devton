@@ -41,6 +41,7 @@ public class ChatController {
 
     @MessageMapping("/join/{liveId}")
     public void attendChat(@DestinationVariable long liveId, LiveJoinDto dto) {
+        log.info("chatting: " + dto.username() + " joined");
         chatService.attend(liveId, dto);
     }
 }
