@@ -7,7 +7,7 @@
 
 <br />
 
-> 🔗 [Frontend repository 링크](https://github.com/AhHimMoYak/lms_fe-devton)
+> 🔗 [Frontend repository 링크](https://github.com/AhHimMoYak/lms-fe-devton)
 
 <details>
   <summary>
